@@ -28,8 +28,8 @@ public class LeftArea {
 			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
 
 			// Kunden
-			Button btnKunden = new Button();
-			btnKunden.setText(IFormRechnung.BTN_KUNDEN);
+			Button btnKunden = new Button(IFormRechnung.BTN_KUNDEN);
+			//btnKunden.setText(IFormRechnung.BTN_KUNDEN);
 
 			// Rechnung
 			Button btnRechnung = new Button();
