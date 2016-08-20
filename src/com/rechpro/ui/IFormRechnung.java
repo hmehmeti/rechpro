@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.rechpro.guindi;
+package com.rechpro.ui;
 
 /**
  * @author hmehmeti

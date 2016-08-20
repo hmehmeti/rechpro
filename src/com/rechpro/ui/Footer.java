@@ -1,4 +1,4 @@
-package com.rechpro.guindi;
+package com.rechpro.ui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
