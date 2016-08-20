@@ -1,4 +1,4 @@
-package com.rechpro.guindi;
+package com.rechpro.ui;
 
 import java.io.IOException;
 
@@ -13,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class Launcher extends Application {
 
@@ -27,46 +26,30 @@ public class Launcher extends Application {
 	}
 
 	protected void getKern(Stage primaryStage) {
-		BorderPane root;
-
-		MenuLeiste menuLeiste = null;
-		MenuBar menuBar = null;
-
-		LeftArea leftArea = null;
-		HBox hBoxLeftArea = null;
-
-		RightArea rightArea = null;
-		HBox hBoxRightArea = null;
-
-		CenterArea centerArea = null;
-		StackPane paneCenterArea = null;
-
-		Footer footer = null;
-		VBox vBoxFooter = null;
 
 		Scene scene = null;
 		try {
 			// Menuleiste
-			menuLeiste = new MenuLeiste();
-			menuBar = menuLeiste.getMenu();
+			MenuLeiste menuLeiste = new MenuLeiste();
+			MenuBar menuBar = menuLeiste.getMenu();
 
 			// LefArea
-			leftArea = new LeftArea();
-			hBoxLeftArea = leftArea.getLeftArea();
+			LeftArea leftArea = new LeftArea();
+			HBox hBoxLeftArea = leftArea.getLeftArea();
 
 			// RightArea
-			rightArea = new RightArea();
-			hBoxRightArea = rightArea.getRightHBox();
+			RightArea rightArea = new RightArea();
+			HBox hBoxRightArea = rightArea.getRightHBox();
 
 			// CenterPane
-			centerArea = new CenterArea();
-			paneCenterArea = centerArea.getCenterPane();
+			CenterArea centerArea = new CenterArea();
+			StackPane paneCenterArea = centerArea.getCenterPane();
 
 			// Footer
-			footer = new Footer();
-			vBoxFooter = footer.getFooter();
+			Footer footer = new Footer();
+			VBox vBoxFooter = footer.getFooter();
 
-			root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
 
 			root.setTop(menuBar);
 			root.setRight(hBoxRightArea);
@@ -78,10 +61,10 @@ public class Launcher extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle("BorderPane Example");
 			primaryStage.setScene(scene);
-			
-			//TODO : here close previous window before open new
+
+			// TODO : here close previous window before open new
 			primaryStage.show();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
