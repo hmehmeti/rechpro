@@ -1,10 +1,11 @@
 package com.rechpro.guindi;
 
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -27,22 +28,17 @@ public class LeftArea {
 			Text text = new Text("Navigation");
 			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
 
-			// Kunden
-			Button btnKunden = new Button(IFormRechnung.BTN_KUNDEN);
-			//btnKunden.setText(IFormRechnung.BTN_KUNDEN);
+			Button btnKunden = new Button();
+			btnKunden.setGraphic(createImageView("../img/custom.png", 80, 80));
 
-			// Rechnung
 			Button btnRechnung = new Button();
-			btnRechnung.setText(IFormRechnung.BTN_RECHNUNGEN);
+			btnRechnung.setGraphic(createImageView("../img/rechnung.jpg", 80, 80));
 
-			// Waren
 			Button btnWaren = new Button();
-			btnWaren.setText(IFormRechnung.BTN_WAREN);
+			btnWaren.setGraphic(createImageView("../img/ware.jpg", 80, 80));
 
-			// Einstellung
 			Button btnEinstellung = new Button();
-			btnEinstellung.setText(IFormRechnung.BTN_EINSTELLUNGEN);
-
+			btnEinstellung.setGraphic(createImageView("../img/setting.png", 80, 80));
 
 			vbox.getChildren().addAll(text, btnRechnung, btnWaren, btnKunden, btnEinstellung);
 			hbox.getChildren().addAll(vbox, new Separator(Orientation.VERTICAL));
@@ -51,6 +47,13 @@ public class LeftArea {
 		}
 
 		return hbox;
+	}
+
+	private ImageView createImageView(String imgPath, int width, int hight) {
+		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
+		ImgView.setFitHeight(hight);
+		ImgView.setFitWidth(width);
+		return ImgView;
 	}
 
 }

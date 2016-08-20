@@ -3,6 +3,8 @@ package com.rechpro.guindi;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -11,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Launcher extends Application {
 
@@ -75,8 +78,10 @@ public class Launcher extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle("BorderPane Example");
 			primaryStage.setScene(scene);
+			
+			//TODO : here close previous window before open new
 			primaryStage.show();
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
