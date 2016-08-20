@@ -1,4 +1,4 @@
-package com.rechpro.guindi;
+package com.rechpro.ui;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;

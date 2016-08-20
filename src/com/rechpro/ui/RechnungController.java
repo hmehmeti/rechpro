@@ -1,4 +1,4 @@
-package com.rechpro.guindi;
+package com.rechpro.ui;
 
 public class RechnungController {
 	
