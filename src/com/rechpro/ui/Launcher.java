@@ -3,18 +3,13 @@ package com.rechpro.ui;
 import java.io.IOException;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Launcher extends Application {
+	BorderPane root;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -31,38 +26,38 @@ public class Launcher extends Application {
 		try {
 			// Menuleiste
 			MenuLeiste menuLeiste = new MenuLeiste();
-			MenuBar menuBar = menuLeiste.getMenu();
 
 			// LefArea
 			LeftArea leftArea = new LeftArea();
-			HBox hBoxLeftArea = leftArea.getLeftArea();
 
 			// RightArea
 			RightArea rightArea = new RightArea();
-			HBox hBoxRightArea = rightArea.getRightHBox();
 
 			// CenterPane
 			CenterArea centerArea = new CenterArea();
-			StackPane paneCenterArea = centerArea.getCenterPane();
 
 			// Footer
 			Footer footer = new Footer();
-			VBox vBoxFooter = footer.getFooter();
 
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
+			root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
 
-			root.setTop(menuBar);
-			root.setRight(hBoxRightArea);
-			root.setBottom(vBoxFooter);
-			root.setLeft(hBoxLeftArea);
-			root.setCenter(paneCenterArea);
+
+			/**
+			 * TODO HME Temporeary outer Function, mayby comming later
+			 */
+			//rightArea.getRightArea(root);
+			menuLeiste.getMenu(root);
+			footer.getFooter(root);
+			leftArea.getLeftArea(root);
+			centerArea.getCenterPane(EnumButton.WILLKOMMEN);
+
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle("BorderPane Example");
 			primaryStage.setScene(scene);
 
-			// TODO : here close previous window before open new
+			// TODO KDO: here close previous window before open new
 			primaryStage.show();
 
 		} catch (IOException e) {

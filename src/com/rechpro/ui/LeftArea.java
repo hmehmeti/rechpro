@@ -1,11 +1,14 @@
 package com.rechpro.ui;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -14,14 +17,12 @@ import javafx.scene.text.Text;
 
 public class LeftArea {
 
-	public HBox getLeftArea() {
+	public void getLeftArea(BorderPane root) {
 		HBox hbox = null;
 		VBox vbox = null;
-		VBox vboxText = null;
+		hbox = new HBox();
 
 		try {
-
-			hbox = new HBox();
 			vbox = new VBox(10);
 			vbox.setPadding(new Insets(10));
 
@@ -30,15 +31,47 @@ public class LeftArea {
 
 			Button btnKunden = new Button();
 			btnKunden.setGraphic(createImageView("../img/custom.png", 80, 80));
+			btnKunden.setText(IFormRechnung.BTN_KUNDEN);
+			btnKunden.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnKunden.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					root.setCenter(new CenterArea().getCenterPane(EnumButton.KUNDEN));
+				}
+			});
 
 			Button btnRechnung = new Button();
 			btnRechnung.setGraphic(createImageView("../img/rechnung.jpg", 80, 80));
+			btnRechnung.setText(IFormRechnung.BTN_RECHNUNGEN);
+			btnRechnung.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnRechnung.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					// TODO
+				}
+			});
 
 			Button btnWaren = new Button();
 			btnWaren.setGraphic(createImageView("../img/ware.jpg", 80, 80));
+			btnWaren.setText(IFormRechnung.BTN_WAREN);
+			btnWaren.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnWaren.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					// TODO
+				}
+			});
 
 			Button btnEinstellung = new Button();
 			btnEinstellung.setGraphic(createImageView("../img/setting.png", 80, 80));
+			btnEinstellung.setText(IFormRechnung.BTN_EINSTELLUNGEN);
+			btnEinstellung.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnEinstellung.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					// TODO
+				}
+			});
 
 			vbox.getChildren().addAll(text, btnRechnung, btnWaren, btnKunden, btnEinstellung);
 			hbox.getChildren().addAll(vbox, new Separator(Orientation.VERTICAL));
@@ -46,7 +79,7 @@ public class LeftArea {
 			e.printStackTrace();
 		}
 
-		return hbox;
+		root.setLeft(hbox);
 	}
 
 	private ImageView createImageView(String imgPath, int width, int hight) {
