@@ -18,32 +18,31 @@ import javafx.scene.text.Text;
 public class LeftArea {
 
 	public void getLeftArea(BorderPane root) {
-		HBox hbox = null;
-		VBox vbox = null;
-		hbox = new HBox();
+		HBox hbox = new HBox();
+		
+		String cssFont = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
+		int buttonWidth = 60;
+		int buttonHight = 60;
 
 		try {
-			vbox = new VBox(10);
+			VBox vbox = new VBox(10);
 			vbox.setPadding(new Insets(10));
-
 			Text text = new Text("Navigation");
-			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
+			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 15));
 
 			Button btnKunden = new Button();
-			btnKunden.setGraphic(createImageView("../img/custom.png", 80, 80));
-			btnKunden.setText(IFormRechnung.BTN_KUNDEN);
-			btnKunden.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnKunden.setGraphic(createImageView("../img/custom.png", buttonWidth, buttonHight));
+			btnKunden.setStyle(cssFont);
 			btnKunden.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
-					root.setCenter(new CenterArea().getCenterPane(EnumButton.KUNDEN));
+					root.setCenter(new CenterArea().loadCenterPane(EnumButton.KUNDEN));
 				}
 			});
 
 			Button btnRechnung = new Button();
-			btnRechnung.setGraphic(createImageView("../img/rechnung.jpg", 80, 80));
-			btnRechnung.setText(IFormRechnung.BTN_RECHNUNGEN);
-			btnRechnung.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnRechnung.setGraphic(createImageView("../img/rechnung.png", buttonWidth, buttonHight));
+			btnRechnung.setStyle(cssFont);
 			btnRechnung.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
@@ -52,9 +51,8 @@ public class LeftArea {
 			});
 
 			Button btnWaren = new Button();
-			btnWaren.setGraphic(createImageView("../img/ware.jpg", 80, 80));
-			btnWaren.setText(IFormRechnung.BTN_WAREN);
-			btnWaren.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnWaren.setGraphic(createImageView("../img/ware.png", buttonWidth, buttonHight));
+			btnWaren.setStyle(cssFont);
 			btnWaren.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
@@ -63,9 +61,8 @@ public class LeftArea {
 			});
 
 			Button btnEinstellung = new Button();
-			btnEinstellung.setGraphic(createImageView("../img/setting.png", 80, 80));
-			btnEinstellung.setText(IFormRechnung.BTN_EINSTELLUNGEN);
-			btnEinstellung.setStyle("-fx-font: 20 arial; -fx-base: #b6e7c9;");
+			btnEinstellung.setGraphic(createImageView("../img/setting.png", buttonWidth, buttonHight));
+			btnEinstellung.setStyle(cssFont);
 			btnEinstellung.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
