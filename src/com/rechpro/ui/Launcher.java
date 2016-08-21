@@ -42,8 +42,13 @@ public class Launcher extends Application {
 			HBox hBoxRightArea = rightArea.getRightHBox();
 
 			// CenterPane
+<<<<<<< Updated upstream:src/com/rechpro/ui/Launcher.java
 			CenterArea centerArea = new CenterArea();
 			StackPane paneCenterArea = centerArea.getCenterPane();
+=======
+			centerArea = new CenterArea();
+			paneCenterArea = centerArea.getCenterPane(EnumButton.WILLKOMMEN);
+>>>>>>> Stashed changes:src/com/rechpro/guindi/Launcher.java
 
 			// Footer
 			Footer footer = new Footer();
