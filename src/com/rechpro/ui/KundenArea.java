@@ -55,6 +55,7 @@ public class KundenArea {
 		};
 
 		TableColumn firstNameCol = createTableColumn(IFormRechnung.LBL_FIRST_NAME);
+		firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -63,6 +64,7 @@ public class KundenArea {
 		});
 
 		TableColumn lastNameCol = createTableColumn(IFormRechnung.LBL_LAST_NAME);
+		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -71,6 +73,7 @@ public class KundenArea {
 		});
 
 		TableColumn emailCol = createTableColumn(IFormRechnung.LBL_EMAIL);
+		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -79,6 +82,7 @@ public class KundenArea {
 		});
 
 		TableColumn addresseCol = createTableColumn(IFormRechnung.LBL_ADDRESSE);
+		addresseCol.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
 		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -133,7 +137,6 @@ public class KundenArea {
 			}
 		};
 		TableColumn column = new TableColumn(columnName);
-		column.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 		column.setCellValueFactory(new PropertyValueFactory<Customer, String>(columnName));
 		column.setCellFactory(cellFactory);
 		
