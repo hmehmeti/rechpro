@@ -10,14 +10,14 @@ import javafx.beans.property.SimpleStringProperty;
  * Kunden Object for DBPersistence
  *
  */
-	public class Kunde {
+	public class Customer {
 
         private final SimpleStringProperty firstName;
         private final SimpleStringProperty lastName;
         private final SimpleStringProperty email;
         private final SimpleStringProperty address;
 
-        public Kunde(String fName, String lName, String email, String address) {
+        public Customer(String fName, String lName, String email, String address) {
             this.firstName = new SimpleStringProperty(fName);
             this.lastName = new SimpleStringProperty(lName);
             this.email = new SimpleStringProperty(email);

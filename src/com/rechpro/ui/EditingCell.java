@@ -3,7 +3,7 @@
  */
 package com.rechpro.ui;
 
-import com.rechpro.persistence.Kunde;
+import com.rechpro.persistence.Customer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
  * @author hmehmeti
  *
  */
-public class EditingCell extends TableCell<Kunde, String> {
+public class EditingCell extends TableCell<Customer, String> {
 
 	private TextField textField;
 

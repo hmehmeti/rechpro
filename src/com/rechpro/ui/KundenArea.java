@@ -1,6 +1,8 @@
 package com.rechpro.ui;
 
-import com.rechpro.persistence.Kunde;
+import com.rechpro.persistence.Customer;
+import com.rechpro.ui.EditingCell;
+import com.rechpro.ui.IFormRechnung;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,12 +33,12 @@ public class KundenArea {
 	public KundenArea() {
 	}
 
-	TableView<Kunde> table = new TableView<Kunde>();
-	final ObservableList<Kunde> data = FXCollections.observableArrayList(
-			new Kunde("Gundi", "Gundieren", "gundi.gundieren@gundi.com", "Karlsruhe"),
-			new Kunde("Max", "Mustermann", "max.mustermann@example.com", "Karlsruhe"),
-			new Kunde("Tayip", "Merkel", "tayip.merkel@kilimili.com", "Karlsruhe"),
-			new Kunde("Putin", "Obama", "putin.obama@freunde.com", "Karlsruhe"));
+	TableView<Customer> table = new TableView<Customer>();
+	final ObservableList<Customer> data = FXCollections.observableArrayList(
+			new Customer("Gundi", "Gundieren", "gundi.gundieren@gundi.com", "Karlsruhe"),
+			new Customer("Max", "Mustermann", "max.mustermann@example.com", "Karlsruhe"),
+			new Customer("Tayip", "Merkel", "tayip.merkel@kilimili.com", "Karlsruhe"),
+			new Customer("Putin", "Obama", "putin.obama@freunde.com", "Karlsruhe"));
 
 	final HBox hb = new HBox();
 
@@ -52,47 +54,35 @@ public class KundenArea {
 			}
 		};
 
-		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME);
-		firstNameCol.setMinWidth(100);
-		firstNameCol.setCellValueFactory(new PropertyValueFactory<Kunde, String>("firstName"));
-		firstNameCol.setCellFactory(cellFactory);
-		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Kunde, String>>() {
+		TableColumn firstNameCol = createTableColumn(IFormRechnung.LBL_FIRST_NAME);
+		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
-			public void handle(CellEditEvent<Kunde, String> t) {
-				((Kunde) t.getTableView().getItems().get(t.getTablePosition().getRow())).setFirstName(t.getNewValue());
+			public void handle(CellEditEvent<Customer, String> t) {
+				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setFirstName(t.getNewValue());
 			}
 		});
 
-		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME);
-		lastNameCol.setMinWidth(100);
-		lastNameCol.setCellValueFactory(new PropertyValueFactory<Kunde, String>("lastName"));
-		lastNameCol.setCellFactory(cellFactory);
-		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Kunde, String>>() {
+		TableColumn lastNameCol = createTableColumn(IFormRechnung.LBL_LAST_NAME);
+		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
-			public void handle(CellEditEvent<Kunde, String> t) {
-				((Kunde) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastName(t.getNewValue());
+			public void handle(CellEditEvent<Customer, String> t) {
+				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastName(t.getNewValue());
 			}
 		});
 
-		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL);
-		emailCol.setMinWidth(200);
-		emailCol.setCellValueFactory(new PropertyValueFactory<Kunde, String>("email"));
-		emailCol.setCellFactory(cellFactory);
-		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Kunde, String>>() {
+		TableColumn emailCol = createTableColumn(IFormRechnung.LBL_EMAIL);
+		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
-			public void handle(CellEditEvent<Kunde, String> t) {
-				((Kunde) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEmail(t.getNewValue());
+			public void handle(CellEditEvent<Customer, String> t) {
+				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEmail(t.getNewValue());
 			}
 		});
 
-		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE);
-		addresseCol.setMinWidth(200);
-		addresseCol.setCellValueFactory(new PropertyValueFactory<Kunde, String>("addresse"));
-		addresseCol.setCellFactory(cellFactory);
-		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Kunde, String>>() {
+		TableColumn addresseCol = createTableColumn(IFormRechnung.LBL_ADDRESSE);
+		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
-			public void handle(CellEditEvent<Kunde, String> t) {
-				((Kunde) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
+			public void handle(CellEditEvent<Customer, String> t) {
+				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
 			}
 		});
 
@@ -117,7 +107,7 @@ public class KundenArea {
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				data.add(new Kunde(addFirstName.getText(), addLastName.getText(), addEmail.getText(), addAddress.getText()));
+				data.add(new Customer(addFirstName.getText(), addLastName.getText(), addEmail.getText(), addAddress.getText()));
 				addFirstName.clear();
 				addLastName.clear();
 				addEmail.clear();
@@ -133,5 +123,21 @@ public class KundenArea {
 		vbox.setPadding(new Insets(10, 0, 0, 10));
 		vbox.getChildren().addAll(label, table, hb);
 		return vbox;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private TableColumn createTableColumn(String columnName) {
+		Callback<TableColumn, TableCell> cellFactory = new Callback<TableColumn, TableCell>() {
+			public TableCell call(TableColumn p) {
+				return new EditingCell();
+			}
+		};
+		TableColumn column = new TableColumn(columnName);
+		column.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		column.setCellValueFactory(new PropertyValueFactory<Customer, String>(columnName));
+		column.setCellFactory(cellFactory);
+		
+		return column;
+		
 	}
 }
