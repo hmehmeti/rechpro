@@ -1,5 +1,6 @@
 package com.rechpro.ui;
 
+import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
 
 import javafx.geometry.Insets;
@@ -31,16 +32,14 @@ import javafx.scene.text.Text;
  **/
 public class RechnungArea {
 
+	private Address address = new Address("Goetherstr", "23",  "73888", "Stuttgart", "Deutschland");
+	private Customer customer = new Customer("Hasan", "Mehmeti", "hasan.mehmeti@gmail.com", address);
 	public RechnungArea() {
 
+		customer.setTelefonNumber("017631282828");
 	}
 
-	@SuppressWarnings("unused")
-	private void drawLine(GraphicsContext gc, int x1, int y1, int x2, int y2) {
-		gc.setStroke(Color.BLUE);
-		gc.setLineWidth(5);
-		gc.strokeLine(x1, y1, x2, y2);
-	}
+	
 
 	public GridPane addGridPane() {
 
@@ -63,7 +62,7 @@ public class RechnungArea {
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
 		VBox miniAdress = new VBox(3);
-		Text sellerAddress = new Text("Hier kommt Verkäufer Adress später Kunde.getAddress()");
+		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		Line line = new Line(90, 40, 350, 40);
 	    line.setStroke(Color.BLACK);
@@ -74,14 +73,22 @@ public class RechnungArea {
 
 		// ------- third row address of customer (left) date and id of bill (right) -----//
 		VBox customAndAddress = new VBox(5);
-		Text custumName = new Text("Kunde Name");
-		Text custumAdress = new Text("Kundestr. 25 \n76133 Karlsruhe");
+		String customName = customer.getFirstName() + customer.getLastName();
+		Text custumName = new Text(customName);
+		//TODO: hier muss die Adresse nachdem Hausnummer in zweite Zeile geschrieben werden
+		String street = customer.getAddress().getStreet().getValue();
+		String number = customer.getAddress().getNumber().getValue();
+		String postCode = customer.getAddress().getPostCode().getValue();
+		String city = customer.getAddress().getCity().getValue();
+		
+		Text custumAdress = new Text(street+" " + number + "\n" + postCode+" "+city);
 		customAndAddress.getChildren().addAll(custumName, custumAdress);
 		centerTop.setLeft(customAndAddress);
 		
 		VBox date = new VBox(5);
 		Text dateText = new Text("Datum: 12.12.2014");
-		Text customNr = new Text("KundenNr.: 12345");
+		
+		Text customNr = new Text("KundenNr.: " + customer.getId());
 		Text billId = new Text("RechungsNr.: 1234567887");
 		date.getChildren().addAll(dateText, customNr, billId);
 
@@ -110,7 +117,7 @@ public class RechnungArea {
         TableColumn<Customer,Double> onePrise = new TableColumn<Customer,Double>("Einzel Preis");
         onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
         TableColumn<Customer,Double> entirePrise = new TableColumn<Customer,Double>("Gesamt Preis");
-        onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+        entirePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
         table.getColumns().addAll(item, numberOfItem, onePrise, entirePrise);
 
 		centerButtom.setCenter(table);

@@ -1,5 +1,6 @@
 package com.rechpro.ui;
 
+import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
 import com.rechpro.ui.EditingCell;
 import com.rechpro.ui.IFormRechnung;
@@ -34,11 +35,15 @@ public class KundenArea {
 	}
 
 	TableView<Customer> table = new TableView<Customer>();
+	private Address gundiAddress = new Address("Gundistr.", "12", "44488", "Karlsruhe", "Deutschland");
+	private Address maxAddress = new Address("Gundistr.", "12", "44488", "Stuttgart", "Deutschland");
+	private Address tayipAddress = new Address("Gundistr.", "12", "44488", "Dortmund", "Deutschland");
+	private Address merkelAddress = new Address("Gundistr.", "12", "44488", "Karlsruhe", "Deutschland");
 	final ObservableList<Customer> data = FXCollections.observableArrayList(
-			new Customer("Gundi", "Gundieren", "gundi.gundieren@gundi.com", "Karlsruhe"),
-			new Customer("Max", "Mustermann", "max.mustermann@example.com", "Karlsruhe"),
-			new Customer("Tayip", "Merkel", "tayip.merkel@kilimili.com", "Karlsruhe"),
-			new Customer("Putin", "Obama", "putin.obama@freunde.com", "Karlsruhe"));
+			new Customer("Gundi", "Gundieren", "gundi.gundieren@gundi.com", gundiAddress),
+			new Customer("Max", "Mustermann", "max.mustermann@example.com", maxAddress),
+			new Customer("Tayip", "Merkel", "tayip.merkel@kilimili.com", tayipAddress),
+			new Customer("Putin", "Obama", "putin.obama@freunde.com", merkelAddress));
 
 	final HBox hb = new HBox();
 
@@ -86,7 +91,16 @@ public class KundenArea {
 		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
-				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
+				((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(spliteAddressAndGetAddressObj(t.getNewValue()));
+			}
+			private Address spliteAddressAndGetAddressObj(String addressString) {
+				String[] stringArray = addressString.split("\\s+");
+				String street = stringArray[0];
+				String no = stringArray[1];
+				String postCode = stringArray[2];
+				String city = stringArray[3];
+				String country = stringArray[4];
+				return new Address(street, no ,postCode, city, country);
 			}
 		});
 
@@ -111,11 +125,22 @@ public class KundenArea {
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				data.add(new Customer(addFirstName.getText(), addLastName.getText(), addEmail.getText(), addAddress.getText()));
+				data.add(new Customer(addFirstName.getText(), addLastName.getText(), addEmail.getText(), spliteAddressAndGetAddressObj(addAddress.getText())));
 				addFirstName.clear();
 				addLastName.clear();
 				addEmail.clear();
 				addAddress.clear();
+			}
+
+			private Address spliteAddressAndGetAddressObj(String addressString) {
+				
+				String[] stringArray = addressString.split("\\s+");
+				String street = stringArray[0];
+				String no = stringArray[1];
+				String postCode = stringArray[2];
+				String city = stringArray[3];
+				String country = stringArray[4];
+				return new Address(street, no ,postCode, city, country);
 			}
 		});
 
