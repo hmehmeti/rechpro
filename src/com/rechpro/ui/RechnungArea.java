@@ -1,11 +1,15 @@
 package com.rechpro.ui;
 
+import com.rechpro.persistence.Customer;
+
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -97,14 +101,19 @@ public class RechnungArea {
 		// ------ text Rechung end----------------------------//
 
 		// -------- list of items -----------------------------//
+		TableView table = new TableView();
 		BorderPane centerButtom = new BorderPane();
-		VBox warenList = new VBox();
-		warenList.setPrefWidth(700);
-		TextArea listOfItems = new TextArea("HIER MUSS NOCH WAREN HINZUGFÜGT WERDEN");
-		listOfItems.setPrefSize(200, 200);
+		TableColumn<Customer,String> item = new TableColumn<Customer,String>("Artikel");
+		item.prefWidthProperty().bind(table.widthProperty().multiply(0.50));
+        TableColumn<Customer,Integer> numberOfItem = new TableColumn<Customer,Integer>("Anzahl");
+        numberOfItem.prefWidthProperty().bind(table.widthProperty().multiply(0.10));
+        TableColumn<Customer,Double> onePrise = new TableColumn<Customer,Double>("Einzel Preis");
+        onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+        TableColumn<Customer,Double> entirePrise = new TableColumn<Customer,Double>("Gesamt Preis");
+        onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+        table.getColumns().addAll(item, numberOfItem, onePrise, entirePrise);
 
-		warenList.getChildren().add(listOfItems);
-		centerButtom.setCenter(warenList);
+		centerButtom.setCenter(table);
 		
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
 		center.setTop(centerTop);
