@@ -46,7 +46,7 @@ public class LeftArea {
 			btnRechnung.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
-					// TODO
+					root.setCenter(new CenterArea().loadCenterPane(EnumButton.RECHNUNG));
 				}
 			});
 

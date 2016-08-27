@@ -10,21 +10,34 @@ import javafx.beans.property.SimpleStringProperty;
  * Kunden Object for DBPersistence
  *
  */
-	public class Kunde {
+	public class Customer {
 
+		private static long id = 112345;
         private final SimpleStringProperty firstName;
         private final SimpleStringProperty lastName;
         private final SimpleStringProperty email;
-        private final SimpleStringProperty address;
+        private Address address;
+        private String telefonNumber = "-";
 
-        public Kunde(String fName, String lName, String email, String address) {
+        //TODO KD where is custom id???
+        public Customer(String fName, String lName, String email, Address address) {
+        	this.id +=1; 
             this.firstName = new SimpleStringProperty(fName);
             this.lastName = new SimpleStringProperty(lName);
             this.email = new SimpleStringProperty(email);
-            this.address = new SimpleStringProperty(address);
+            this.address = address;
         }
 
-
+        public long getId(){
+        	return id;
+        }
+        
+        public String getTelefonNumber(){
+        	return telefonNumber;
+        }
+        public void setTelefonNumber(String newTelNumber){
+        	this.telefonNumber = newTelNumber;
+        }
 		public String getFirstName() {
             return firstName.get();
         }
@@ -49,12 +62,12 @@ import javafx.beans.property.SimpleStringProperty;
             this.email.set(fName);
         }
 
-        public SimpleStringProperty getAddress() {
+        public Address getAddress() {
 			return address;
 		}
 
-        public void setAddress(String address) {
-           this.address.set(address);
+        public void setAddress(Address address) {
+           this.address = address;
         }
 
 	}

@@ -17,10 +17,11 @@ public class CenterArea {
 			stackPane = new StackPane();
 			stackPane.setAlignment(Pos.CENTER);
 			rec = new Rectangle();
-			rec.setFill(Color.BLACK);
-			rec.widthProperty().bind(stackPane.widthProperty().subtract(50));
-			rec.heightProperty().bind(stackPane.heightProperty().subtract(50));
-			stackPane.getChildren().addAll(rec);
+			rec.setFill(Color.WHITE);
+			stackPane.getChildren().addAll(new RechnungArea().addGridPane());
+//			rec.widthProperty().bind(stackPane.widthProperty().subtract(50));
+//			rec.heightProperty().bind(stackPane.heightProperty().subtract(50));
+//			stackPane.getChildren().addAll(rec);
 
 			break;
 		case EINSTELLUNG:
