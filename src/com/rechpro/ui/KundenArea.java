@@ -36,9 +36,9 @@ public class KundenArea {
 
 	TableView<Customer> table = new TableView<Customer>();
 	private Address gundiAddress = new Address("Gundistr.", "12", "44488", "Karlsruhe", "Deutschland");
-	private Address maxAddress = new Address("Gundistr.", "12", "44488", "Stuttgart", "Deutschland");
-	private Address tayipAddress = new Address("Gundistr.", "12", "44488", "Dortmund", "Deutschland");
-	private Address merkelAddress = new Address("Gundistr.", "12", "44488", "Karlsruhe", "Deutschland");
+	private Address maxAddress = new Address("Gundistr.", "65", "44488", "Stuttgart", "Deutschland");
+	private Address tayipAddress = new Address("Gundistr.", "10", "44488", "Dortmund", "Deutschland");
+	private Address merkelAddress = new Address("Gundistr.", "3", "44488", "Karlsruhe", "Deutschland");
 	final ObservableList<Customer> data = FXCollections.observableArrayList(
 			new Customer("Gundi", "Gundieren", "gundi.gundieren@gundi.com", gundiAddress),
 			new Customer("Max", "Mustermann", "max.mustermann@example.com", maxAddress),
@@ -59,8 +59,10 @@ public class KundenArea {
 			}
 		};
 
-		TableColumn firstNameCol = createTableColumn(IFormRechnung.LBL_FIRST_NAME);
+		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME); 
 		firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+		firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName")); 
+		firstNameCol.setCellFactory(cellFactory); 
 		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -68,8 +70,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn lastNameCol = createTableColumn(IFormRechnung.LBL_LAST_NAME);
-		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME); 
+		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20)); 
+		lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName")); 
+		lastNameCol.setCellFactory(cellFactory);
 		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -77,8 +81,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn emailCol = createTableColumn(IFormRechnung.LBL_EMAIL);
-		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL); 
+		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25)); 
+		emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email")); 
+		emailCol.setCellFactory(cellFactory); 
 		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -86,8 +92,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn addresseCol = createTableColumn(IFormRechnung.LBL_ADDRESSE);
+		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE); 
 		addresseCol.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
+	    addresseCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("addresse")); 
+	    addresseCol.setCellFactory(cellFactory); 
 		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -108,16 +116,19 @@ public class KundenArea {
 		table.getColumns().addAll(firstNameCol, lastNameCol, emailCol, addresseCol);
 
 		final TextField addFirstName = new TextField();
+		addFirstName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		addFirstName.setPromptText(IFormRechnung.LBL_FIRST_NAME);
-		addFirstName.setMaxWidth(firstNameCol.getPrefWidth());
+		
 		final TextField addLastName = new TextField();
-		addLastName.setMaxWidth(lastNameCol.getPrefWidth());
+		addLastName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		addLastName.setPromptText(IFormRechnung.LBL_LAST_NAME);
+		
 		final TextField addEmail = new TextField();
-		addEmail.setMaxWidth(emailCol.getPrefWidth());
 		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
+		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		
 		final TextField addAddress = new TextField();
-		addAddress.setMaxWidth(emailCol.getPrefWidth());
+		addAddress.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
 		addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
 
 		final Button addButton = new Button(IFormRechnung.BTN_KUNDEN_ADD);
@@ -133,14 +144,27 @@ public class KundenArea {
 			}
 
 			private Address spliteAddressAndGetAddressObj(String addressString) {
+				String street = "";
+				String no = "";
+				String postCode = "";
+				String country="";
+				String city = "";
+				if (addressString != null || addressString != "") {
+					String[] stringArray = addressString.split("\\s+");
+					
+					if(stringArray.length >= 1)
+						street = stringArray[0];
+					if(stringArray.length >= 2)
+						no = stringArray[1];
+					if(stringArray.length >= 3)
+						postCode = stringArray[2];
+					if (stringArray.length >= 4)
+						city = stringArray[3];
+					if (stringArray.length >= 5)
+						country = stringArray[4];
+				}
+				return new Address(street, no, postCode, city, country);
 				
-				String[] stringArray = addressString.split("\\s+");
-				String street = stringArray[0];
-				String no = stringArray[1];
-				String postCode = stringArray[2];
-				String city = stringArray[3];
-				String country = stringArray[4];
-				return new Address(street, no ,postCode, city, country);
 			}
 		});
 
@@ -152,20 +176,5 @@ public class KundenArea {
 		vbox.setPadding(new Insets(10, 0, 0, 10));
 		vbox.getChildren().addAll(label, table, hb);
 		return vbox;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private TableColumn createTableColumn(String columnName) {
-		Callback<TableColumn, TableCell> cellFactory = new Callback<TableColumn, TableCell>() {
-			public TableCell call(TableColumn p) {
-				return new EditingCell();
-			}
-		};
-		TableColumn column = new TableColumn(columnName);
-		column.setCellValueFactory(new PropertyValueFactory<Customer, String>(columnName));
-		column.setCellFactory(cellFactory);
-		
-		return column;
-		
 	}
 }
