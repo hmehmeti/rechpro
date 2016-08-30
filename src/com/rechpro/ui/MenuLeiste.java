@@ -1,10 +1,8 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 public class MenuLeiste {
 

@@ -1,7 +1,4 @@
-/**
- *
- */
-package com.rechpro.persistence;
+package src.com.rechpro.persistence;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -21,7 +18,7 @@ import javafx.beans.property.SimpleStringProperty;
 
         //TODO KD where is custom id???
         public Customer(String fName, String lName, String email, Address address) {
-        	this.id +=1; 
+        	this.id +=1;
             this.firstName = new SimpleStringProperty(fName);
             this.lastName = new SimpleStringProperty(lName);
             this.email = new SimpleStringProperty(email);
@@ -31,7 +28,7 @@ import javafx.beans.property.SimpleStringProperty;
         public long getId(){
         	return id;
         }
-        
+
         public String getTelefonNumber(){
         	return telefonNumber;
         }

@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,7 +19,7 @@ public class LeftArea {
 
 	public void getLeftArea(BorderPane root) {
 		HBox hbox = new HBox();
-		
+
 		String cssFont = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
 		int buttonWidth = 60;
 		int buttonHight = 60;

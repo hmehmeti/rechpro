@@ -1,9 +1,9 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
-import com.rechpro.persistence.Address;
-import com.rechpro.persistence.Customer;
-import com.rechpro.ui.EditingCell;
-import com.rechpro.ui.IFormRechnung;
+import src.com.rechpro.persistence.Address;
+import src.com.rechpro.persistence.Customer;
+import src.com.rechpro.ui.EditingCell;
+import src.com.rechpro.ui.IFormRechnung;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,10 +59,10 @@ public class KundenArea {
 			}
 		};
 
-		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME); 
+		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME);
 		firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName")); 
-		firstNameCol.setCellFactory(cellFactory); 
+		firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName"));
+		firstNameCol.setCellFactory(cellFactory);
 		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -70,9 +70,9 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME); 
-		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20)); 
-		lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName")); 
+		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME);
+		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+		lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName"));
 		lastNameCol.setCellFactory(cellFactory);
 		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
@@ -81,10 +81,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL); 
-		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25)); 
-		emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email")); 
-		emailCol.setCellFactory(cellFactory); 
+		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL);
+		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email"));
+		emailCol.setCellFactory(cellFactory);
 		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -92,10 +92,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE); 
+		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE);
 		addresseCol.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
-	    addresseCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("addresse")); 
-	    addresseCol.setCellFactory(cellFactory); 
+	    addresseCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("addresse"));
+	    addresseCol.setCellFactory(cellFactory);
 		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -118,15 +118,15 @@ public class KundenArea {
 		final TextField addFirstName = new TextField();
 		addFirstName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		addFirstName.setPromptText(IFormRechnung.LBL_FIRST_NAME);
-		
+
 		final TextField addLastName = new TextField();
 		addLastName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
 		addLastName.setPromptText(IFormRechnung.LBL_LAST_NAME);
-		
+
 		final TextField addEmail = new TextField();
 		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
 		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-		
+
 		final TextField addAddress = new TextField();
 		addAddress.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
 		addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
@@ -151,7 +151,7 @@ public class KundenArea {
 				String city = "";
 				if (addressString != null || addressString != "") {
 					String[] stringArray = addressString.split("\\s+");
-					
+
 					if(stringArray.length >= 1)
 						street = stringArray[0];
 					if(stringArray.length >= 2)
@@ -164,7 +164,7 @@ public class KundenArea {
 						country = stringArray[4];
 				}
 				return new Address(street, no, postCode, city, country);
-				
+
 			}
 		});
 

@@ -1,7 +1,4 @@
-/**
- *
- */
-package com.rechpro.persistence;
+package src.com.rechpro.persistence;
 
 /**
  * @author hmehmeti

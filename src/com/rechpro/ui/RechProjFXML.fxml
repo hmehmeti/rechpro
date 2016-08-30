@@ -2,6 +2,6 @@
 
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rechpro.ui.RechnungController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.com.rechpro.ui.RechnungController">
 	<!-- TODO Add Nodes -->
 </BorderPane>

@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

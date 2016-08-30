@@ -1,9 +1,6 @@
-/**
- *
- */
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
-import com.rechpro.persistence.Customer;
+import src.com.rechpro.persistence.Customer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

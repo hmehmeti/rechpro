@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;

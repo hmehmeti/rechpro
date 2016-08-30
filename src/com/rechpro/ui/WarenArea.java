@@ -1,7 +1,4 @@
-/**
- *
- */
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
 /**
  * @author hmehmeti

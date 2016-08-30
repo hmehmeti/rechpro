@@ -1,30 +1,19 @@
-package com.rechpro.ui;
+package src.com.rechpro.ui;
 
-import com.rechpro.persistence.Address;
-import com.rechpro.persistence.Customer;
-
-import javafx.geometry.Insets;
-import javafx.geometry.VPos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import src.com.rechpro.persistence.Address;
+import src.com.rechpro.persistence.Customer;
 
 /**
  * @author kdogan
@@ -39,14 +28,14 @@ public class RechnungArea {
 		customer.setTelefonNumber("017631282828");
 	}
 
-	
+
 
 	public GridPane addGridPane() {
 
 		GridPane grid = new GridPane();
 		BorderPane mainWinBorderPane = new BorderPane();
 		mainWinBorderPane.setPrefSize(700,1000);
-		
+
 		VBox mainWindow = new VBox(20);
 		// ------------Header begin---------------------------//
 		BorderPane header = new BorderPane();
@@ -66,7 +55,7 @@ public class RechnungArea {
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		Line line = new Line(90, 40, 350, 40);
 	    line.setStroke(Color.BLACK);
-		
+
 		miniAdress.getChildren().addAll(sellerAddress, line);
 		centerTop.setTop(miniAdress);
 		// ------------Adress of seller end-------------------//
@@ -80,14 +69,14 @@ public class RechnungArea {
 		String number = customer.getAddress().getNumber().getValue();
 		String postCode = customer.getAddress().getPostCode().getValue();
 		String city = customer.getAddress().getCity().getValue();
-		
+
 		Text custumAdress = new Text(street+" " + number + "\n" + postCode+" "+city);
 		customAndAddress.getChildren().addAll(custumName, custumAdress);
 		centerTop.setLeft(customAndAddress);
-		
+
 		VBox date = new VBox(5);
 		Text dateText = new Text("Datum: 12.12.2014");
-		
+
 		Text customNr = new Text("KundenNr.: " + customer.getId());
 		Text billId = new Text("RechungsNr.: 1234567887");
 		date.getChildren().addAll(dateText, customNr, billId);
@@ -121,7 +110,7 @@ public class RechnungArea {
         table.getColumns().addAll(item, numberOfItem, onePrise, entirePrise);
 
 		centerButtom.setCenter(table);
-		
+
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
 		center.setTop(centerTop);
 		center.setCenter(centerButtom);
@@ -142,7 +131,7 @@ public class RechnungArea {
 
 		mainWinBorderPane.setBottom(footer);
 		// --------- footer end ------------------------------//
-	
+
 		mainWindow.getChildren().addAll(mainWinBorderPane);
 		grid.getChildren().add(mainWindow);
 
