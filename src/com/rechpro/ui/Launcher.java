@@ -24,33 +24,22 @@ public class Launcher extends Application {
 
 		Scene scene = null;
 		try {
-			// Menuleiste
 			MenuLeiste menuLeiste = new MenuLeiste();
-
-			// LefArea
 			LeftArea leftArea = new LeftArea();
-
-			// RightArea
 			RightArea rightArea = new RightArea();
-
-			// CenterPane
 			CenterArea centerArea = new CenterArea();
-
-			// Footer
 			Footer footer = new Footer();
 
 			root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
 
-
 			/**
-			 * TODO HME Temporeary outer Function, mayby comming later
+			 * TODO HME Temporary outer Function, maybe coming later
 			 */
 			//rightArea.getRightArea(root);
 			menuLeiste.getMenu(root);
 			footer.getFooter(root);
 			leftArea.getLeftArea(root);
-			centerArea.getCenterPane(EnumButton.WILLKOMMEN);
-
+			centerArea.loadCenterPane(EnumButton.WILLKOMMEN);
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
