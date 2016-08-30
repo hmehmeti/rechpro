@@ -1,4 +1,4 @@
-package src.com.rechpro.ui;
+package com.rechpro.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

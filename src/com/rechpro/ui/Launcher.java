@@ -1,4 +1,4 @@
-package src.com.rechpro.ui;
+package com.rechpro.ui;
 
 import java.io.IOException;
 

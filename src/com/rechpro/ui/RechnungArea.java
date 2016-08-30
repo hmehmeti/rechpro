@@ -1,4 +1,4 @@
-package src.com.rechpro.ui;
+package com.rechpro.ui;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import src.com.rechpro.persistence.Address;
-import src.com.rechpro.persistence.Customer;
+import com.rechpro.persistence.Address;
+import com.rechpro.persistence.Customer;
 
 /**
  * @author kdogan

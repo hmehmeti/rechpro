@@ -1,9 +1,9 @@
-package src.com.rechpro.ui;
+package com.rechpro.ui;
 
-import src.com.rechpro.persistence.Address;
-import src.com.rechpro.persistence.Customer;
-import src.com.rechpro.ui.EditingCell;
-import src.com.rechpro.ui.IFormRechnung;
+import com.rechpro.persistence.Address;
+import com.rechpro.persistence.Customer;
+import com.rechpro.ui.EditingCell;
+import com.rechpro.ui.IFormRechnung;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

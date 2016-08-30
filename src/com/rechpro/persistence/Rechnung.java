@@ -1,4 +1,4 @@
-package src.com.rechpro.persistence;
+package com.rechpro.persistence;
 
 import java.sql.Date;
 import java.util.List;
