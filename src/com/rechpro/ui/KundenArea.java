@@ -10,7 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -21,6 +23,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -127,9 +131,11 @@ public class KundenArea {
 		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
 		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 
-		final TextField addAddress = new TextField();
+		final Button addAddress = new Button("Addresse eingeben!");
 		addAddress.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
-		addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
+		addAddress.setOnAction(event->showStage());
+		
+		//addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
 
 		final Button addButton = new Button(IFormRechnung.BTN_KUNDEN_ADD);
 
@@ -140,7 +146,7 @@ public class KundenArea {
 				addFirstName.clear();
 				addLastName.clear();
 				addEmail.clear();
-				addAddress.clear();
+				//addAddress.clear();
 			}
 
 			private Address spliteAddressAndGetAddressObj(String addressString) {
@@ -176,5 +182,78 @@ public class KundenArea {
 		vbox.setPadding(new Insets(10, 0, 0, 10));
 		vbox.getChildren().addAll(label, table, hb);
 		return vbox;
+	}
+	
+	public static void showStage(){
+		
+		Stage newStage = new Stage();
+		VBox customWindow = new VBox(10);
+		HBox mainWindow = new HBox();
+		Label customerData = new Label("Kunde Erstellen");
+		customerData.setFont(Font.font ("Roboto", 20));
+		
+		
+		VBox firtsColumn = new VBox(8);
+		Text sex = new Text("Andrede");
+		Text firstName = new Text("Vorname");
+		Text lastName = new Text("Nachname");
+		Text street = new Text("Straﬂe");
+		Text postCodePlaceCountry = new Text("PLZ/Ort/Land");
+		Text phone = new Text("Telefon Nr.");
+		Text mobilePhone = new Text("Handy Nr.");
+		Text fax = new Text("Fax");
+		Text email = new Text("EMail");
+		Text birthday = new Text("Geburtsort");
+		Text bankNo = new Text("Konto Nr.");
+		Text blz = new Text("BLZ");
+		Text iban = new Text("IBAN");
+		Text bicNo = new Text("BIC");
+		firtsColumn.getChildren().addAll(sex, firstName, lastName, street, postCodePlaceCountry, phone, mobilePhone, fax, email, birthday,bankNo, blz, iban, bicNo);
+		setSize(firtsColumn, 16);
+		VBox secondColumn = new VBox(8);
+		for (int i = 0; i < firtsColumn.getChildren().size(); i++){
+			secondColumn.getChildren().add(new Text(" : "));
+		}
+		setSize(secondColumn, 16);
+		VBox thirdColumn = new VBox(3);
+		ChoiceBox sexField = new ChoiceBox(FXCollections.observableArrayList(
+			    "Mann", "Frau", "Firma")
+			);
+		TextField firstNameField = new TextField();
+		TextField lastNameField = new TextField();
+		TextField streetField = new TextField();
+		TextField postCodePlaceCountryField = new TextField();
+		TextField phoneField = new TextField();
+		TextField mobilePhoneField = new TextField();
+		TextField faxField = new TextField();
+		TextField emailField = new TextField();
+		TextField birthdayField = new TextField();
+		TextField bankNoField = new TextField();
+		TextField blzField = new TextField();
+		TextField ibanField = new TextField();
+		TextField bicNoField = new TextField();
+		
+		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetField, postCodePlaceCountryField, phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
+		
+		mainWindow.getChildren().addAll(firtsColumn, secondColumn, thirdColumn);
+		HBox buttons = new HBox(20);
+		Button cancel = new Button("Abbrechen");
+		Button save = new Button("Speichern");
+		buttons.getChildren().addAll(cancel, save);
+		
+		customWindow.getChildren().addAll(customerData, mainWindow, buttons);
+		
+		Scene stageScene = new Scene(customWindow);
+		newStage.setScene(stageScene);
+		newStage.show();
+		}
+
+	private static void setSize(VBox firstColumn, int textSize) {
+		
+		for (int i= 0; i< firstColumn.getChildren().size(); i++){
+			Text text = (Text)firstColumn.getChildren().get(i);
+			text.setFont(Font.font ("Verdana", textSize));
+		}
+			
 	}
 }
