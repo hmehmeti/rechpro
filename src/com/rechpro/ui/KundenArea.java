@@ -188,12 +188,16 @@ public class KundenArea {
 		
 		Stage newStage = new Stage();
 		VBox customWindow = new VBox(10);
+		
 		HBox mainWindow = new HBox();
+		customWindow.setMargin(mainWindow, new Insets(10, 10, 10, 10));
 		Label customerData = new Label("Kunde Erstellen");
+		customWindow.setMargin(customerData, new Insets(10, 10, 10, 10));
 		customerData.setFont(Font.font ("Roboto", 20));
 		
 		
 		VBox firtsColumn = new VBox(8);
+		
 		Text sex = new Text("Andrede");
 		Text firstName = new Text("Vorname");
 		Text lastName = new Text("Nachname");
@@ -209,12 +213,12 @@ public class KundenArea {
 		Text iban = new Text("IBAN");
 		Text bicNo = new Text("BIC");
 		firtsColumn.getChildren().addAll(sex, firstName, lastName, street, postCodePlaceCountry, phone, mobilePhone, fax, email, birthday,bankNo, blz, iban, bicNo);
-		setSize(firtsColumn, 16);
+		setSize(firtsColumn, 15);
 		VBox secondColumn = new VBox(8);
 		for (int i = 0; i < firtsColumn.getChildren().size(); i++){
 			secondColumn.getChildren().add(new Text(" : "));
 		}
-		setSize(secondColumn, 16);
+		setSize(secondColumn, 15);
 		VBox thirdColumn = new VBox(3);
 		ChoiceBox sexField = new ChoiceBox(FXCollections.observableArrayList(
 			    "Mann", "Frau", "Firma")
@@ -222,7 +226,11 @@ public class KundenArea {
 		TextField firstNameField = new TextField();
 		TextField lastNameField = new TextField();
 		TextField streetField = new TextField();
-		TextField postCodePlaceCountryField = new TextField();
+		HBox postCodeCityCountryField = new HBox(2);
+		TextField postCode = new TextField();
+		TextField city = new TextField();
+		TextField country = new TextField();
+		postCodeCityCountryField.getChildren().addAll(postCode, city,country);
 		TextField phoneField = new TextField();
 		TextField mobilePhoneField = new TextField();
 		TextField faxField = new TextField();
@@ -233,13 +241,14 @@ public class KundenArea {
 		TextField ibanField = new TextField();
 		TextField bicNoField = new TextField();
 		
-		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetField, postCodePlaceCountryField, phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
+		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetField, postCodeCityCountryField, phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
 		
 		mainWindow.getChildren().addAll(firtsColumn, secondColumn, thirdColumn);
 		HBox buttons = new HBox(20);
 		Button cancel = new Button("Abbrechen");
 		Button save = new Button("Speichern");
 		buttons.getChildren().addAll(cancel, save);
+		customWindow.setMargin(buttons, new Insets(10, 10, 10, 10));
 		
 		customWindow.getChildren().addAll(customerData, mainWindow, buttons);
 		
@@ -252,7 +261,7 @@ public class KundenArea {
 		
 		for (int i= 0; i< firstColumn.getChildren().size(); i++){
 			Text text = (Text)firstColumn.getChildren().get(i);
-			text.setFont(Font.font ("Verdana", textSize));
+			text.setFont(Font.font ("Roboto", textSize));
 		}
 			
 	}
