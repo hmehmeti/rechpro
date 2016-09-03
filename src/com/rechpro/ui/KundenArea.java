@@ -4,6 +4,7 @@ import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
 import com.rechpro.ui.EditingCell;
 import com.rechpro.ui.IFormRechnung;
+import com.rechpro.worker.StageGenerator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,7 +38,13 @@ public class KundenArea {
 	/**
 	 * TODO HME ist noch zu implementieren
 	 */
+	private StageGenerator stageGenerator;
+	private Stage customerStage;
+	private static Button customerSaveBtn;
+	private static Button customerCancelBtn;
+	VBox customerWindow;
 	public KundenArea() {
+		stageGenerator = new StageGenerator();
 	}
 
 	TableView<Customer> table = new TableView<Customer>();
@@ -131,7 +138,24 @@ public class KundenArea {
 		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, createNewCustomerText);
 		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
 		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
-		createNewCustomerBtn.setOnAction(event->showStage());
+		//Hier wird Stage von Kunde initializiert
+		customerStage = new Stage();
+		customerWindow = stageGenerator.createCustomerStage();
+		customerStage.setScene(new Scene(customerWindow));
+		createNewCustomerBtn.setOnAction(event->customerStage.show());
+		customerSaveBtn = stageGenerator.getCustomerSaveButton();
+		customerCancelBtn = stageGenerator.getCustomerCancelButton();
+		
+		customerSaveBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+		       public void handle(ActionEvent e) {
+		             if(stageGenerator.areMandatoryInputsDone()){
+		            	 //TODO
+		             }
+		        }
+
+			
+		    });
 
 		hb.getChildren().addAll(createNewCustomerBtnAndText);
 		hb.setSpacing(4);
@@ -143,87 +167,8 @@ public class KundenArea {
 		return vbox;
 	}
 	
-	public static void showStage(){
-		
-		Stage newStage = new Stage();
-		VBox customWindow = new VBox(10);
-		
-		HBox mainWindow = new HBox();
-		customWindow.setMargin(mainWindow, new Insets(10, 10, 10, 10));
-		Label customerData = new Label("Kunde Erstellen");
-		customWindow.setMargin(customerData, new Insets(10, 10, 10, 10));
-		customerData.setFont(Font.font ("Roboto", 20));
-		
-		
-		VBox firtsColumn = new VBox(8);
-		
-		Text sex = new Text("Andrede");
-		Text firstName = new Text("Vorname");
-		Text lastName = new Text("Nachname");
-		Text street = new Text("Straﬂe");
-		Text postCodePlaceCountry = new Text("PLZ/Ort/Land");
-		Text phone = new Text("Telefon Nr.");
-		Text mobilePhone = new Text("Handy Nr.");
-		Text fax = new Text("Fax");
-		Text email = new Text("EMail");
-		Text birthday = new Text("Geburtsort");
-		Text bankNo = new Text("Konto Nr.");
-		Text blz = new Text("BLZ");
-		Text iban = new Text("IBAN");
-		Text bicNo = new Text("BIC");
-		firtsColumn.getChildren().addAll(sex, firstName, lastName, street, postCodePlaceCountry, phone, mobilePhone, fax, email, birthday,bankNo, blz, iban, bicNo);
-		setSize(firtsColumn, 15);
-		VBox secondColumn = new VBox(8);
-		for (int i = 0; i < firtsColumn.getChildren().size(); i++){
-			secondColumn.getChildren().add(new Text(" : "));
-		}
-		setSize(secondColumn, 15);
-		VBox thirdColumn = new VBox(3);
-		ChoiceBox sexField = new ChoiceBox(FXCollections.observableArrayList(
-			    "Mann", "Frau", "Firma")
-			);
-		TextField firstNameField = new TextField();
-		TextField lastNameField = new TextField();
-		TextField streetField = new TextField();
-		HBox postCodeCityCountryField = new HBox(2);
-		TextField postCode = new TextField();
-		TextField city = new TextField();
-		TextField country = new TextField();
-		postCodeCityCountryField.getChildren().addAll(postCode, city,country);
-		TextField phoneField = new TextField();
-		TextField mobilePhoneField = new TextField();
-		TextField faxField = new TextField();
-		TextField emailField = new TextField();
-		TextField birthdayField = new TextField();
-		TextField bankNoField = new TextField();
-		TextField blzField = new TextField();
-		TextField ibanField = new TextField();
-		TextField bicNoField = new TextField();
-		
-		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetField, postCodeCityCountryField, phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
-		
-		mainWindow.getChildren().addAll(firtsColumn, secondColumn, thirdColumn);
-		HBox buttons = new HBox(20);
-		Button cancel = new Button("Abbrechen");
-		Button save = new Button("Speichern");
-		buttons.getChildren().addAll(cancel, save);
-		customWindow.setMargin(buttons, new Insets(10, 10, 10, 10));
-		
-		customWindow.getChildren().addAll(customerData, mainWindow, buttons);
-		
-		Scene stageScene = new Scene(customWindow);
-		newStage.setScene(stageScene);
-		newStage.show();
-		}
-
-	private static void setSize(VBox firstColumn, int textSize) {
-		
-		for (int i= 0; i< firstColumn.getChildren().size(); i++){
-			Text text = (Text)firstColumn.getChildren().get(i);
-			text.setFont(Font.font ("Roboto", textSize));
-		}
-			
-	}
+	
+	
 	private ImageView createImageView(String imgPath, int width, int hight) {
 		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
 		ImgView.setFitHeight(hight);
