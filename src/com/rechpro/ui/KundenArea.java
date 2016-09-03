@@ -20,6 +20,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -119,62 +121,19 @@ public class KundenArea {
 		table.setItems(data);
 		table.getColumns().addAll(firstNameCol, lastNameCol, emailCol, addresseCol);
 
-		final TextField addFirstName = new TextField();
-		addFirstName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		addFirstName.setPromptText(IFormRechnung.LBL_FIRST_NAME);
-
-		final TextField addLastName = new TextField();
-		addLastName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		addLastName.setPromptText(IFormRechnung.LBL_LAST_NAME);
-
 		final TextField addEmail = new TextField();
 		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
 		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 
-		final Button addAddress = new Button("Addresse eingeben!");
-		addAddress.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
-		addAddress.setOnAction(event->showStage());
-		
-		//addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
+		VBox createNewCustomerBtnAndText = new VBox(2);
+		Button createNewCustomerBtn = new Button();
+		Text createNewCustomerText = new Text("Erstelle neue Kunde");
+		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, createNewCustomerText);
+		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
+		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
+		createNewCustomerBtn.setOnAction(event->showStage());
 
-		final Button addButton = new Button(IFormRechnung.BTN_KUNDEN_ADD);
-
-		addButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				data.add(new Customer(addFirstName.getText(), addLastName.getText(), addEmail.getText(), spliteAddressAndGetAddressObj(addAddress.getText())));
-				addFirstName.clear();
-				addLastName.clear();
-				addEmail.clear();
-				//addAddress.clear();
-			}
-
-			private Address spliteAddressAndGetAddressObj(String addressString) {
-				String street = "";
-				String no = "";
-				String postCode = "";
-				String country="";
-				String city = "";
-				if (addressString != null || addressString != "") {
-					String[] stringArray = addressString.split("\\s+");
-
-					if(stringArray.length >= 1)
-						street = stringArray[0];
-					if(stringArray.length >= 2)
-						no = stringArray[1];
-					if(stringArray.length >= 3)
-						postCode = stringArray[2];
-					if (stringArray.length >= 4)
-						city = stringArray[3];
-					if (stringArray.length >= 5)
-						country = stringArray[4];
-				}
-				return new Address(street, no, postCode, city, country);
-
-			}
-		});
-
-		hb.getChildren().addAll(addFirstName, addLastName, addEmail, addAddress, addButton);
+		hb.getChildren().addAll(createNewCustomerBtnAndText);
 		hb.setSpacing(4);
 
 		final VBox vbox = new VBox();
@@ -264,5 +223,11 @@ public class KundenArea {
 			text.setFont(Font.font ("Roboto", textSize));
 		}
 			
+	}
+	private ImageView createImageView(String imgPath, int width, int hight) {
+		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
+		ImgView.setFitHeight(hight);
+		ImgView.setFitWidth(width);
+		return ImgView;
 	}
 }
