@@ -1,11 +1,7 @@
 package com.rechpro.persistence;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
-
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 
 /**
  * @author hmehmeti
@@ -21,10 +17,10 @@ public class Rechnung {
 	private Double tax;
 	private Float taxRate;
 	private List<Waren> items;
-	
-	
+
+
 	public Rechnung(long id) {
-		
+
 		this.id = id;
 	}
 

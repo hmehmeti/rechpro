@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.rechpro.persistence;
 
 /**

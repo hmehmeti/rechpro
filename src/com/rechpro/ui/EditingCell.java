@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.rechpro.ui;
 
 import com.rechpro.persistence.Customer;

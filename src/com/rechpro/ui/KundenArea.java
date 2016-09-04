@@ -4,13 +4,16 @@ import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
 import com.rechpro.ui.EditingCell;
 import com.rechpro.ui.IFormRechnung;
+import com.rechpro.worker.StageGenerator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -18,9 +21,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -31,7 +38,13 @@ public class KundenArea {
 	/**
 	 * TODO HME ist noch zu implementieren
 	 */
+	private StageGenerator stageGenerator;
+	private Stage customerStage;
+	private static Button customerSaveBtn;
+	private static Button customerCancelBtn;
+	VBox customerWindow;
 	public KundenArea() {
+		stageGenerator = new StageGenerator();
 	}
 
 	TableView<Customer> table = new TableView<Customer>();
@@ -59,10 +72,10 @@ public class KundenArea {
 			}
 		};
 
-		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME); 
+		TableColumn firstNameCol = new TableColumn(IFormRechnung.LBL_FIRST_NAME);
 		firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName")); 
-		firstNameCol.setCellFactory(cellFactory); 
+		firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName"));
+		firstNameCol.setCellFactory(cellFactory);
 		firstNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -70,9 +83,9 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME); 
-		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20)); 
-		lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName")); 
+		TableColumn lastNameCol = new TableColumn(IFormRechnung.LBL_LAST_NAME);
+		lastNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
+		lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName"));
 		lastNameCol.setCellFactory(cellFactory);
 		lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
@@ -81,10 +94,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL); 
-		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25)); 
-		emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email")); 
-		emailCol.setCellFactory(cellFactory); 
+		TableColumn emailCol = new TableColumn(IFormRechnung.LBL_EMAIL);
+		emailCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email"));
+		emailCol.setCellFactory(cellFactory);
 		emailCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -92,10 +105,10 @@ public class KundenArea {
 			}
 		});
 
-		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE); 
+		TableColumn addresseCol = new TableColumn(IFormRechnung.LBL_ADDRESSE);
 		addresseCol.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
-	    addresseCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("addresse")); 
-	    addresseCol.setCellFactory(cellFactory); 
+	    addresseCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("addresse"));
+	    addresseCol.setCellFactory(cellFactory);
 		addresseCol.setOnEditCommit(new EventHandler<CellEditEvent<Customer, String>>() {
 			@Override
 			public void handle(CellEditEvent<Customer, String> t) {
@@ -115,60 +128,36 @@ public class KundenArea {
 		table.setItems(data);
 		table.getColumns().addAll(firstNameCol, lastNameCol, emailCol, addresseCol);
 
-		final TextField addFirstName = new TextField();
-		addFirstName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		addFirstName.setPromptText(IFormRechnung.LBL_FIRST_NAME);
-		
-		final TextField addLastName = new TextField();
-		addLastName.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-		addLastName.setPromptText(IFormRechnung.LBL_LAST_NAME);
-		
 		final TextField addEmail = new TextField();
 		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
 		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+
+		VBox createNewCustomerBtnAndText = new VBox(2);
+		Button createNewCustomerBtn = new Button();
+		Text createNewCustomerText = new Text("Erstelle neue Kunde");
+		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, createNewCustomerText);
+		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
+		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
+		//Hier wird Stage von Kunde initializiert
+		customerStage = new Stage();
+		customerWindow = stageGenerator.createCustomerStage();
+		customerStage.setScene(new Scene(customerWindow));
+		createNewCustomerBtn.setOnAction(event->customerStage.show());
+		customerSaveBtn = stageGenerator.getCustomerSaveButton();
+		customerCancelBtn = stageGenerator.getCustomerCancelButton();
 		
-		final TextField addAddress = new TextField();
-		addAddress.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
-		addAddress.setPromptText(IFormRechnung.LBL_ADDRESSE);
-
-		final Button addButton = new Button(IFormRechnung.BTN_KUNDEN_ADD);
-
-		addButton.setOnAction(new EventHandler<ActionEvent>() {
+		customerSaveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent e) {
-				data.add(new Customer(addFirstName.getText(), addLastName.getText(), addEmail.getText(), spliteAddressAndGetAddressObj(addAddress.getText())));
-				addFirstName.clear();
-				addLastName.clear();
-				addEmail.clear();
-				addAddress.clear();
-			}
+		       public void handle(ActionEvent e) {
+		             if(stageGenerator.areMandatoryInputsDone()){
+		            	 //TODO
+		             }
+		        }
 
-			private Address spliteAddressAndGetAddressObj(String addressString) {
-				String street = "";
-				String no = "";
-				String postCode = "";
-				String country="";
-				String city = "";
-				if (addressString != null || addressString != "") {
-					String[] stringArray = addressString.split("\\s+");
-					
-					if(stringArray.length >= 1)
-						street = stringArray[0];
-					if(stringArray.length >= 2)
-						no = stringArray[1];
-					if(stringArray.length >= 3)
-						postCode = stringArray[2];
-					if (stringArray.length >= 4)
-						city = stringArray[3];
-					if (stringArray.length >= 5)
-						country = stringArray[4];
-				}
-				return new Address(street, no, postCode, city, country);
-				
-			}
-		});
+			
+		    });
 
-		hb.getChildren().addAll(addFirstName, addLastName, addEmail, addAddress, addButton);
+		hb.getChildren().addAll(createNewCustomerBtnAndText);
 		hb.setSpacing(4);
 
 		final VBox vbox = new VBox();
@@ -176,5 +165,14 @@ public class KundenArea {
 		vbox.setPadding(new Insets(10, 0, 0, 10));
 		vbox.getChildren().addAll(label, table, hb);
 		return vbox;
+	}
+	
+	
+	
+	private ImageView createImageView(String imgPath, int width, int hight) {
+		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
+		ImgView.setFitHeight(hight);
+		ImgView.setFitWidth(width);
+		return ImgView;
 	}
 }
