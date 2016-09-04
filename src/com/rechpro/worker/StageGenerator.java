@@ -19,6 +19,8 @@ public class StageGenerator {
 	private static Button customerSaveBtn;
 	private static Button customerCancelBtn;
 	private static VBox customWindow;
+	private String invalidTextFildCSS = "-fx-border-color: red;";
+	private String validTextFieldCSS = "-fx-border-color: #DCDCDC;";
 
 	public static VBox createCustomerStage() {
 
@@ -116,19 +118,76 @@ public class StageGenerator {
 		HBox mainWindow = (HBox) customWindow.getChildren().get(1);
 		VBox thirdColumn = (VBox) mainWindow.getChildren().get(2);
 		ChoiceBox<String> sexField = (ChoiceBox<String>) thirdColumn.getChildren().get(0);
+		TextField firstNameField = (TextField) thirdColumn.getChildren().get(1);
+		TextField streetField = (TextField) thirdColumn.getChildren().get(2);
+		HBox plzCityLand = (HBox) thirdColumn.getChildren().get(4);
+		TextField plz = (TextField) plzCityLand.getChildren().get(0);
+		TextField city = (TextField) plzCityLand.getChildren().get(1);
+		TextField country = (TextField) plzCityLand.getChildren().get(2);
+		boolean returnValue = true;
+		TextField bankNo = (TextField) thirdColumn.getChildren().get(9);
+		TextField blz = (TextField) thirdColumn.getChildren().get(10);
+		
 		if(sexField.getSelectionModel().isEmpty() || sexField.getSelectionModel().equals(null)){
-			return false;
+			firstNameField.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			//TODO maybe it should set on default
+			sexField.setStyle(validTextFieldCSS);
 		}
-		return true;
+		if(firstNameField.getText().isEmpty() || firstNameField.getText().equals(null)){
+			firstNameField.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			//TODO maybe it should set on default
+			firstNameField.setStyle(validTextFieldCSS);
+		}
+		if(streetField.getText().isEmpty() || streetField.getText().equals(null)){
+			streetField.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			streetField.setStyle(validTextFieldCSS);
+		}
+		if(plz.getText().isEmpty() || plz.getText().equals(null)){
+			plz.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			plz.setStyle(validTextFieldCSS);
+		}
+		if(city.getText().isEmpty() || city.getText().equals(null)){
+			city.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			city.setStyle(validTextFieldCSS);
+		}
+		if(country.getText().isEmpty() || country.getText().equals(null)){
+			country.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			country.setStyle(validTextFieldCSS);
+		}
+		if(bankNo.getText().isEmpty() || bankNo.getText().equals(null)){
+			bankNo.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			bankNo.setStyle(validTextFieldCSS);
+		}
+		if(blz.getText().isEmpty() || blz.getText().equals(null)){
+			blz.setStyle(invalidTextFildCSS);
+			returnValue = false;
+		}else{
+			blz.setStyle(validTextFieldCSS);
+		}
+		return returnValue;
 	}
 	
-	private Popup createPopup() {
-	    final Popup popup = new Popup();
-	    popup.setAutoHide(true);
-	    popup.setX(300);
-	    popup.setY(200);
-	    popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
-	    return popup;
-	}
+//	private Popup createPopup() {
+//	    final Popup popup = new Popup();
+//	    popup.setAutoHide(true);
+//	    popup.setX(300);
+//	    popup.setY(200);
+//	    popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
+//	    return popup;
+//	}
 	 
 }
