@@ -1,9 +1,18 @@
 package com.rechpro.ui;
 
+import java.io.IOException;
+
+import com.rechpro.worker.CustomController;
+
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 public class CenterArea {
 
@@ -37,7 +46,16 @@ public class CenterArea {
 		case KUNDEN:
 			stackPane = new StackPane();
 			stackPane.setAlignment(Pos.CENTER);
-			stackPane.getChildren().addAll(new KundenArea().getTableViewKunde());
+			//stackPane.getChildren().addAll(new KundenArea().getTableViewKunde());
+			
+			try {
+				AnchorPane customerTableView = (AnchorPane) FXMLLoader.load(getClass().getResource("/resources/customTable.fxml"));
+				stackPane.getChildren().addAll(customerTableView);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 
 			break;
 		default:

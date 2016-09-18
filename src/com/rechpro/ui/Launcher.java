@@ -30,8 +30,8 @@ public class Launcher extends Application {
 			CenterArea centerArea = new CenterArea();
 			Footer footer = new Footer();
 
-			root = (BorderPane) FXMLLoader.load(getClass().getResource("RechProjFXML.fxml"));
-
+			root = (BorderPane) FXMLLoader.load(getClass().getResource("/resources/RechProjFXML.fxml"));
+		       
 			/**
 			 * TODO HME Temporary outer Function, maybe coming later
 			 */
