@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
+import com.rechpro.worker.TestCustomers;
 
 /**
  * @author kdogan
@@ -21,11 +22,10 @@ import com.rechpro.persistence.Customer;
  **/
 public class RechnungArea {
 
-	private Address address = new Address("Goetherstr", "23",  "73888", "Stuttgart", "Deutschland");
-	private Customer customer = new Customer("Hasan", "Mehmeti", "hasan.mehmeti@gmail.com", address);
+	private Customer customer = new TestCustomers().getUser1();
 	public RechnungArea() {
 
-		customer.setTelefonNumber("017631282828");
+		//customer.setTelefonNumber("017631282828");
 	}
 
 
@@ -62,13 +62,13 @@ public class RechnungArea {
 
 		// ------- third row address of customer (left) date and id of bill (right) -----//
 		VBox customAndAddress = new VBox(5);
-		String customName = customer.getFirstName() + customer.getLastName();
+		String customName = customer.getFirstName().get() + customer.getLastName().get();
 		Text custumName = new Text(customName);
 		//TODO: hier muss die Adresse nachdem Hausnummer in zweite Zeile geschrieben werden
-		String street = customer.getAddress().getStreet().getValue();
-		String number = customer.getAddress().getNumber().getValue();
-		String postCode = customer.getAddress().getPostCode().getValue();
-		String city = customer.getAddress().getCity().getValue();
+		String street = customer.getStreet().get();
+		String number = customer.getNo().get();
+		String postCode = customer.getPostCode().get();
+		String city = customer.getCity().get();
 
 		Text custumAdress = new Text(street+" " + number + "\n" + postCode+" "+city);
 		customAndAddress.getChildren().addAll(custumName, custumAdress);
@@ -77,7 +77,7 @@ public class RechnungArea {
 		VBox date = new VBox(5);
 		Text dateText = new Text("Datum: 12.12.2014");
 
-		Text customNr = new Text("KundenNr.: " + customer.getId());
+		Text customNr = new Text("KundenNr.: " + customer.getId().get());
 		Text billId = new Text("RechungsNr.: 1234567887");
 		date.getChildren().addAll(dateText, customNr, billId);
 
