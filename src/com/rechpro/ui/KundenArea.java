@@ -1,41 +1,27 @@
 package com.rechpro.ui;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
-import com.rechpro.persistence.Address;
 import com.rechpro.persistence.Customer;
-import com.rechpro.ui.EditingCell;
-import com.rechpro.ui.IFormRechnung;
 import com.rechpro.worker.TestCustomers;
 import com.rechpro.worker.UserParameters;
 import com.rechpro.worker.VBoxGenerator;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
  * @author hmehmeti
@@ -47,34 +33,35 @@ public class KundenArea {
 	private Stage customerStage;
 	private static Button customerSaveBtn;
 	private static Button customerCancelBtn;
-	VBox customerWindow;
+	VBox customCreateWindow;
 	TestCustomers testCustomers = new TestCustomers();
 	final HBox hb = new HBox();
-	TableView<Customer> table = new TableView<Customer>();
+	StackPane stackPane = new StackPane();
 	
 	public KundenArea() {
 		vBoxGenerator = new VBoxGenerator();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonTable.fxml"));
+		try {
+			AnchorPane page = (AnchorPane) loader.load();
+			stackPane.getChildren().add(page);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-
 	protected VBox getTableViewKunde() {
-		final Label label = new Label(IFormRechnung.LBL_TABLE_ADDRESS_CUSTOMERS);
-		label.setFont(new Font("Arial", 20));
+		final VBox vbox = new VBox(2);
 
-		final TextField addEmail = new TextField();
-		addEmail.setPromptText(IFormRechnung.LBL_EMAIL);
-		addEmail.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-
+		// Button and Text to create new customer
 		VBox createNewCustomerBtnAndText = new VBox(2);
-		Button createNewCustomerBtn = new Button();
+		Button createNewCustomerBtn = getNewCustomerCreatButtonWithText();
 		Text createNewCustomerText = new Text("Erstelle neue Kunde");
 		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, createNewCustomerText);
-		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
-		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
-		//Hier wird Stage von Kunde initializiert
+		
+		// new window if createNewCustomerButton is clicked
 		customerStage = new Stage();
-		customerWindow = vBoxGenerator.createVBox();
-		customerStage.setScene(new Scene(customerWindow));
+		customCreateWindow = vBoxGenerator.createVBox();
+		customerStage.setScene(new Scene(customCreateWindow));
 		createNewCustomerBtn.setOnAction(event->customerStage.show());
 		customerSaveBtn = vBoxGenerator.getCustomerSaveButton();
 		customerCancelBtn = vBoxGenerator.getCustomerCancelButton();
@@ -83,19 +70,23 @@ public class KundenArea {
 			@Override
 		       public void handle(ActionEvent e) {
 		             if(vBoxGenerator.areMandatoryInputsDone()){
-		            	 customPersistor(customerWindow);
+		            	 customPersistor(customCreateWindow);
 		             }
 		        }
 		    });
 
-		hb.getChildren().addAll(createNewCustomerBtnAndText);
-		hb.setSpacing(4);
-
-		final VBox vbox = new VBox();
 		vbox.setSpacing(5);
 		vbox.setPadding(new Insets(10, 0, 0, 10));
-		vbox.getChildren().addAll(label, table, hb);
+		vbox.getChildren().addAll(stackPane,createNewCustomerBtnAndText);
 		return vbox;
+	}
+	
+	private Button getNewCustomerCreatButtonWithText(){
+		
+		Button createNewCustomerBtn = new Button();
+		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
+		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
+		return createNewCustomerBtn;
 	}
 	
 	/**
@@ -120,7 +111,7 @@ public class KundenArea {
 		customParameterList.put(UserParameters.BLZ ,vBoxGenerator.getBlzField().getText());
 		customParameterList.put(UserParameters.IBAN ,vBoxGenerator.getIbanField().getText());
 		customParameterList.put(UserParameters.BIC_NO ,vBoxGenerator.getBicNoField().getText());
-		
+		//TODO here should insert to DB
 		Customer custom = new Customer(customParameterList);
 	}
 	

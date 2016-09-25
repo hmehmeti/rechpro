@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 /**
  * View-Controller for the person table.
  * 
- * @author Marco Jakob
+ * @author Kamuran Dogan
  */
 public class PersonTableController {
 	
@@ -37,7 +37,12 @@ public class PersonTableController {
 	 * Just add some sample data in the constructor.
 	 */
 	public PersonTableController() {
+		fetchCustomersFromDatabase();
+	}
+
+	private void fetchCustomersFromDatabase() {
 		TestCustomers customerGen = new TestCustomers();
+		//TODO hier musst ein Thread gestartet werden. In dieser thread musst ein while (true) gestartet
 		masterData.add(customerGen.getUser1());
 		masterData.add(customerGen.getUser2());
 		masterData.add(customerGen.getUser3());
