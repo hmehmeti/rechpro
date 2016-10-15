@@ -43,7 +43,7 @@ public class Launcher extends Application {
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setTitle("BorderPane Example");
+			primaryStage.setTitle("RechPro");
 			primaryStage.setScene(scene);
 
 			// TODO KDO: here close previous window before open new
