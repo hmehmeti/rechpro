@@ -3,13 +3,11 @@ package com.rechpro.ui;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.rechpro.persistence.Customer;
+import com.rechpro.worker.CustomerController;
 import com.rechpro.worker.TestCustomers;
 import com.rechpro.worker.UserParameters;
 import com.rechpro.worker.VBoxGenerator;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -33,12 +31,14 @@ public class KundenArea {
 	private Stage customerStage;
 	private static Button customerSaveBtn;
 	private static Button customerCancelBtn;
-	VBox customCreateWindow;
 	TestCustomers testCustomers = new TestCustomers();
 	final HBox hb = new HBox();
 	StackPane stackPane = new StackPane();
 	
+	private CustomerController customController;
+	
 	public KundenArea() {
+		customController = new CustomerController();
 		vBoxGenerator = new VBoxGenerator();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonTable.fxml"));
 		try {
@@ -60,20 +60,12 @@ public class KundenArea {
 		
 		// new window if createNewCustomerButton is clicked
 		customerStage = new Stage();
-		customCreateWindow = vBoxGenerator.createVBox();
+		VBox customCreateWindow = vBoxGenerator.createVBox();
 		customerStage.setScene(new Scene(customCreateWindow));
 		createNewCustomerBtn.setOnAction(event->customerStage.show());
 		customerSaveBtn = vBoxGenerator.getCustomerSaveButton();
 		customerCancelBtn = vBoxGenerator.getCustomerCancelButton();
-		
-		customerSaveBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-		       public void handle(ActionEvent e) {
-		             if(vBoxGenerator.areMandatoryInputsDone()){
-		            	 customPersistor(customCreateWindow);
-		             }
-		        }
-		    });
+		customerSaveBtn.setOnAction(event->checkMandatoryFieldAndSaveCustomer());
 
 		vbox.setSpacing(5);
 		vbox.setPadding(new Insets(10, 0, 0, 10));
@@ -81,6 +73,14 @@ public class KundenArea {
 		return vbox;
 	}
 	
+	private void checkMandatoryFieldAndSaveCustomer() {
+		if(vBoxGenerator.areMandatoryInputsDone()){
+       	 transformAndPersist();
+        } else {
+        	System.out.println("Obligatorische Felder sind nicht eingegeben");
+        }
+	}
+
 	private Button getNewCustomerCreatButtonWithText(){
 		
 		Button createNewCustomerBtn = new Button();
@@ -88,12 +88,8 @@ public class KundenArea {
 		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
 		return createNewCustomerBtn;
 	}
-	
-	/**
-	 * create a custom and save in database
-	 * @param customerWindow2
-	 */
-	private void customPersistor(VBox customWindow) {
+
+	private void transformAndPersist() {
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
 		customParameterList.put(UserParameters.SEX, vBoxGenerator.getSexField());
 		customParameterList.put(UserParameters.FIRSTNAME ,vBoxGenerator.getFirstNameField().getText());
@@ -111,8 +107,8 @@ public class KundenArea {
 		customParameterList.put(UserParameters.BLZ ,vBoxGenerator.getBlzField().getText());
 		customParameterList.put(UserParameters.IBAN ,vBoxGenerator.getIbanField().getText());
 		customParameterList.put(UserParameters.BIC_NO ,vBoxGenerator.getBicNoField().getText());
-		//TODO here should insert to DB
-		Customer custom = new Customer(customParameterList);
+		
+		customController.transformAndPersist(customParameterList);
 	}
 	
 	private ImageView createImageView(String imgPath, int width, int hight) {

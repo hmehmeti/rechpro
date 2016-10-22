@@ -1,16 +1,16 @@
-package com.rechpro.persistence;
+package com.rechpro.viewmodel;
 
 /**
  * @author hmehmeti
  * Einstellung Object for DBPersistence
  *
  */
-public class Einstellung {
+public class Settings {
 
 	/**
 	 * TODO HME
 	 */
-	public Einstellung() {
+	public Settings() {
 	}
 
 }

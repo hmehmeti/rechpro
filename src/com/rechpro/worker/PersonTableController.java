@@ -1,6 +1,6 @@
 package com.rechpro.worker;
 
-import com.rechpro.persistence.Customer;
+import com.rechpro.viewmodel.CustomerViewModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,25 +22,25 @@ public class PersonTableController {
 	@FXML
 	private TextField filterField;
 	@FXML
-	private TableView<Customer> personTable;
+	private TableView<CustomerViewModel> personTable;
 	@FXML
-	private TableColumn<Customer, String> customerId;
+	private TableColumn<CustomerViewModel, String> customerId;
 	@FXML
-	private TableColumn<Customer, String> firstNameColumn;
+	private TableColumn<CustomerViewModel, String> firstNameColumn;
 	
 	@FXML
-	private TableColumn<Customer, String> lastNameColumn;
+	private TableColumn<CustomerViewModel, String> lastNameColumn;
 
-	private ObservableList<Customer> masterData = FXCollections.observableArrayList();
+	private ObservableList<CustomerViewModel> masterData = FXCollections.observableArrayList();
 
 	/**
 	 * Just add some sample data in the constructor.
 	 */
 	public PersonTableController() {
-		fetchCustomersFromDatabase();
+		fetchCustomerViewModelsFromDatabase();
 	}
 
-	private void fetchCustomersFromDatabase() {
+	private void fetchCustomerViewModelsFromDatabase() {
 		TestCustomers customerGen = new TestCustomers();
 		//TODO hier musst ein Thread gestartet werden. In dieser thread musst ein while (true) gestartet
 		masterData.add(customerGen.getUser1());
@@ -57,12 +57,12 @@ public class PersonTableController {
 	@FXML
 	private void initialize() {
 		// 0. Initialize the columns.
-		customerId.setCellValueFactory(cellData -> cellData.getValue().getId());
+		customerId.setCellValueFactory(cellData -> cellData.getValue().getCustomerId());
 		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getFirstName());
 		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLastName());
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		FilteredList<Customer> filteredData = new FilteredList<>(masterData, p -> true);
+		FilteredList<CustomerViewModel> filteredData = new FilteredList<>(masterData, p -> true);
 		
 		// 2. Set the filter Predicate whenever the filter changes.
 		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -77,7 +77,7 @@ public class PersonTableController {
 				
 				if (person.getFirstName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true; // Filter matches first name.
-				} else if (person.getId().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				} else if (person.getCustomerId().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true; // Filter matches last name.
 				} else if (person.getLastName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true; // Filter matches last name.
@@ -87,7 +87,7 @@ public class PersonTableController {
 		});
 		
 		// 3. Wrap the FilteredList in a SortedList. 
-		SortedList<Customer> sortedData = new SortedList<>(filteredData);
+		SortedList<CustomerViewModel> sortedData = new SortedList<>(filteredData);
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		// 	  Otherwise, sorting the TableView would have no effect.

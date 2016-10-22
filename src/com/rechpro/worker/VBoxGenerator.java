@@ -193,7 +193,7 @@ public class VBoxGenerator {
 	}
 
 	public String getSexField() {
-		return sexField.getSelectionModel().toString();
+		return sexField.getSelectionModel().getSelectedItem();
 	}
 
 	public TextField getFirstNameField() {

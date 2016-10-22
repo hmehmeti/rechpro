@@ -1,8 +1,12 @@
 package com.rechpro.worker;
 
 import java.io.IOException;
+import java.util.HashMap;
 
-import com.rechpro.persistence.Customer;
+import com.rechpro.entity.Customer;
+import com.rechpro.persistence.CustomerDBService;
+import com.rechpro.transformer.CustomerTransformer;
+import com.rechpro.viewmodel.CustomerViewModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,23 +22,26 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class CustomController {
+public class CustomerController {
 
     @FXML
     private TextField filterField;
     @FXML
-    private TableView<Customer> customerTable;
+    private TableView<CustomerViewModel> customerTable;
     @FXML
-    private TableColumn<Customer, String> customerId;
+    private TableColumn<CustomerViewModel, String> customerId;
     @FXML
-    private TableColumn<Customer, String> customerName;
+    private TableColumn<CustomerViewModel, String> customerName;
     @FXML
-    private TableColumn<Customer, String> customerAddress;
+    private TableColumn<CustomerViewModel, String> customerAddress;
     
-    private ObservableList<Customer> masterData = FXCollections.observableArrayList();
+    private ObservableList<CustomerViewModel> masterData = FXCollections.observableArrayList();
 	
-	public CustomController() {
-//		customerTable = new TableView<Customer>();
+	private CustomerTransformer transformer;
+	private CustomerDBService dbService;
+
+	public CustomerController() {
+//		customerTable = new TableView<CustomerViewModel>();
 //		customerId = new TableColumn<>();
 //		customerName = new TableColumn<>();
 //		customerAddress = new TableColumn<>();
@@ -42,6 +49,9 @@ public class CustomController {
 		TestCustomers customersGenerator = new TestCustomers();
         masterData.add(customersGenerator.getUser1());
         masterData.add(customersGenerator.getUser2());
+        
+        transformer = new CustomerTransformer();
+        dbService = new CustomerDBService();
 	}
 	
 	/**
@@ -53,12 +63,12 @@ public class CustomController {
 	@FXML
 	private void initialize() {
 		// 0. Initialize the columns.
-		customerId.setCellValueFactory(cellData -> cellData.getValue().getId());
+		customerId.setCellValueFactory(cellData -> cellData.getValue().getCustomerId());
 		customerName.setCellValueFactory(cellData -> cellData.getValue().getFirstName());
 		customerAddress.setCellValueFactory(cellData -> cellData.getValue().getAddress());
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		FilteredList<Customer> filteredData = new FilteredList<>(masterData, p -> true);
+		FilteredList<CustomerViewModel> filteredData = new FilteredList<>(masterData, p -> true);
 		
 		// 2. Set the filter Predicate whenever the filter changes.
 		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -71,7 +81,7 @@ public class CustomController {
 				// Compare first name and last name of every person with filter text.
 				String lowerCaseFilter = newValue.toLowerCase();
 				
-				if (customer.getId().get().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				if (customer.getCustomerId().get().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true; // Filter matches first name.
 				} else if (customer.getFirstName().get().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true; // Filter matches last name.
@@ -83,7 +93,7 @@ public class CustomController {
 		});
     
 		// 3. Wrap the FilteredList in a SortedList. 
-		SortedList<Customer> sortedData = new SortedList<>(filteredData);
+		SortedList<CustomerViewModel> sortedData = new SortedList<>(filteredData);
 				
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		// 	  Otherwise, sorting the TableView would have no effect.
@@ -91,6 +101,11 @@ public class CustomController {
 				
 		// 5. Add sorted (and filtered) data to the table.
 		customerTable.setItems(sortedData);
+	}
+
+	public void transformAndPersist(HashMap<Enum, String> customParameterList) {
+		Customer customer = transformer.entityFromParameterList(customParameterList);
+		dbService.addCustomer(customer);
 	}
 
 }
