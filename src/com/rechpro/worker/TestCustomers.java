@@ -2,11 +2,12 @@ package com.rechpro.worker;
 
 import java.util.HashMap;
 
-import com.rechpro.persistence.Customer;
+import com.rechpro.entity.Customer;
+import com.rechpro.viewmodel.CustomerViewModel;
 
 public class TestCustomers {
 
-	public Customer getUser1(){
+	public CustomerViewModel getUser1(){
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
 		customParameterList.put(UserParameters.ID, "12345678");
 		customParameterList.put(UserParameters.SEX, "Herr");
@@ -27,11 +28,11 @@ public class TestCustomers {
 		customParameterList.put(UserParameters.IBAN ,"DE 89384958393");
 		customParameterList.put(UserParameters.BIC_NO ,"");
 		
-		Customer custom = new Customer(customParameterList);
+		CustomerViewModel custom = new CustomerViewModel(customParameterList);
 		return custom;
 	}
 	
-	public Customer getUser2(){
+	public CustomerViewModel getUser2(){
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
 		customParameterList.put(UserParameters.ID, "888779678");
 		customParameterList.put(UserParameters.SEX, "Frau");
@@ -52,11 +53,11 @@ public class TestCustomers {
 		customParameterList.put(UserParameters.IBAN ,"DE 89384958393");
 		customParameterList.put(UserParameters.BIC_NO ,"656556");
 		
-		Customer custom = new Customer(customParameterList);
+		CustomerViewModel custom = new CustomerViewModel(customParameterList);
 		return custom;
 	}
 	
-	public Customer getUser3(){
+	public CustomerViewModel getUser3(){
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
 		customParameterList.put(UserParameters.ID, "888771111");
 		customParameterList.put(UserParameters.SEX, "Frau");
@@ -77,7 +78,7 @@ public class TestCustomers {
 		customParameterList.put(UserParameters.IBAN ,"DE 89384958393");
 		customParameterList.put(UserParameters.BIC_NO ,"656556");
 		
-		Customer custom = new Customer(customParameterList);
+		CustomerViewModel custom = new CustomerViewModel(customParameterList);
 		return custom;
 	}
 }

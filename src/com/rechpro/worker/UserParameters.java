@@ -3,6 +3,7 @@ package com.rechpro.worker;
 public enum UserParameters {
 
 	ID,
+	CUSTOMERID,
 	SEX,
 	FIRSTNAME,
 	LASTNAME,

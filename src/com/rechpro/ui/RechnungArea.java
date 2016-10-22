@@ -12,8 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import com.rechpro.persistence.Address;
-import com.rechpro.persistence.Customer;
+
+import com.rechpro.viewmodel.Address;
+import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.TestCustomers;
 
 /**
@@ -22,10 +23,10 @@ import com.rechpro.worker.TestCustomers;
  **/
 public class RechnungArea {
 
-	private Customer customer = new TestCustomers().getUser1();
+	private CustomerViewModel CustomerViewModel = new TestCustomers().getUser1();
 	public RechnungArea() {
 
-		//customer.setTelefonNumber("017631282828");
+		//CustomerViewModel.setTelefonNumber("017631282828");
 	}
 
 
@@ -60,15 +61,15 @@ public class RechnungArea {
 		centerTop.setTop(miniAdress);
 		// ------------Adress of seller end-------------------//
 
-		// ------- third row address of customer (left) date and id of bill (right) -----//
+		// ------- third row address of CustomerViewModel (left) date and id of bill (right) -----//
 		VBox customAndAddress = new VBox(5);
-		String customName = customer.getFirstName().get() + customer.getLastName().get();
+		String customName = CustomerViewModel.getFirstName().get() + CustomerViewModel.getLastName().get();
 		Text custumName = new Text(customName);
 		//TODO: hier muss die Adresse nachdem Hausnummer in zweite Zeile geschrieben werden
-		String street = customer.getStreet().get();
-		String number = customer.getNo().get();
-		String postCode = customer.getPostCode().get();
-		String city = customer.getCity().get();
+		String street = CustomerViewModel.getStreet().get();
+		String number = CustomerViewModel.getNo().get();
+		String postCode = CustomerViewModel.getPostCode().get();
+		String city = CustomerViewModel.getCity().get();
 
 		Text custumAdress = new Text(street+" " + number + "\n" + postCode+" "+city);
 		customAndAddress.getChildren().addAll(custumName, custumAdress);
@@ -77,14 +78,14 @@ public class RechnungArea {
 		VBox date = new VBox(5);
 		Text dateText = new Text("Datum: 12.12.2014");
 
-		Text customNr = new Text("KundenNr.: " + customer.getId().get());
+		Text customNr = new Text("KundenNr.: " + CustomerViewModel.getCustomerId().get());
 		Text billId = new Text("RechungsNr.: 1234567887");
 		date.getChildren().addAll(dateText, customNr, billId);
 
 		centerTop.setRight(date);
 		//customAndDate.getChildren().addAll(customAndAddress, date);
 
-		// ------- third row address of customer (left) date and id of bill (right) end-----//
+		// ------- third row address of CustomerViewModel (left) date and id of bill (right) end-----//
 
 		// ------ text Rechung --------------------------------//
 		VBox billHBox = new VBox();
@@ -99,13 +100,13 @@ public class RechnungArea {
 		// -------- list of items -----------------------------//
 		TableView table = new TableView();
 		BorderPane centerButtom = new BorderPane();
-		TableColumn<Customer,String> item = new TableColumn<Customer,String>("Artikel");
+		TableColumn<CustomerViewModel,String> item = new TableColumn<CustomerViewModel,String>("Artikel");
 		item.prefWidthProperty().bind(table.widthProperty().multiply(0.50));
-        TableColumn<Customer,Integer> numberOfItem = new TableColumn<Customer,Integer>("Anzahl");
+        TableColumn<CustomerViewModel,Integer> numberOfItem = new TableColumn<CustomerViewModel,Integer>("Anzahl");
         numberOfItem.prefWidthProperty().bind(table.widthProperty().multiply(0.10));
-        TableColumn<Customer,Double> onePrise = new TableColumn<Customer,Double>("Einzel Preis");
+        TableColumn<CustomerViewModel,Double> onePrise = new TableColumn<CustomerViewModel,Double>("Einzel Preis");
         onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-        TableColumn<Customer,Double> entirePrise = new TableColumn<Customer,Double>("Gesamt Preis");
+        TableColumn<CustomerViewModel,Double> entirePrise = new TableColumn<CustomerViewModel,Double>("Gesamt Preis");
         entirePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
         table.getColumns().addAll(item, numberOfItem, onePrise, entirePrise);
 
