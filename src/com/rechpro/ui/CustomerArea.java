@@ -83,7 +83,7 @@ public class CustomerArea {
 	private Button getNewCustomerCreatButtonWithText(){
 		
 		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(createImageView("../img/create_new_customer.png", 40, 40));
+		createNewCustomerBtn.setGraphic(createImageView("../img/addNewCustomerBtn.png", 40, 40));
 		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
 		return createNewCustomerBtn;
 	}
