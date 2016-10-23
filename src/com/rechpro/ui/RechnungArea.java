@@ -13,20 +13,29 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
+import com.rechpro.entity.Customer;
+import com.rechpro.persistence.CustomerDBService;
+import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.Address;
 import com.rechpro.viewmodel.CustomerViewModel;
-import com.rechpro.worker.TestCustomers;
 
 /**
  * @author kdogan
  * @email kamuran1905@yahoo.de
  **/
 public class RechnungArea {
+	private CustomerTransformer transformer;
+	private CustomerDBService dbService;
 
-	private CustomerViewModel CustomerViewModel = new TestCustomers().getUser1();
+	private CustomerViewModel customerViewModel;
 	public RechnungArea() {
 
-		//CustomerViewModel.setTelefonNumber("017631282828");
+		transformer = new CustomerTransformer();
+        dbService = new CustomerDBService();
+        ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getCustomers();
+        customerViewModel = transformer.entityToViewModel(customers.get(0));
 	}
 
 
@@ -63,13 +72,13 @@ public class RechnungArea {
 
 		// ------- third row address of CustomerViewModel (left) date and id of bill (right) -----//
 		VBox customAndAddress = new VBox(5);
-		String customName = CustomerViewModel.getFirstName().get() + CustomerViewModel.getLastName().get();
+		String customName = customerViewModel.getFirstName().get() + customerViewModel.getLastName().get();
 		Text custumName = new Text(customName);
 		//TODO: hier muss die Adresse nachdem Hausnummer in zweite Zeile geschrieben werden
-		String street = CustomerViewModel.getStreet().get();
-		String number = CustomerViewModel.getNo().get();
-		String postCode = CustomerViewModel.getPostCode().get();
-		String city = CustomerViewModel.getCity().get();
+		String street = customerViewModel.getStreet().get();
+		String number = customerViewModel.getNo().get();
+		String postCode = customerViewModel.getPostCode().get();
+		String city = customerViewModel.getCity().get();
 
 		Text custumAdress = new Text(street+" " + number + "\n" + postCode+" "+city);
 		customAndAddress.getChildren().addAll(custumName, custumAdress);
@@ -78,7 +87,7 @@ public class RechnungArea {
 		VBox date = new VBox(5);
 		Text dateText = new Text("Datum: 12.12.2014");
 
-		Text customNr = new Text("KundenNr.: " + CustomerViewModel.getCustomerId().get());
+		Text customNr = new Text("KundenNr.: " + customerViewModel.getCustomerId().get());
 		Text billId = new Text("RechungsNr.: 1234567887");
 		date.getChildren().addAll(dateText, customNr, billId);
 

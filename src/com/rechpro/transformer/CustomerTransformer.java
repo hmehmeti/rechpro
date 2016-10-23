@@ -1,6 +1,8 @@
 package com.rechpro.transformer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.rechpro.entity.Customer;
 import com.rechpro.viewmodel.CustomerViewModel;
@@ -11,7 +13,7 @@ public class CustomerTransformer {
 	
 	public CustomerViewModel entityToViewModel(Customer customer) {
 		CustomerViewModel customerVM = new CustomerViewModel();
-		
+		customerVM.setCustomerId(new SimpleStringProperty(Integer.toString(customer.getId())));
 		customerVM.setSex(new SimpleStringProperty(customer.getSex()));
 		customerVM.setFirstName(new SimpleStringProperty(customer.getFirstName()));
 		customerVM.setLastName(new SimpleStringProperty(customer.getLastName()));
@@ -35,6 +37,14 @@ public class CustomerTransformer {
 	
 	public Customer entityFromParameterList(HashMap<Enum, String> customParameterList) {
 		return new Customer(customParameterList);
+	}
+
+	public List<CustomerViewModel> convertAndGetAllCustomer(List<Customer> customers) {
+		List<CustomerViewModel> list = new ArrayList<CustomerViewModel>();
+		for (Customer customer : customers) {
+			list.add(entityToViewModel(customer));
+		}
+		return list;
 	}
 
 }

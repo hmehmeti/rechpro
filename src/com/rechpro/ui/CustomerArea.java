@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.rechpro.worker.CustomerController;
-import com.rechpro.worker.TestCustomers;
 import com.rechpro.worker.UserParameters;
 import com.rechpro.worker.VBoxGenerator;
 
@@ -31,7 +30,6 @@ public class CustomerArea {
 	private Stage customerStage;
 	private static Button customerSaveBtn;
 	private static Button customerCancelBtn;
-	TestCustomers testCustomers = new TestCustomers();
 	final HBox hb = new HBox();
 	StackPane stackPane = new StackPane();
 	
@@ -50,7 +48,7 @@ public class CustomerArea {
 	}
 
 	protected VBox getTableViewKunde() {
-		final VBox vbox = new VBox(2);
+		final VBox customerArea = new VBox(2);
 
 		// Button and Text to create new customer
 		VBox createNewCustomerBtnAndText = new VBox(2);
@@ -68,10 +66,10 @@ public class CustomerArea {
 		customerSaveBtn.setOnAction(event->checkMandatoryFieldAndSaveCustomer());
 		customerCancelBtn.setOnAction(event->customerStage.close());
 
-		vbox.setSpacing(5);
-		vbox.setPadding(new Insets(10, 0, 0, 10));
-		vbox.getChildren().addAll(stackPane,createNewCustomerBtnAndText);
-		return vbox;
+		customerArea.setSpacing(5);
+		customerArea.setPadding(new Insets(10, 0, 0, 10));
+		customerArea.getChildren().addAll(stackPane,createNewCustomerBtnAndText);
+		return customerArea;
 	}
 
 	private void checkMandatoryFieldAndSaveCustomer() {
