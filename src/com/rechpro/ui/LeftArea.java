@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import resources.PathClass;
 
 public class LeftArea {
 
@@ -31,7 +32,7 @@ public class LeftArea {
 			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 15));
 
 			Button btnKunden = new Button();
-			btnKunden.setGraphic(createImageView("../img/custom.png", buttonWidth, buttonHight));
+			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHight));
 			btnKunden.setStyle(cssFont);
 			btnKunden.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -41,7 +42,7 @@ public class LeftArea {
 			});
 
 			Button btnRechnung = new Button();
-			btnRechnung.setGraphic(createImageView("../img/rechnung.png", buttonWidth, buttonHight));
+			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHight));
 			btnRechnung.setStyle(cssFont);
 			btnRechnung.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -51,7 +52,7 @@ public class LeftArea {
 			});
 
 			Button btnWaren = new Button();
-			btnWaren.setGraphic(createImageView("../img/ware.png", buttonWidth, buttonHight));
+			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));
 			btnWaren.setStyle(cssFont);
 			btnWaren.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -61,7 +62,7 @@ public class LeftArea {
 			});
 
 			Button btnEinstellung = new Button();
-			btnEinstellung.setGraphic(createImageView("../img/setting.png", buttonWidth, buttonHight));
+			btnEinstellung.setGraphic(createImageView(PathClass.SETTING_ICON_PATH, buttonWidth, buttonHight));
 			btnEinstellung.setStyle(cssFont);
 			btnEinstellung.setOnAction(new EventHandler<ActionEvent>() {
 				@Override

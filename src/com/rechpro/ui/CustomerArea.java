@@ -19,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import resources.PathClass;
 
 /**
  * @author hmehmeti
@@ -83,7 +84,7 @@ public class CustomerArea {
 	private Button getNewCustomerCreatButtonWithText(){
 		
 		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(createImageView("../img/addNewCustomerBtn.png", 40, 40));
+		createNewCustomerBtn.setGraphic(createImageView(PathClass.ADD_NEW_CUSTOMER_BTN, 40, 40));
 		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
 		return createNewCustomerBtn;
 	}

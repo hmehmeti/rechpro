@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import resources.PathClass;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class RechnungArea {
 		// ------------Header begin---------------------------//
 		BorderPane header = new BorderPane();
 		header.setPrefSize(700, 150);
-		ImageView logo = createImageView("../img/ware.png", 80, 80);
+		ImageView logo = createImageView(PathClass.ARTICLE_ICON_PATH, 80, 80);
 		header.setRight(logo);
 		mainWinBorderPane.setTop(header);
 		// ------------Header end ----------------------------//
