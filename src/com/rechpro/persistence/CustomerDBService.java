@@ -24,5 +24,4 @@ public class CustomerDBService {
 		List<Customer> customers = cutomerHibernateUtil.getObjectsWithHibernateTransaction("Customer");
 		return customers;
 	}
-
 }

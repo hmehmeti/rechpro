@@ -35,7 +35,9 @@ public class CustomerViewModel {
 	public CustomerViewModel() {}
 
 	public CustomerViewModel(HashMap<Enum, String> customParameterList) {
-		this.customerId = new SimpleStringProperty(customParameterList.get(UserParameters.CUSTOMERID));
+		//TODO customerId
+		//this.customerId = new SimpleStringProperty(customParameterList.get(UserParameters.CUSTOMERID));
+		this.customerId = new SimpleStringProperty(customParameterList.get(UserParameters.ID));
 		this.sex = new SimpleStringProperty(customParameterList.get(UserParameters.SEX));
 		this.firstName = new SimpleStringProperty(customParameterList.get(UserParameters.FIRSTNAME));
 		this.lastName = new SimpleStringProperty(customParameterList.get(UserParameters.LASTNAME));

@@ -26,7 +26,7 @@ public class CenterArea {
 			break;
 			
 		case KUNDEN:
-			stackPane.getChildren().add(new KundenArea().getTableViewKunde());
+			stackPane.getChildren().add(new CustomerArea().getTableViewKunde());
 			break;
 			
 		default:
