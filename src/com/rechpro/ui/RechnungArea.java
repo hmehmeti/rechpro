@@ -1,8 +1,16 @@
 package com.rechpro.ui;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -16,10 +24,12 @@ import resources.PathClass;
 
 import java.util.ArrayList;
 
+import com.rechpro.entity.Article;
 import com.rechpro.entity.Customer;
 import com.rechpro.persistence.CustomerDBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.Address;
+import com.rechpro.viewmodel.ArticleViewModel;
 import com.rechpro.viewmodel.CustomerViewModel;
 
 /**
@@ -31,8 +41,9 @@ public class RechnungArea {
 	private CustomerDBService dbService;
 
 	private CustomerViewModel customerViewModel;
+	
+	private final ObservableList<ArticleViewModel> articles = FXCollections.observableArrayList();
 	public RechnungArea() {
-
 		transformer = new CustomerTransformer();
         dbService = new CustomerDBService();
         ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getCustomers();
@@ -108,24 +119,45 @@ public class RechnungArea {
 		// ------ text Rechung end----------------------------//
 
 		// -------- list of items -----------------------------//
-		TableView table = new TableView();
+		TableView<ArticleViewModel> articleTable = new TableView<ArticleViewModel>();
 		BorderPane centerButtom = new BorderPane();
-		TableColumn<CustomerViewModel,String> item = new TableColumn<CustomerViewModel,String>("Artikel");
-		item.prefWidthProperty().bind(table.widthProperty().multiply(0.50));
-        TableColumn<CustomerViewModel,Integer> numberOfItem = new TableColumn<CustomerViewModel,Integer>("Anzahl");
-        numberOfItem.prefWidthProperty().bind(table.widthProperty().multiply(0.10));
-        TableColumn<CustomerViewModel,Double> onePrise = new TableColumn<CustomerViewModel,Double>("Einzel Preis");
-        onePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-        TableColumn<CustomerViewModel,Double> entirePrise = new TableColumn<CustomerViewModel,Double>("Gesamt Preis");
-        entirePrise.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
-        table.getColumns().addAll(item, numberOfItem, onePrise, entirePrise);
+		
+		TableColumn<ArticleViewModel,SimpleStringProperty> articleNumber = new TableColumn<ArticleViewModel,SimpleStringProperty>("Artikel Nr.");
+		articleNumber.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,SimpleStringProperty>("Artikel Nr."));
+		//articleNumber.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.20));
+		TableColumn<ArticleViewModel,SimpleStringProperty> name = new TableColumn<ArticleViewModel,SimpleStringProperty>("Artikel");
+		name.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.40));
+        TableColumn<ArticleViewModel,SimpleStringProperty> numberOfItem = new TableColumn<ArticleViewModel,SimpleStringProperty>("Anzahl");
+        numberOfItem.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.10));
+        TableColumn<ArticleViewModel,SimpleStringProperty> onePrise = new TableColumn<ArticleViewModel,SimpleStringProperty>("Einzel Preis");
+        onePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
+        TableColumn<ArticleViewModel,SimpleStringProperty> entirePrise = new TableColumn<ArticleViewModel,SimpleStringProperty>("Gesamt Preis");
+        entirePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
+        
+        articleTable.setItems(articles);
+        articleTable.getColumns().addAll(articleNumber, name, numberOfItem, onePrise, entirePrise);
 
-		centerButtom.setCenter(table);
+		centerButtom.setCenter(articleTable);
+		
+		final Button addButton = new Button("Add");
+        addButton.setOnAction(e -> articles.add(
+        		new ArticleViewModel(
+        				new SimpleStringProperty("12345"), 
+        				new SimpleStringProperty("Foo"), 
+        				new SimpleStringProperty("Chuu"), 
+        				new SimpleStringProperty("1"), 
+        				new SimpleStringProperty("1"), 
+        				new SimpleStringProperty("1.22")
+        				)
+        		));
 
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
 		center.setTop(centerTop);
 		center.setCenter(centerButtom);
+		center.setBottom(addButton);
 		mainWinBorderPane.setCenter(center);
+		
+		
 		// -------- list of items end ------------------------//
 
 		// --------- footer ----------------------------------//

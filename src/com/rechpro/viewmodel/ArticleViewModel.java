@@ -15,6 +15,19 @@ public class ArticleViewModel {
 	private StringProperty rechnungId;
 	private StringProperty category;
 	private StringProperty prise;
+	
+	public ArticleViewModel(){
+		//NOP
+	}
+	
+	public ArticleViewModel(StringProperty articleNumber2, StringProperty name2, StringProperty description2, StringProperty rechnungId2, StringProperty category2, StringProperty prise2) {
+		this.articleNumber = articleNumber2;
+		this.name = name2;
+		this.description = description2;
+		this.rechnungId = rechnungId2;
+		this.category = category2;
+		this.prise = prise2;
+	}
 	public StringProperty getArticleNumber() {
 		return articleNumber;
 	}
