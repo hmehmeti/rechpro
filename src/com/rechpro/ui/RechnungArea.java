@@ -122,16 +122,24 @@ public class RechnungArea {
 		TableView<ArticleViewModel> articleTable = new TableView<ArticleViewModel>();
 		BorderPane centerButtom = new BorderPane();
 		
-		TableColumn<ArticleViewModel,SimpleStringProperty> articleNumber = new TableColumn<ArticleViewModel,SimpleStringProperty>("Artikel Nr.");
-		articleNumber.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,SimpleStringProperty>("Artikel Nr."));
-		//articleNumber.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.20));
-		TableColumn<ArticleViewModel,SimpleStringProperty> name = new TableColumn<ArticleViewModel,SimpleStringProperty>("Artikel");
+		TableColumn<ArticleViewModel,String> articleNumber = new TableColumn<ArticleViewModel,String>("Artikel Nr.");
+		articleNumber.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("articleNumber"));
+		articleNumber.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.20));
+		
+		TableColumn<ArticleViewModel,String> name = new TableColumn<ArticleViewModel,String>("Artikel");
+		name.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("name"));
 		name.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.40));
-        TableColumn<ArticleViewModel,SimpleStringProperty> numberOfItem = new TableColumn<ArticleViewModel,SimpleStringProperty>("Anzahl");
+		//TODO: cet number of article
+        TableColumn numberOfItem = new TableColumn<ArticleViewModel,String>("Anzahl");
+        numberOfItem.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("number"));
         numberOfItem.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.10));
-        TableColumn<ArticleViewModel,SimpleStringProperty> onePrise = new TableColumn<ArticleViewModel,SimpleStringProperty>("Einzel Preis");
+        
+        TableColumn<ArticleViewModel,String> onePrise = new TableColumn<ArticleViewModel,String>("Einzel Preis");
+        onePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("prise"));
         onePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
-        TableColumn<ArticleViewModel,SimpleStringProperty> entirePrise = new TableColumn<ArticleViewModel,SimpleStringProperty>("Gesamt Preis");
+        //TODO set here number*prise
+        TableColumn<ArticleViewModel,String> entirePrise = new TableColumn<ArticleViewModel,String>("Gesamt Preis");
+        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("prise"));
         entirePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
         
         articleTable.setItems(articles);
@@ -140,16 +148,7 @@ public class RechnungArea {
 		centerButtom.setCenter(articleTable);
 		
 		final Button addButton = new Button("Add");
-        addButton.setOnAction(e -> articles.add(
-        		new ArticleViewModel(
-        				new SimpleStringProperty("12345"), 
-        				new SimpleStringProperty("Foo"), 
-        				new SimpleStringProperty("Chuu"), 
-        				new SimpleStringProperty("1"), 
-        				new SimpleStringProperty("1"), 
-        				new SimpleStringProperty("1.22")
-        				)
-        		));
+        addButton.setOnAction(e -> addNewItemToTable(articleTable));
 
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
 		center.setTop(centerTop);
@@ -179,6 +178,21 @@ public class RechnungArea {
 		grid.getChildren().add(mainWindow);
 
 		return grid;
+	}
+	
+	private void addNewItemToTable(TableView<ArticleViewModel> articleTable){
+		articles.add(
+        		new ArticleViewModel(
+        				new SimpleStringProperty("12345"), 
+        				new SimpleStringProperty("Foo"), 
+        				new SimpleStringProperty("Chuu"), 
+        				new SimpleStringProperty("1"), 
+        				new SimpleStringProperty("1"), 
+        				new SimpleStringProperty("1.22")
+        				)
+        		);
+		System.out.println("Add new Items to Table");
+		articleTable.setItems(articles);
 	}
 
 	private ImageView createImageView(String imgPath, int width, int hight) {

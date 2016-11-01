@@ -28,38 +28,38 @@ public class ArticleViewModel {
 		this.category = category2;
 		this.prise = prise2;
 	}
-	public StringProperty getArticleNumber() {
-		return articleNumber;
+	public String getArticleNumber() {
+		return articleNumber.get();
 	}
 	public void setArticleNumber(StringProperty articleNumber) {
 		this.articleNumber = articleNumber;
 	}
-	public StringProperty getName() {
-		return name;
+	public String getName() {
+		return name.get();
 	}
 	public void setName(StringProperty name) {
 		this.name = name;
 	}
-	public StringProperty getDescription() {
-		return description;
+	public String getDescription() {
+		return description.get();
 	}
 	public void setDescription(StringProperty description) {
 		this.description = description;
 	}
-	public StringProperty getRechnungId() {
-		return rechnungId;
+	public String getRechnungId() {
+		return rechnungId.get();
 	}
 	public void setRechnungId(StringProperty rechnungId) {
 		this.rechnungId = rechnungId;
 	}
-	public StringProperty getCategory() {
-		return category;
+	public String getCategory() {
+		return category.get();
 	}
 	public void setCategory(StringProperty category) {
 		this.category = category;
 	}
-	public StringProperty getPrise() {
-		return prise;
+	public String getPrise() {
+		return prise.get();
 	}
 	public void setPrise(StringProperty prise) {
 		this.prise = prise;
