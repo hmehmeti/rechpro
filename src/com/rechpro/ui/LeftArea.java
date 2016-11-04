@@ -34,42 +34,25 @@ public class LeftArea {
 			Button btnKunden = new Button();
 			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHight));
 			btnKunden.setStyle(cssFont);
-			btnKunden.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					root.setCenter(new CenterArea().loadCenterPane(EnumButton.KUNDEN));
-				}
-			});
+			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.KUNDEN)));
 
 			Button btnRechnung = new Button();
 			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHight));
 			btnRechnung.setStyle(cssFont);
-			btnRechnung.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					root.setCenter(new CenterArea().loadCenterPane(EnumButton.RECHNUNG));
-				}
-			});
+			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.RECHNUNG)));
 
 			Button btnWaren = new Button();
 			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));
 			btnWaren.setStyle(cssFont);
-			btnWaren.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					// TODO
-				}
-			});
+			//TODO: implement WAREN
+			//btnWaren.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.WAREN)));
+			
 
 			Button btnEinstellung = new Button();
 			btnEinstellung.setGraphic(createImageView(PathClass.SETTING_ICON_PATH, buttonWidth, buttonHight));
 			btnEinstellung.setStyle(cssFont);
-			btnEinstellung.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					// TODO
-				}
-			});
+			//TODO: implement EINSTELLUNG
+			//btnEinstellung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.EINSTELLUNG)));
 
 			vbox.getChildren().addAll(text, btnRechnung, btnWaren, btnKunden, btnEinstellung);
 			hbox.getChildren().addAll(vbox, new Separator(Orientation.VERTICAL));

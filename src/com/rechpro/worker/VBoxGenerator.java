@@ -64,7 +64,7 @@ public class VBoxGenerator {
 		bicNoField = new TextField();
 	}
 
-	public VBox createVBox() {
+	public VBox createCustomerCreationTable() {
 
 		customWindow = new VBox(10);
 

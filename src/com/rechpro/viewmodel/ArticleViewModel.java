@@ -20,46 +20,46 @@ public class ArticleViewModel {
 		//NOP
 	}
 	
-	public ArticleViewModel(StringProperty articleNumber2, StringProperty name2, StringProperty description2, StringProperty rechnungId2, StringProperty category2, StringProperty prise2) {
-		this.articleNumber = articleNumber2;
-		this.name = name2;
-		this.description = description2;
-		this.rechnungId = rechnungId2;
-		this.category = category2;
-		this.prise = prise2;
+	public ArticleViewModel(StringProperty articleNumber, StringProperty name, StringProperty description, StringProperty rechnungId, StringProperty category, StringProperty prise) {
+		this.articleNumber = articleNumber;
+		this.name = name;
+		this.description = description;
+		this.rechnungId = rechnungId;
+		this.category = category;
+		this.prise = prise;
 	}
-	public String getArticleNumber() {
-		return articleNumber.get();
+	public StringProperty getArticleNumber() {
+		return articleNumber;
 	}
 	public void setArticleNumber(StringProperty articleNumber) {
 		this.articleNumber = articleNumber;
 	}
-	public String getName() {
-		return name.get();
+	public StringProperty getName() {
+		return name;
 	}
 	public void setName(StringProperty name) {
 		this.name = name;
 	}
-	public String getDescription() {
-		return description.get();
+	public StringProperty getDescription() {
+		return description;
 	}
 	public void setDescription(StringProperty description) {
 		this.description = description;
 	}
-	public String getRechnungId() {
-		return rechnungId.get();
+	public StringProperty getRechnungId() {
+		return rechnungId;
 	}
 	public void setRechnungId(StringProperty rechnungId) {
 		this.rechnungId = rechnungId;
 	}
-	public String getCategory() {
-		return category.get();
+	public StringProperty getCategory() {
+		return category;
 	}
 	public void setCategory(StringProperty category) {
 		this.category = category;
 	}
-	public String getPrise() {
-		return prise.get();
+	public StringProperty getPrise() {
+		return prise;
 	}
 	public void setPrise(StringProperty prise) {
 		this.prise = prise;

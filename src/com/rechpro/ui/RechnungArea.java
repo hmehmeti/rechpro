@@ -1,11 +1,16 @@
 package com.rechpro.ui;
 
+import java.util.ArrayList;
+
+import com.rechpro.entity.Customer;
+import com.rechpro.persistence.DBService;
+import com.rechpro.transformer.CustomerTransformer;
+import com.rechpro.viewmodel.ArticleViewModel;
+import com.rechpro.viewmodel.CustomerViewModel;
+
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -22,31 +27,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import resources.PathClass;
 
-import java.util.ArrayList;
-
-import com.rechpro.entity.Article;
-import com.rechpro.entity.Customer;
-import com.rechpro.persistence.CustomerDBService;
-import com.rechpro.transformer.CustomerTransformer;
-import com.rechpro.viewmodel.Address;
-import com.rechpro.viewmodel.ArticleViewModel;
-import com.rechpro.viewmodel.CustomerViewModel;
-
 /**
  * @author kdogan
  * @email kamuran1905@yahoo.de
  **/
 public class RechnungArea {
 	private CustomerTransformer transformer;
-	private CustomerDBService dbService;
+	private DBService<Customer> dbService;
 
 	private CustomerViewModel customerViewModel;
 	
 	private final ObservableList<ArticleViewModel> articles = FXCollections.observableArrayList();
 	public RechnungArea() {
 		transformer = new CustomerTransformer();
-        dbService = new CustomerDBService();
-        ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getCustomers();
+        dbService = new DBService<Customer>("Customer");
+        ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getEntities();
         customerViewModel = transformer.entityToViewModel(customers.get(0));
 	}
 
@@ -129,7 +124,7 @@ public class RechnungArea {
 		TableColumn<ArticleViewModel,String> name = new TableColumn<ArticleViewModel,String>("Artikel");
 		name.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("name"));
 		name.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.40));
-		//TODO: cet number of article
+		//TODO: get number of article
         TableColumn numberOfItem = new TableColumn<ArticleViewModel,String>("Anzahl");
         numberOfItem.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("number"));
         numberOfItem.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.10));
@@ -147,7 +142,7 @@ public class RechnungArea {
 
 		centerButtom.setCenter(articleTable);
 		
-		final Button addButton = new Button("Add");
+		final Button addButton = new Button("Ware Hinzufügen");
         addButton.setOnAction(e -> addNewItemToTable(articleTable));
 
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
