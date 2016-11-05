@@ -1,5 +1,6 @@
 package com.rechpro.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.rechpro.entity.Customer;
@@ -7,10 +8,13 @@ import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.ArticleViewModel;
 import com.rechpro.viewmodel.CustomerViewModel;
+import com.rechpro.worker.ArticleSelector;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -18,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -25,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import resources.PathClass;
 
 /**
@@ -143,7 +149,8 @@ public class RechnungArea {
 		centerButtom.setCenter(articleTable);
 		
 		final Button addButton = new Button("Ware Hinzufügen");
-        addButton.setOnAction(e -> addNewItemToTable(articleTable));
+        //addButton.setOnAction(e -> addNewItemToTable(articleTable));
+        addButton.setOnAction(e -> addCustomerSelectionArea());
 
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
 		center.setTop(centerTop);
@@ -173,6 +180,18 @@ public class RechnungArea {
 		grid.getChildren().add(mainWindow);
 
 		return grid;
+	}
+	
+	private void addCustomerSelectionArea() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ArticleSelectionTable.fxml"));
+		try {
+			Stage articleStage = new Stage();
+			AnchorPane customerSelectionArea = (AnchorPane) loader.load();
+			articleStage.setScene(new Scene(customerSelectionArea));
+			articleStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void addNewItemToTable(TableView<ArticleViewModel> articleTable){

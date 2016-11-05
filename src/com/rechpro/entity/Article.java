@@ -29,7 +29,7 @@ public class Article {
 	@Column(name="description")
 	private String description;
 	
-	@Column(name="rechung_id")
+	@Column(name="rechnung_id")
 	private int rechnungId;
 	
 	@Column(name="category")
