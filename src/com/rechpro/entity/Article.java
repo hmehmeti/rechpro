@@ -38,6 +38,9 @@ public class Article {
 	@Column(name="prise")
 	private Double prise;
 
+	public Article(){
+		//NOP
+	}
 	public Article(int articleNumber2, String name2, String description2, int rechnungId2, int category2, double prise2) {
 		this.articleNumber = articleNumber2;
 		this.name = name2;

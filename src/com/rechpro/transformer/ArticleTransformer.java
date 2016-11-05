@@ -26,8 +26,8 @@ public class ArticleTransformer {
 		SimpleStringProperty prise = new SimpleStringProperty(Double.toString(article.getPrise()));
 		
 		articleVM.setArticleNumber(articleNumber);
-		articleVM.setArticleNumber(name);
-		articleVM.setArticleNumber(description);
+		articleVM.setName(name);
+		articleVM.setDescription(description);
 		articleVM.setRechnungId(rechnungId);
 		articleVM.setCategory(category);
 		articleVM.setPrise(prise);
