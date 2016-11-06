@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rechpro.entity.Article;
+import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.ArticleViewModel;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -35,8 +36,14 @@ public class ArticleTransformer {
 		return articleVM;
 	}
 	
-	public Article entityFromParameterList(int articleNumber, String name, String description, int rechnungId, int category, double prise) {
-		return new Article(articleNumber, name, description, rechnungId, category, prise);
+	public Article viewModelToEntity(ArticleViewModel model) {
+		int articleName = Integer.parseInt(model.getArticleNumber().get());
+		String name = model.getName().get();
+		String description = model.getDescription().get();
+		int rechnungId = Integer.parseInt(model.getRechnungId().get());
+		int categoryId = Integer.parseInt(model.getCategory().get());
+		double prise = Double.parseDouble(model.getPrise().get());
+		return new Article(articleName, name, description, rechnungId, categoryId, prise);
 	}
 
 	public List<ArticleViewModel> convertAndGetAllArticle(List<Article> articles) {
@@ -45,5 +52,16 @@ public class ArticleTransformer {
 			list.add(entityToViewModel(article));
 		}
 		return list;
+	}
+	
+	public ArticleViewModelInRechnung articleViewModel2ArticleViewModelInRechnung(ArticleViewModel model){
+		int articleName = Integer.parseInt(model.getArticleNumber().get());
+		String name = model.getName().get();
+		String description = model.getDescription().get();
+		int rechnungId = Integer.parseInt(model.getRechnungId().get());
+		int categoryId = Integer.parseInt(model.getCategory().get());
+		double prise = Double.parseDouble(model.getPrise().get());
+		
+		return new ArticleViewModelInRechnung(articleName, name, description, rechnungId, categoryId, prise);
 	}
 }

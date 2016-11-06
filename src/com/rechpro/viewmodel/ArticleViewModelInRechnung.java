@@ -1,4 +1,4 @@
-package com.rechpro.entity;
+package com.rechpro.viewmodel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,37 +11,22 @@ import javax.persistence.Table;
  * @author kdogan
  *
  */
-@Entity
-@Table(name="article")
-public class Article {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+public class ArticleViewModelInRechnung {
+
 	private int id;
-	
-	@Column(name="name")
 	private String name;
-	
-	@Column(name="article_number")
 	private int articleNumber;
-	
-	@Column(name="description")
 	private String description;
-	
-	@Column(name="rechnung_id")
 	private int rechnungId;
-	
-	@Column(name="category")
 	private int category;
-	
-	@Column(name="prise")
 	private Double prise;
-
-	public Article(){
+	private int number = 0;
+	
+	public ArticleViewModelInRechnung(){
 		//NOP
 	}
-	public Article(int articleNumber, String name, String description, int rechnungId, int category, double prise) {
+	public ArticleViewModelInRechnung(int articleNumber, String name, String description, int rechnungId, int category, double prise) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
@@ -100,5 +85,17 @@ public class Article {
 
 	public int getId() {
 		return id;
+	}
+	
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public int getNumber() {
+		return this.number;
+	}
+	
+	public double getTotalPrise(){
+		return this.number * this.prise;
 	}
 }

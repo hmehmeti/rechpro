@@ -3,12 +3,14 @@ package com.rechpro.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.rechpro.entity.Article;
 import com.rechpro.entity.Customer;
 import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.ArticleViewModel;
+import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
-import com.rechpro.worker.ArticleSelector;
+import com.rechpro.worker.ArticleController;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -40,19 +43,18 @@ import resources.PathClass;
 public class RechnungArea {
 	private CustomerTransformer transformer;
 	private DBService<Customer> dbService;
-
 	private CustomerViewModel customerViewModel;
+	private static Stage articleSelectStage;
 	
-	private final ObservableList<ArticleViewModel> articles = FXCollections.observableArrayList();
+	public final static ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 	public RechnungArea() {
 		transformer = new CustomerTransformer();
         dbService = new DBService<Customer>("Customer");
         ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getEntities();
+        //TODO hier muss ausgewählte Customer
         customerViewModel = transformer.entityToViewModel(customers.get(0));
 	}
-
-
-
+	
 	public GridPane addGridPane() {
 
 		GridPane grid = new GridPane();
@@ -120,27 +122,27 @@ public class RechnungArea {
 		// ------ text Rechung end----------------------------//
 
 		// -------- list of items -----------------------------//
-		TableView<ArticleViewModel> articleTable = new TableView<ArticleViewModel>();
+		TableView<ArticleViewModelInRechnung> articleTable = new TableView<ArticleViewModelInRechnung>();
 		BorderPane centerButtom = new BorderPane();
 		
-		TableColumn<ArticleViewModel,String> articleNumber = new TableColumn<ArticleViewModel,String>("Artikel Nr.");
-		articleNumber.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("articleNumber"));
+		TableColumn<ArticleViewModelInRechnung,String> articleNumber = new TableColumn<ArticleViewModelInRechnung,String>("Artikel Nr.");
+		articleNumber.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("articleNumber"));
 		articleNumber.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.20));
 		
-		TableColumn<ArticleViewModel,String> name = new TableColumn<ArticleViewModel,String>("Artikel");
-		name.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("name"));
+		TableColumn<ArticleViewModelInRechnung,String> name = new TableColumn<ArticleViewModelInRechnung,String>("Artikel");
+		name.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("name"));
 		name.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.40));
 		//TODO: get number of article
-        TableColumn numberOfItem = new TableColumn<ArticleViewModel,String>("Anzahl");
-        numberOfItem.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("number"));
+        TableColumn numberOfItem = new TableColumn<ArticleViewModelInRechnung,String>("Anzahl");
+        numberOfItem.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("number"));
         numberOfItem.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.10));
         
-        TableColumn<ArticleViewModel,String> onePrise = new TableColumn<ArticleViewModel,String>("Einzel Preis");
-        onePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("prise"));
+        TableColumn<ArticleViewModelInRechnung,String> onePrise = new TableColumn<ArticleViewModelInRechnung,String>("Einzel Preis");
+        onePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("prise"));
         onePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
-        //TODO set here number*prise
-        TableColumn<ArticleViewModel,String> entirePrise = new TableColumn<ArticleViewModel,String>("Gesamt Preis");
-        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModel,String>("prise"));
+       
+        TableColumn<ArticleViewModelInRechnung,String> entirePrise = new TableColumn<ArticleViewModelInRechnung,String>("Gesamt Preis");
+        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("prise"));
         entirePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
         
         articleTable.setItems(articles);
@@ -149,7 +151,6 @@ public class RechnungArea {
 		centerButtom.setCenter(articleTable);
 		
 		final Button addButton = new Button("Ware Hinzufügen");
-        //addButton.setOnAction(e -> addNewItemToTable(articleTable));
         addButton.setOnAction(e -> addCustomerSelectionArea());
 
 	//	midlePane.getChildren().addAll(miniAdress, customAndDate, warenList);
@@ -158,6 +159,12 @@ public class RechnungArea {
 		center.setBottom(addButton);
 		mainWinBorderPane.setCenter(center);
 		
+		articleTable.setOnMousePressed(e -> {
+			if (e.isPrimaryButtonDown() && e.getClickCount() == 1) {
+				ArticleViewModelInRechnung selectedArticle = articleTable.getSelectionModel().getSelectedItem();
+				updateArticleInTableView(selectedArticle);
+			}
+		});
 		
 		// -------- list of items end ------------------------//
 
@@ -182,33 +189,32 @@ public class RechnungArea {
 		return grid;
 	}
 	
+	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
+		for(ArticleViewModelInRechnung article: articles){
+			if(article.getArticleNumber() == selectedArticle.getArticleNumber()){
+				articles.remove(article);
+				articles.add(selectedArticle);
+			}
+		}
+	}
+
 	private void addCustomerSelectionArea() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ArticleSelectionTable.fxml"));
 		try {
-			Stage articleStage = new Stage();
+			articleSelectStage = new Stage();
 			AnchorPane customerSelectionArea = (AnchorPane) loader.load();
-			articleStage.setScene(new Scene(customerSelectionArea));
-			articleStage.show();
+			articleSelectStage.setScene(new Scene(customerSelectionArea));
+			articleSelectStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void addNewItemToTable(TableView<ArticleViewModel> articleTable){
-		articles.add(
-        		new ArticleViewModel(
-        				new SimpleStringProperty("12345"), 
-        				new SimpleStringProperty("Foo"), 
-        				new SimpleStringProperty("Chuu"), 
-        				new SimpleStringProperty("1"), 
-        				new SimpleStringProperty("1"), 
-        				new SimpleStringProperty("1.22")
-        				)
-        		);
-		System.out.println("Add new Items to Table");
-		articleTable.setItems(articles);
+	public static void closeArticleSelectStage(){
+		if (articleSelectStage == null)
+			return;
+		articleSelectStage.close();
 	}
-
+	
 	private ImageView createImageView(String imgPath, int width, int hight) {
 		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
 		ImgView.setFitHeight(hight);
