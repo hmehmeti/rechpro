@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -101,7 +102,8 @@ public class RechnungArea {
 		center.setBottom(addButton);
 		mainWinBorderPane.setCenter(center);
 		
-		articleTable.setOnMousePressed(e -> addSelectedArticleToTable(e));
+		articleTable.setOnMousePressed(e -> editSelectedArticleNumber(e));
+		
 		
 		///////////////// list of selected articles end /////////////////////////////
 
@@ -181,9 +183,10 @@ public class RechnungArea {
 		articleSelectStage.close();
 	}
 	
-	private void addSelectedArticleToTable(MouseEvent e) {
+	private void editSelectedArticleNumber(MouseEvent e) {
 		if (e.isPrimaryButtonDown() && e.getClickCount() == 1) {
 			ArticleViewModelInRechnung selectedArticle = articleTable.getSelectionModel().getSelectedItem();
+			selectedArticle.setNumber(2);
 			updateArticleInTableView(selectedArticle);
 		}
 	}

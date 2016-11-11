@@ -21,7 +21,7 @@ public class ArticleViewModelInRechnung {
 	private int rechnungId;
 	private int category;
 	private Double prise;
-	private int number = 0;
+	private int number = 1;
 	
 	public ArticleViewModelInRechnung(){
 		//NOP

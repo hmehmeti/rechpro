@@ -29,7 +29,7 @@ public class TableGenerator {
         onePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
        
         TableColumn<ArticleViewModelInRechnung,String> entirePrise = new TableColumn<ArticleViewModelInRechnung,String>("Gesamt Preis");
-        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("prise"));
+        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("totalPrise"));
         entirePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
         
         articleTable.getColumns().addAll(articleNumber, name, numberOfItem, onePrise, entirePrise);
