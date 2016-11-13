@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import resources.PathClass;
 
 public class Launcher extends Application {
 	BorderPane root;
@@ -30,7 +31,7 @@ public class Launcher extends Application {
 			CenterArea centerArea = new CenterArea();
 			Footer footer = new Footer();
 
-			root = (BorderPane) FXMLLoader.load(getClass().getResource("/resources/RechProjFXML.fxml"));
+			root = (BorderPane) FXMLLoader.load(getClass().getResource(PathClass.RECHPRO_JFXML_FILE));
 		       
 			/**
 			 * TODO HME Temporary outer Function, maybe coming later
@@ -42,7 +43,7 @@ public class Launcher extends Application {
 			centerArea.loadCenterPane(EnumButton.WILLKOMMEN);
 
 			scene = new Scene(root, 900, 500);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource(PathClass.APPLICATION_CSS).toExternalForm());
 			primaryStage.setTitle("RechPro");
 			primaryStage.setScene(scene);
 

@@ -24,7 +24,6 @@ public class StageGenerator {
 
 	public static VBox createCustomerStage() {
 
-		Stage newStage = new Stage();
 		customWindow = new VBox(10);
 
 		HBox mainWindow = new HBox();
@@ -180,14 +179,5 @@ public class StageGenerator {
 		}
 		return returnValue;
 	}
-	
-//	private Popup createPopup() {
-//	    final Popup popup = new Popup();
-//	    popup.setAutoHide(true);
-//	    popup.setX(300);
-//	    popup.setY(200);
-//	    popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
-//	    return popup;
-//	}
 	 
 }

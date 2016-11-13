@@ -3,7 +3,7 @@ package com.rechpro.worker;
 import java.util.HashMap;
 
 import com.rechpro.entity.Customer;
-import com.rechpro.persistence.CustomerDBService;
+import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.CustomerViewModel;
 
@@ -36,7 +36,7 @@ public class CustomerController {
 	private TableColumn<CustomerViewModel, String> lastNameColumn;
 	
 	private CustomerTransformer transformer;
-	private CustomerDBService dbService;
+	private DBService<Customer> dbService;
 
 	private ObservableList<CustomerViewModel> masterData = FXCollections.observableArrayList();
 
@@ -45,8 +45,8 @@ public class CustomerController {
 	 */
 	public CustomerController() {
 		transformer = new CustomerTransformer();
-        dbService = new CustomerDBService();
-        masterData.addAll(transformer.convertAndGetAllCustomer(dbService.getCustomers()));
+        dbService = new DBService<Customer>("Customer");
+        masterData.addAll(transformer.convertAndGetAllCustomer(dbService.getEntities()));
 	}
 
 	/**
@@ -100,6 +100,6 @@ public class CustomerController {
 	
 	public void transformAndPersist(HashMap<Enum, String> customParameterList) { 
 	    Customer customer = transformer.entityFromParameterList(customParameterList); 
-	    dbService.addCustomer(customer); 
+	    dbService.addEntity(customer); 
 	  } 
 }

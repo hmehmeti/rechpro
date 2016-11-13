@@ -25,6 +25,7 @@
 		</property>
 		
 		<mapping class="com.rechpro.entity.Customer"/>
+		<mapping class="com.rechpro.entity.Article"/>
 		
 	</session-factory>
 </hibernate-configuration>

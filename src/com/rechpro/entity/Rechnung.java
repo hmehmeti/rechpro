@@ -16,7 +16,7 @@ public class Rechnung {
 	private Double amount;
 	private Double tax;
 	private Float taxRate;
-	private List<Waren> items;
+	private List<Article> items;
 
 
 	public Rechnung(long id) {
@@ -75,19 +75,19 @@ public class Rechnung {
 	}
 
 
-	public List<Waren> getItems() {
+	public List<Article> getItems() {
 		return items;
 	}
 
 
-	public void addItam(Waren item) {
+	public void addItam(Article item) {
 		this.items.add(item);
 	}
 
-	public void addItams(List<Waren> items) {
+	public void addItams(List<Article> items) {
 		this.items.addAll(items);
 	}
-	public void removeItam(Waren item) {
+	public void removeItam(Article item) {
 		if(this.items.contains(item))
 			this.items.remove(item);
 	}
