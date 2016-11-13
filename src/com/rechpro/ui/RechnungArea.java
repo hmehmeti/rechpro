@@ -115,7 +115,8 @@ public class RechnungArea {
 		articleTable.setOnContextMenuRequested(e->
 		{
 			contextMenu.show(center, e.getScreenX(), e.getScreenY());
-			selectedArticle = articleTable.getSelectionModel().getSelectedItem();
+			selectedArticle = (ArticleViewModelInRechnung)articleTable.getSelectionModel().getSelectedItem();
+			System.out.println("selected article id :"+ selectedArticle.getArticleNumber());
 		});
 		
 		///////////////// list of selected articles end /////////////////////////////
@@ -167,7 +168,7 @@ public class RechnungArea {
 
 	private void deleteSelectedArticle() {
 		if(articles.contains(selectedArticle))
-			articles.remove(articleNumber);
+			articles.remove(selectedArticle);
 		else
 			return;
 	}

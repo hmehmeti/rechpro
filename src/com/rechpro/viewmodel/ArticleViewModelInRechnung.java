@@ -89,7 +89,8 @@ public class ArticleViewModelInRechnung {
 	}
 	
 	public double getTotalPrise(){
-		return this.number * this.prise;
+		double total = Math.floor((this.number * this.prise) * 1000) / 1000;
+		return total;
 	}
 	@Override
 	public int hashCode() {
