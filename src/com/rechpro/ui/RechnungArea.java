@@ -15,21 +15,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import resources.PathClass;
 
 /**
@@ -43,6 +46,11 @@ public class RechnungArea {
 	private static Stage articleSelectStage;
 	private TableGenerator tableGenerator;
 	private TableView<ArticleViewModelInRechnung> articleTable;
+	private Button inputSubmitBtn = new Button("ok");
+	private int articleNumber = 0;
+	private TextField choisedNumber;
+	private ArticleViewModelInRechnung selectedArticle;
+	private Stage numberInputStage;
 	
 	public final static ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 	public RechnungArea() {
@@ -102,8 +110,13 @@ public class RechnungArea {
 		center.setBottom(addButton);
 		mainWinBorderPane.setCenter(center);
 		
-		articleTable.setOnMousePressed(e -> editSelectedArticleNumber(e));
-		
+		// Create ContextMenu
+		ContextMenu contextMenu = getContextMenu();
+		articleTable.setOnContextMenuRequested(e->
+		{
+			contextMenu.show(center, e.getScreenX(), e.getScreenY());
+			selectedArticle = articleTable.getSelectionModel().getSelectedItem();
+		});
 		
 		///////////////// list of selected articles end /////////////////////////////
 
@@ -128,11 +141,63 @@ public class RechnungArea {
 		return grid;
 	}
 	
+	private ContextMenu getContextMenu() {
+		ContextMenu contextMenu = new ContextMenu();
+        
+        MenuItem deleteArticle = new MenuItem("Löschen");
+        MenuItem changeNumber = new MenuItem("Anzahl Ändern");
+        
+        changeNumber.setOnAction(e -> 
+        {
+        	numberInputStage = getNumberInputStage();
+        	numberInputStage.show();
+        });
+        
+        inputSubmitBtn.setOnAction(e -> 
+        {
+        	checkChoisedNumberAndSetArticleNumber();
+        	numberInputStage.close();
+        });
+        
+        deleteArticle.setOnAction(e->System.out.println("Select Menu Item 2"));
+        contextMenu.getItems().addAll(deleteArticle, changeNumber);
+        
+		return contextMenu;
+	}
+
+	private void checkChoisedNumberAndSetArticleNumber() {
+		int choisedNumberValue = 0;
+		try {
+			choisedNumberValue = Integer.parseInt(choisedNumber.getText());
+		} catch (Exception e) {	}
+		
+		if(choisedNumberValue != 0){
+			articleNumber = choisedNumberValue;
+			editSelectedArticleNumber();
+		}
+		else
+			return;
+	}
+
+	private Stage getNumberInputStage(){
+		Stage newStage = new Stage();
+		newStage.setTitle("Waren Anzahl Eingeben");
+		newStage.initStyle(StageStyle.UTILITY);
+		newStage.setResizable(false);
+		inputSubmitBtn.setPrefWidth(30);
+		HBox comp = new HBox();
+		choisedNumber = new TextField();
+		choisedNumber.setPrefWidth(70);
+		comp.getChildren().addAll(choisedNumber, inputSubmitBtn);
+		Scene stageScene = new Scene(comp, 200, 50);
+		newStage.setScene(stageScene);
+		return newStage;
+	}
+	
 	private VBox getLeftColumn() {
 		VBox customerAndAddress = new VBox(5);
 		String customName = customerViewModel.getFirstName().get() +" "+ customerViewModel.getLastName().get();
 		Text custumerName = new Text(customName);
-		//TODO: hier muss die Adresse nachdem Hausnummer in zweite Zeile geschrieben werden
 		String street = customerViewModel.getStreet().get();
 		String number = customerViewModel.getNo().get();
 		String postCode = customerViewModel.getPostCode().get();
@@ -183,11 +248,19 @@ public class RechnungArea {
 		articleSelectStage.close();
 	}
 	
-	private void editSelectedArticleNumber(MouseEvent e) {
-		if (e.isPrimaryButtonDown() && e.getClickCount() == 1) {
-			ArticleViewModelInRechnung selectedArticle = articleTable.getSelectionModel().getSelectedItem();
-			selectedArticle.setNumber(2);
-			updateArticleInTableView(selectedArticle);
+	private void editSelectedArticleNumber() {
+		
+		if(articleNumber != 0)
+			selectedArticle.setNumber(articleNumber);
+		updateArticleInTableView(selectedArticle);
+	}
+	
+	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
+		for(ArticleViewModelInRechnung article: articles){
+			if(article.getArticleNumber() == selectedArticle.getArticleNumber()){
+				articles.remove(article);
+				articles.add(selectedArticle);
+			}
 		}
 	}
 
@@ -208,14 +281,5 @@ public class RechnungArea {
 		ImgView.setFitHeight(hight);
 		ImgView.setFitWidth(width);
 		return ImgView;
-	}
-	
-	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
-		for(ArticleViewModelInRechnung article: articles){
-			if(article.getArticleNumber() == selectedArticle.getArticleNumber()){
-				articles.remove(article);
-				articles.add(selectedArticle);
-			}
-		}
 	}
 }

@@ -5,17 +5,16 @@ import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.ArticleTransformer;
 import com.rechpro.ui.RechnungArea;
 import com.rechpro.viewmodel.ArticleViewModel;
+import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 /**
  * View-Controller for the person table.
@@ -36,7 +35,6 @@ public class ArticleController {
 	private TableColumn<ArticleViewModel, String> categoryColumn;
 
 	private ArticleViewModel selectedArticle;
-
 	private ArticleTransformer transformer;
 	private DBService<Article> dbService;
 
@@ -87,7 +85,10 @@ public class ArticleController {
 		articleTable.setOnMousePressed(e -> {
 			if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
 				selectedArticle = articleTable.getSelectionModel().getSelectedItem();
-				RechnungArea.articles.add(transformer.articleViewModel2ArticleViewModelInRechnung(selectedArticle));
+				ArticleViewModelInRechnung a = transformer.articleViewModel2ArticleViewModelInRechnung(selectedArticle);
+				if(!RechnungArea.articles.contains(a))
+					RechnungArea.articles.add(a);
+				
 				RechnungArea.closeArticleSelectStage();
 			}
 		});
