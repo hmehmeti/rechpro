@@ -144,10 +144,10 @@ public class RechnungArea {
 	private ContextMenu getContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
         
-        MenuItem deleteArticle = new MenuItem("Löschen");
-        MenuItem changeNumber = new MenuItem("Anzahl Ändern");
+        MenuItem deleteArticle = new MenuItem("Artikel Löschen");
+        MenuItem changeArticleNumber = new MenuItem("Anzahl Ändern");
         
-        changeNumber.setOnAction(e -> 
+        changeArticleNumber.setOnAction(e -> 
         {
         	numberInputStage = getNumberInputStage();
         	numberInputStage.show();
@@ -159,10 +159,17 @@ public class RechnungArea {
         	numberInputStage.close();
         });
         
-        deleteArticle.setOnAction(e->System.out.println("Select Menu Item 2"));
-        contextMenu.getItems().addAll(deleteArticle, changeNumber);
+        deleteArticle.setOnAction(e->deleteSelectedArticle());
+        contextMenu.getItems().addAll(deleteArticle, changeArticleNumber);
         
 		return contextMenu;
+	}
+
+	private void deleteSelectedArticle() {
+		if(articles.contains(selectedArticle))
+			articles.remove(articleNumber);
+		else
+			return;
 	}
 
 	private void checkChoisedNumberAndSetArticleNumber() {
