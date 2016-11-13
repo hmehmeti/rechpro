@@ -42,7 +42,7 @@ public class CustomerViewModel {
 		this.firstName = new SimpleStringProperty(customParameterList.get(UserParameters.FIRSTNAME));
 		this.lastName = new SimpleStringProperty(customParameterList.get(UserParameters.LASTNAME));
 		this.street = new SimpleStringProperty(customParameterList.get(UserParameters.STREET));
-		this.no = new SimpleStringProperty(customParameterList.get(UserParameters.NO));
+		this.no = new SimpleStringProperty(customParameterList.get(UserParameters.HOME_NO));
 		this.postCode = new SimpleStringProperty(customParameterList.get(UserParameters.POSTCODE));
 		this.city = new SimpleStringProperty(customParameterList.get(UserParameters.CITY));
 		this.country = new SimpleStringProperty(customParameterList.get(UserParameters.COUNTRY));

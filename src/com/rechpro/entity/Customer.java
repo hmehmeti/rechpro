@@ -87,7 +87,7 @@ public class Customer {
 		this.firstName = customParameterList.get(UserParameters.FIRSTNAME);
 		this.lastName = customParameterList.get(UserParameters.LASTNAME);
 		this.street = customParameterList.get(UserParameters.STREET);
-		this.no = customParameterList.get(UserParameters.NO);
+		this.no = customParameterList.get(UserParameters.HOME_NO);
 		this.postCode = customParameterList.get(UserParameters.POSTCODE);
 		this.city = customParameterList.get(UserParameters.CITY);
 		this.country = customParameterList.get(UserParameters.COUNTRY);

@@ -95,6 +95,7 @@ public class CustomerArea {
 		customParameterList.put(UserParameters.FIRSTNAME ,customerTableGenerator.getFirstNameField().getText());
 		customParameterList.put(UserParameters.LASTNAME ,customerTableGenerator.getLastNameField().getText());
 		customParameterList.put(UserParameters.STREET ,customerTableGenerator.getStreetField().getText());
+		customParameterList.put(UserParameters.HOME_NO ,customerTableGenerator.getHomeNrField().getText());
 		customParameterList.put(UserParameters.POSTCODE ,customerTableGenerator.getPostCode().getText());
 		customParameterList.put(UserParameters.CITY ,customerTableGenerator.getCity().getText());
 		customParameterList.put(UserParameters.COUNTRY ,customerTableGenerator.getCountry().getText());

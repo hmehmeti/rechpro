@@ -59,7 +59,7 @@ public class RechnungArea {
         dbService = new DBService<Customer>("Customer");
         ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getEntities();
         //TODO hier muss ausgewählte Customer
-        customerViewModel = transformer.entityToViewModel(customers.get(0));
+        customerViewModel = transformer.entityToViewModel(customers.get(3));
 	}
 	
 	public GridPane addGridPane() {

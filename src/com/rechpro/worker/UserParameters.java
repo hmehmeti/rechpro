@@ -8,7 +8,7 @@ public enum UserParameters {
 	FIRSTNAME,
 	LASTNAME,
 	STREET,
-	NO,
+	HOME_NO,
 	POSTCODE,
 	CITY,
 	COUNTRY,

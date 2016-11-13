@@ -2,7 +2,6 @@ package com.rechpro.worker;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -11,8 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
 
 public class VBoxGenerator {
 	
@@ -25,7 +22,10 @@ public class VBoxGenerator {
 	ChoiceBox<String> sexField;
 	TextField firstNameField;
 	TextField lastNameField;
+	
+	HBox streetAndHomeNrField;
 	TextField streetField;
+	TextField homeNrField;
 
 	HBox postCodeCityCountryField;
 	TextField postCode;
@@ -46,7 +46,10 @@ public class VBoxGenerator {
 		sexField = new ChoiceBox<String>(FXCollections.observableArrayList("Mann", "Frau", "Firma"));
 		firstNameField = new TextField();
 		lastNameField = new TextField();
+		
+		streetAndHomeNrField = new HBox(2);
 		streetField = new TextField();
+		homeNrField = new TextField();
 
 		postCodeCityCountryField = new HBox(2);
 		postCode = new TextField();
@@ -79,7 +82,7 @@ public class VBoxGenerator {
 		Text sex = new Text("Andrede*");
 		Text firstName = new Text("Vorname*");
 		Text lastName = new Text("Nachname");
-		Text street = new Text("Straﬂe*");
+		Text street = new Text("Straﬂe/Nr.*");
 		Text postCodePlaceCountry = new Text("PLZ/Ort/Land*");
 		Text phone = new Text("Telefon Nr.");
 		Text mobilePhone = new Text("Handy Nr.");
@@ -101,9 +104,10 @@ public class VBoxGenerator {
 		setSize(secondColumn, 15);
 		VBox thirdColumn = new VBox(3);
 		
+		streetAndHomeNrField.getChildren().addAll(streetField, homeNrField);
 		postCodeCityCountryField.getChildren().addAll(postCode, city, country);
 
-		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetField, postCodeCityCountryField,
+		thirdColumn.getChildren().addAll(sexField, firstNameField, lastNameField, streetAndHomeNrField, postCodeCityCountryField,
 				phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
 
 		mainWindow.getChildren().addAll(firtsColumn, secondColumn, thirdColumn);
@@ -205,7 +209,11 @@ public class VBoxGenerator {
 	}
 
 	public TextField getStreetField() {
-		return streetField;
+		return (TextField) streetAndHomeNrField.getChildren().get(0);
+	}
+	
+	public TextField getHomeNrField() {
+		return (TextField) streetAndHomeNrField.getChildren().get(1);
 	}
 
 	public HBox getPostCodeCityCountryField() {
