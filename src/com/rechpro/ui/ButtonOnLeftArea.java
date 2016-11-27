@@ -1,5 +1,5 @@
 package com.rechpro.ui;
 
-public enum EnumButton {
+public enum ButtonOnLeftArea {
 	WILLKOMMEN, RECHNUNG, EINSTELLUNG, KUNDEN
 }

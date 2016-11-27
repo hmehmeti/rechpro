@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 public class CenterArea {
 
-	protected StackPane loadCenterPane(EnumButton button) {
+	public static StackPane loadCenterPane(ButtonOnLeftArea button) {
 		StackPane stackPane = new StackPane();
 		stackPane.setAlignment(Pos.CENTER);
 		Rectangle rec = new Rectangle();

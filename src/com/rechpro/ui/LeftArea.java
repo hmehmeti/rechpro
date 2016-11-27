@@ -1,7 +1,5 @@
 package com.rechpro.ui;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
@@ -18,7 +16,7 @@ import resources.PathClass;
 
 public class LeftArea {
 
-	public void getLeftArea(BorderPane root) {
+	public void createLeftArea(BorderPane root) {
 		HBox hbox = new HBox();
 
 		String cssFont = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
@@ -34,12 +32,12 @@ public class LeftArea {
 			Button btnKunden = new Button();
 			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHight));
 			btnKunden.setStyle(cssFont);
-			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.KUNDEN)));
+			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.KUNDEN)));
 
 			Button btnRechnung = new Button();
 			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHight));
 			btnRechnung.setStyle(cssFont);
-			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.RECHNUNG)));
+			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG)));
 
 			Button btnWaren = new Button();
 			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));

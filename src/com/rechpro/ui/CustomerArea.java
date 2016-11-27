@@ -3,6 +3,8 @@ package com.rechpro.ui;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.rechpro.viewmodel.ArticleViewModelInRechnung;
+import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.CustomerController;
 import com.rechpro.worker.UserParameters;
 import com.rechpro.worker.VBoxGenerator;
@@ -11,6 +13,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -40,6 +45,7 @@ public class CustomerArea {
 	final HBox hb = new HBox();
 	private StackPane stackPane = new StackPane();
 	private CustomerController customController;
+	public static TableView<CustomerViewModel> customerTable;
 	
 	public CustomerArea() {
 		customController = new CustomerController();
@@ -54,8 +60,7 @@ public class CustomerArea {
 		// Button and Text to create new customer
 		VBox createNewCustomerBtnAndText = new VBox(2);
 		Button createNewCustomerBtn = getNewCustomerCreatButtonWithText();
-		Text createNewCustomerText = new Text("Erstelle neue Kunde");
-		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, createNewCustomerText);
+		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, new Text("Erstelle neue Kunde"));
 		
 		// new window if createNewCustomerButton is clicked
 		customerStage = new Stage();
@@ -118,6 +123,7 @@ public class CustomerArea {
 		ImgView.setFitWidth(width);
 		return ImgView;
 	}
+
 	
 	/**
 	 * Hier wird die Tabelle, in der die Kunden gelistet und gesucht werden kann, erzugt und in CustomerArea hinzugefügt

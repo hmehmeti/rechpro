@@ -1,7 +1,6 @@
 package com.rechpro.ui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.rechpro.entity.Customer;
 import com.rechpro.persistence.DBService;
@@ -40,28 +39,22 @@ import resources.PathClass;
  * @email kamuran1905@yahoo.de
  **/
 public class RechnungArea {
-	private CustomerTransformer transformer;
-	private DBService<Customer> dbService;
-	private CustomerViewModel customerViewModel;
+	public static CustomerViewModel customerToCreateBill;
 	private static Stage articleSelectStage;
 	private TableGenerator tableGenerator;
 	private TableView<ArticleViewModelInRechnung> articleTable;
-	private Button inputSubmitBtn = new Button("ok");
+	private Button inputSubmitBtn = new Button("Ändern");
 	private int articleNumber = 0;
 	private TextField choisedNumber;
 	private ArticleViewModelInRechnung selectedArticle;
-	private Stage numberInputStage;
-	
+	private Stage numberInputWindow;
+
 	public final static ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
+
 	public RechnungArea() {
 		tableGenerator = new TableGenerator();
-		transformer = new CustomerTransformer();
-        dbService = new DBService<Customer>("Customer");
-        ArrayList<Customer> customers = (ArrayList<Customer>)dbService.getEntities();
-        //TODO hier muss ausgewählte Customer
-        customerViewModel = transformer.entityToViewModel(customers.get(3));
 	}
-	
+
 	public GridPane addGridPane() {
 
 		GridPane grid = new GridPane();
@@ -83,42 +76,42 @@ public class RechnungArea {
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
 
-		//////// (Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr.  ////////
+		//////// (Right) Seller and Customer Address | (Left) Date, Customer and
+		//////// Rechnung Nr. ////////
 		VBox sellerAddressMini = getSellerMiniAddress();
 		VBox leftColumn = getLeftColumn();
 		VBox rightColumn = getRightColumn();
 		VBox rechnungTextRow = getRechnungTextRow();
-		
+
 		centerTop.setTop(sellerAddressMini);
 		centerTop.setLeft(leftColumn);
 		centerTop.setRight(rightColumn);
 		centerTop.setBottom(rechnungTextRow);
-		
-		////////(Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr.  end ////////
+
+		//////// (Right) Seller and Customer Address | (Left) Date, Customer and
+		//////// Rechnung Nr. end ////////
 
 		///////////////// list of selected articles //////////////////////////////
 		articleTable = tableGenerator.getSelectedArticleTable();
 		BorderPane centerButtom = new BorderPane();
-        articleTable.setItems(articles);
+		articleTable.setItems(articles);
 		centerButtom.setCenter(articleTable);
-		
-		final Button addButton = new Button("Ware Hinzufügen");
-        addButton.setOnAction(e -> addCustomerSelectionArea());
+
+		final Button addButton = new Button("Artikel Hinzufügen");
+		addButton.setOnAction(e -> openArticlesWindow());
 
 		center.setTop(centerTop);
 		center.setCenter(centerButtom);
 		center.setBottom(addButton);
 		mainWinBorderPane.setCenter(center);
-		
-		// Create ContextMenu
-		ContextMenu contextMenu = getContextMenu();
-		articleTable.setOnContextMenuRequested(e->
-		{
-			contextMenu.show(center, e.getScreenX(), e.getScreenY());
-			selectedArticle = (ArticleViewModelInRechnung)articleTable.getSelectionModel().getSelectedItem();
-			System.out.println("selected article id :"+ selectedArticle.getArticleNumber());
+
+		// right click on Mouse on the article to remove or change the number of article
+		articleTable.setOnContextMenuRequested(e -> {
+			getContextMenu().show(center, e.getScreenX(), e.getScreenY());
+			selectedArticle = (ArticleViewModelInRechnung) articleTable.getSelectionModel().getSelectedItem();
+			System.out.println("selected article id :" + selectedArticle.getArticleNumber());
 		});
-		
+
 		///////////////// list of selected articles end /////////////////////////////
 
 		// --------- footer ----------------------------------//
@@ -127,9 +120,9 @@ public class RechnungArea {
 
 		Text footerInfo = new Text("Füß Informationen");
 		Line line2 = new Line(90, 40, 800, 40);
-	    line2.setStroke(Color.BLACK);
-	    Line line3 = new Line(90, 40, 800, 40);
-	    line3.setStroke(Color.BLACK);
+		line2.setStroke(Color.BLACK);
+		Line line3 = new Line(90, 40, 800, 40);
+		line3.setStroke(Color.BLACK);
 
 		footer.getChildren().addAll(line2, footerInfo, line3);
 
@@ -141,33 +134,31 @@ public class RechnungArea {
 
 		return grid;
 	}
-	
+
 	private ContextMenu getContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-        
-        MenuItem deleteArticle = new MenuItem("Artikel Löschen");
-        MenuItem changeArticleNumber = new MenuItem("Anzahl Ändern");
-        
-        changeArticleNumber.setOnAction(e -> 
-        {
-        	numberInputStage = getNumberInputStage();
-        	numberInputStage.show();
-        });
-        
-        inputSubmitBtn.setOnAction(e -> 
-        {
-        	checkChoisedNumberAndSetArticleNumber();
-        	numberInputStage.close();
-        });
-        
-        deleteArticle.setOnAction(e->deleteSelectedArticle());
-        contextMenu.getItems().addAll(deleteArticle, changeArticleNumber);
-        
+
+		MenuItem deleteArticle = new MenuItem("Artikel Löschen");
+		MenuItem updateArticleNumber = new MenuItem("Anzahl Ändern");
+
+		updateArticleNumber.setOnAction(e -> {
+			numberInputWindow = getNumberInputWindow();
+			numberInputWindow.show();
+		});
+
+		inputSubmitBtn.setOnAction(e -> {
+			checkChoisedNumberAndSetArticleNumber();
+			numberInputWindow.close();
+		});
+
+		deleteArticle.setOnAction(e -> deleteSelectedArticle());
+		contextMenu.getItems().addAll(deleteArticle, updateArticleNumber);
+
 		return contextMenu;
 	}
 
 	private void deleteSelectedArticle() {
-		if(articles.contains(selectedArticle))
+		if (articles.contains(selectedArticle))
 			articles.remove(selectedArticle);
 		else
 			return;
@@ -177,17 +168,17 @@ public class RechnungArea {
 		int choisedNumberValue = 0;
 		try {
 			choisedNumberValue = Integer.parseInt(choisedNumber.getText());
-		} catch (Exception e) {	}
-		
-		if(choisedNumberValue != 0){
-			articleNumber = choisedNumberValue;
-			editSelectedArticleNumber();
+			if (choisedNumberValue != 0) {
+				articleNumber = choisedNumberValue;
+				editSelectedArticleNumber();
+			} else
+				return;
+		} catch (Exception e) {	
+			e.printStackTrace();
 		}
-		else
-			return;
 	}
 
-	private Stage getNumberInputStage(){
+	private Stage getNumberInputWindow() {
 		Stage newStage = new Stage();
 		newStage.setTitle("Waren Anzahl Eingeben");
 		newStage.initStyle(StageStyle.UTILITY);
@@ -201,29 +192,36 @@ public class RechnungArea {
 		newStage.setScene(stageScene);
 		return newStage;
 	}
-	
+
 	private VBox getLeftColumn() {
 		VBox customerAndAddress = new VBox(5);
-		String customName = customerViewModel.getFirstName().get() +" "+ customerViewModel.getLastName().get();
-		Text custumerName = new Text(customName);
-		String street = customerViewModel.getStreet().get();
-		String number = customerViewModel.getNo().get();
-		String postCode = customerViewModel.getPostCode().get();
-		String city = customerViewModel.getCity().get();
+		if (customerToCreateBill != null) {
+			String customName = customerToCreateBill.getFirstName().get() + " "	+ customerToCreateBill.getLastName().get();
+			Text custumerName = new Text(customName);
+			String street = customerToCreateBill.getStreet().get();
+			String number = customerToCreateBill.getNo().get();
+			String postCode = customerToCreateBill.getPostCode().get();
+			String city = customerToCreateBill.getCity().get();
 
-		Text custumerAdress = new Text(street + " " + number + "\n" + postCode + " " + city);
-		customerAndAddress.getChildren().addAll(custumerName, custumerAdress);
-		
+			Text custumerAdress = new Text(street + " " + number + "\n" + postCode + " " + city);
+			customerAndAddress.getChildren().addAll(custumerName, custumerAdress);
+		} else {
+			Text custumerAdress = new Text("Musterstr. 123 \n" + "MusterPLZ Musterstadt ");
+			customerAndAddress.getChildren().addAll(new Text("Muster Kunde"), custumerAdress);
+		}
 		return customerAndAddress;
 	}
 
 	private VBox getRightColumn() {
 		VBox rightColumn = new VBox(5);
-		
+		Text customerNr;
 		Text dateText = new Text("Datum: 12.12.2014");
-		Text customerNr = new Text("KundenNr.: " + customerViewModel.getCustomerId().get());
+		if (customerToCreateBill != null)
+			customerNr = new Text("KundenNr.: " + customerToCreateBill.getCustomerId().get());
+		else
+			customerNr = new Text("KundenNr.: 123456789");
 		Text rechnungNr = new Text("RechungsNr.: 1234567887");
-		
+
 		rightColumn.getChildren().addAll(dateText, customerNr, rechnungNr);
 		return rightColumn;
 	}
@@ -233,8 +231,8 @@ public class RechnungArea {
 		Label billText = new Label("RECHNUNG");
 		billText.setFont(new Font("Arial", 30));
 		Line line4 = new Line(90, 40, 800, 40);
-	    line4.setStroke(Color.BLACK);
-		billHBox.getChildren().addAll(billText,line4);
+		line4.setStroke(Color.BLACK);
+		billHBox.getChildren().addAll(billText, line4);
 		return billHBox;
 	}
 
@@ -244,35 +242,35 @@ public class RechnungArea {
 		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		Line line = new Line(90, 40, 350, 40);
-	    line.setStroke(Color.BLACK);
+		line.setStroke(Color.BLACK);
 		miniAdress.getChildren().addAll(sellerAddress, line);
-		
+
 		return miniAdress;
 	}
 
-	public static void closeArticleSelectStage(){
+	public static void closeArticleSelectStage() {
 		if (articleSelectStage == null)
 			return;
 		articleSelectStage.close();
 	}
-	
+
 	private void editSelectedArticleNumber() {
-		
-		if(articleNumber != 0)
+		if (articleNumber != 0)
 			selectedArticle.setNumber(articleNumber);
+		
 		updateArticleInTableView(selectedArticle);
 	}
-	
+
 	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
-		for(ArticleViewModelInRechnung article: articles){
-			if(article.getArticleNumber() == selectedArticle.getArticleNumber()){
-				articles.remove(article);
-				articles.add(selectedArticle);
-			}
+
+		for(int i = 0; i < articles.size(); i++){
+			ArticleViewModelInRechnung article = articles.get(i);
+			if (article.getArticleNumber() == selectedArticle.getArticleNumber())
+				articles.set(i, selectedArticle);
 		}
 	}
 
-	private void addCustomerSelectionArea() {
+	private void openArticlesWindow() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ArticleSelectionTable.fxml"));
 		try {
 			articleSelectStage = new Stage();
@@ -283,7 +281,7 @@ public class RechnungArea {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private ImageView createImageView(String imgPath, int width, int hight) {
 		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
 		ImgView.setFitHeight(hight);

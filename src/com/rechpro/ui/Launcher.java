@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import resources.PathClass;
 
 public class Launcher extends Application {
-	BorderPane root;
+	public static BorderPane root;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -39,8 +39,8 @@ public class Launcher extends Application {
 			//rightArea.getRightArea(root);
 			menuLeiste.getMenu(root);
 			footer.getFooter(root);
-			leftArea.getLeftArea(root);
-			centerArea.loadCenterPane(EnumButton.WILLKOMMEN);
+			leftArea.createLeftArea(root);
+			centerArea.loadCenterPane(ButtonOnLeftArea.WILLKOMMEN);
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource(PathClass.APPLICATION_CSS).toExternalForm());

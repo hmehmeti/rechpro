@@ -10,8 +10,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import com.rechpro.entity.Customer;
-
 /**
  * This code was taken almost in entirety from the Hibernate 3.1 reference
  * manual. The package name and formatting has been changed only.
