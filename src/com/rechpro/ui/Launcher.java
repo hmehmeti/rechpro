@@ -27,7 +27,7 @@ public class Launcher extends Application {
 		try {
 			MenuLeiste menuLeiste = new MenuLeiste();
 			LeftArea leftArea = new LeftArea();
-			RightArea rightArea = new RightArea();
+			//RightArea rightArea = new RightArea();
 			CenterArea centerArea = new CenterArea();
 			Footer footer = new Footer();
 
@@ -40,7 +40,7 @@ public class Launcher extends Application {
 			menuLeiste.getMenu(root);
 			footer.getFooter(root);
 			leftArea.createLeftArea(root);
-			centerArea.loadCenterPane(ButtonOnLeftArea.WILLKOMMEN);
+			root.setCenter(centerArea.loadCenterPane(ButtonOnLeftArea.KUNDEN));
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource(PathClass.APPLICATION_CSS).toExternalForm());

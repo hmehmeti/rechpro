@@ -70,14 +70,13 @@ public class RechnungArea {
 		mainWinBorderPane.setTop(header);
 		// ------------Header end ----------------------------//
 
-		// ------------Adress of seller ----------------------//
+		// ------------Address of seller ----------------------//
 		BorderPane center = new BorderPane();
 		center.setPrefSize(700, 400);
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
 
-		//////// (Right) Seller and Customer Address | (Left) Date, Customer and
-		//////// Rechnung Nr. ////////
+		/** (Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr. **/
 		VBox sellerAddressMini = getSellerMiniAddress();
 		VBox leftColumn = getLeftColumn();
 		VBox rightColumn = getRightColumn();
@@ -88,10 +87,9 @@ public class RechnungArea {
 		centerTop.setRight(rightColumn);
 		centerTop.setBottom(rechnungTextRow);
 
-		//////// (Right) Seller and Customer Address | (Left) Date, Customer and
-		//////// Rechnung Nr. end ////////
+		/** (Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr. end **/
 
-		///////////////// list of selected articles //////////////////////////////
+		/** list of selected articles **/
 		articleTable = tableGenerator.getSelectedArticleTable();
 		BorderPane centerButtom = new BorderPane();
 		articleTable.setItems(articles);
@@ -99,22 +97,44 @@ public class RechnungArea {
 
 		final Button addButton = new Button("Artikel Hinzufügen");
 		addButton.setOnAction(e -> openArticlesWindow());
-
+		BorderPane underCenter = new BorderPane();
+		Text doppelPunkt = new Text(" : ");
+		Text nettoBetragText = new Text("Nettobetrag ");
+		Text nettoBetrag = new Text("<Betrag>");
+		HBox nettoBetragColumn = new HBox();
+		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag);
+		
+		Text steuerText = new Text("zzgl. 19 % MwSt. ");
+		Text doppelPunkt2 = new Text(" : ");
+		Text steuerBetrag = new Text("<Steuer Betrag>");
+		HBox steuerColumn = new HBox();
+		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, steuerBetrag);
+		
+		Text bruttoBetragText = new Text("Bruttobetrag ");
+		bruttoBetragText.setFont(new Font("Arial", 15));
+		Text doppelPunkt3 = new Text(" : ");
+		Text bruttoBetrag = new Text(""+calculateBetrag());
+		HBox bruttoBetragColumn = new HBox();
+		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag);
+		VBox test = new VBox();
+		test.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
+		underCenter.setRight(test);
+		underCenter.setLeft(addButton);
+		
 		center.setTop(centerTop);
 		center.setCenter(centerButtom);
-		center.setBottom(addButton);
+		center.setBottom(underCenter);
 		mainWinBorderPane.setCenter(center);
 
 		// right click on Mouse on the article to remove or change the number of article
 		articleTable.setOnContextMenuRequested(e -> {
 			getContextMenu().show(center, e.getScreenX(), e.getScreenY());
 			selectedArticle = (ArticleViewModelInRechnung) articleTable.getSelectionModel().getSelectedItem();
-			System.out.println("selected article id :" + selectedArticle.getArticleNumber());
 		});
 
-		///////////////// list of selected articles end /////////////////////////////
+		/** list of selected articles end **/
 
-		// --------- footer ----------------------------------//
+		/************ footer ***************/
 		VBox footer = new VBox(5);
 		footer.setPrefWidth(700);
 
@@ -127,12 +147,20 @@ public class RechnungArea {
 		footer.getChildren().addAll(line2, footerInfo, line3);
 
 		mainWinBorderPane.setBottom(footer);
-		// --------- footer end ------------------------------//
+		/********* footer end **************/
 
 		mainWindow.getChildren().addAll(mainWinBorderPane);
 		grid.getChildren().add(mainWindow);
 
 		return grid;
+	}
+
+	private double calculateBetrag() {
+		double betrag = 0;
+		for(ArticleViewModelInRechnung article: articles)
+			betrag = betrag + article.getTotalPrise();
+
+		return betrag;
 	}
 
 	private ContextMenu getContextMenu() {
