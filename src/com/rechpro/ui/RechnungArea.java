@@ -64,17 +64,62 @@ public class RechnungArea {
 		mainWinBorderPane.setPrefSize(700, 1000);
 
 		VBox mainWindow = new VBox(20);
-		// ------------Header begin---------------------------//
+		
+		BorderPane header = createHeaderArea();
+		BorderPane center = createCenterArea();
+		VBox footer = createFooterArea();
+		
+		mainWinBorderPane.setTop(header);
+		mainWinBorderPane.setCenter(center);
+		mainWinBorderPane.setBottom(footer);
+		
+		// right click on Mouse on the article to remove or change the number of article
+		articleTable.setOnContextMenuRequested(e -> {
+			getContextMenu().show(center, e.getScreenX(), e.getScreenY());
+			selectedArticle = (ArticleViewModelInRechnung) articleTable.getSelectionModel().getSelectedItem();
+		});
+
+		mainWindow.getChildren().addAll(mainWinBorderPane);
+		grid.getChildren().add(mainWindow);
+
+		return grid;
+	}
+
+	private BorderPane createHeaderArea() {
 		BorderPane header = new BorderPane();
 		header.setPrefSize(700, 150);
 		ImageView logo = createImageView(PathClass.ARTICLE_ICON_PATH, 80, 80);
 		header.setRight(logo);
-		mainWinBorderPane.setTop(header);
-		// ------------Header end ----------------------------//
+		return header;
+	}
 
-		// ------------Address of seller ----------------------//
+	private BorderPane createCenterArea() {
 		BorderPane center = new BorderPane();
 		center.setPrefSize(700, 400);
+		
+		BorderPane centerTop = createCenterTopArea();
+		BorderPane centerButtom = createCenterButtomArea();
+		BorderPane underCenter = createUnderCenterArea();
+
+		center.setTop(centerTop);
+		center.setCenter(centerButtom);
+		center.setBottom(underCenter);
+		return center;
+	}
+	private VBox createFooterArea() {
+		VBox footer = new VBox(5);
+		footer.setPrefWidth(700);
+		Text footerInfo = new Text("Füß Informationen");
+		Line line2 = new Line(90, 40, 800, 40);
+		line2.setStroke(Color.BLACK);
+		Line line3 = new Line(90, 40, 800, 40);
+		line3.setStroke(Color.BLACK);
+		footer.getChildren().addAll(line2, footerInfo, line3);
+		
+		return footer;
+	}
+
+	private BorderPane createCenterTopArea() {
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
 
@@ -88,15 +133,11 @@ public class RechnungArea {
 		centerTop.setLeft(leftColumn);
 		centerTop.setRight(rightColumn);
 		centerTop.setBottom(rechnungTextRow);
+		
+		return centerTop;
+	}
 
-		/** (Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr. end **/
-
-		/** list of selected articles **/
-		articleTable = tableGenerator.getSelectedArticleTable();
-		BorderPane centerButtom = new BorderPane();
-		articleTable.setItems(articles);
-		centerButtom.setCenter(articleTable);
-
+	private BorderPane createUnderCenterArea() {
 		final Button addButton = new Button("Artikel Hinzufügen");
 		addButton.setOnAction(e -> openArticlesWindow());
 		BorderPane underCenter = new BorderPane();
@@ -121,38 +162,15 @@ public class RechnungArea {
 		underCenter.setRight(PriseTotalColumn);
 		underCenter.setLeft(addButton);
 		
-		center.setTop(centerTop);
-		center.setCenter(centerButtom);
-		center.setBottom(underCenter);
-		mainWinBorderPane.setCenter(center);
+		return underCenter;
+	}
 
-		// right click on Mouse on the article to remove or change the number of article
-		articleTable.setOnContextMenuRequested(e -> {
-			getContextMenu().show(center, e.getScreenX(), e.getScreenY());
-			selectedArticle = (ArticleViewModelInRechnung) articleTable.getSelectionModel().getSelectedItem();
-		});
-
-		/** list of selected articles end **/
-
-		/************ footer ***************/
-		VBox footer = new VBox(5);
-		footer.setPrefWidth(700);
-
-		Text footerInfo = new Text("Füß Informationen");
-		Line line2 = new Line(90, 40, 800, 40);
-		line2.setStroke(Color.BLACK);
-		Line line3 = new Line(90, 40, 800, 40);
-		line3.setStroke(Color.BLACK);
-
-		footer.getChildren().addAll(line2, footerInfo, line3);
-
-		mainWinBorderPane.setBottom(footer);
-		/********* footer end **************/
-
-		mainWindow.getChildren().addAll(mainWinBorderPane);
-		grid.getChildren().add(mainWindow);
-
-		return grid;
+	private BorderPane createCenterButtomArea() {
+		articleTable = tableGenerator.getSelectedArticleTable();
+		BorderPane centerButtom = new BorderPane();
+		articleTable.setItems(articles);
+		centerButtom.setCenter(articleTable);
+		return centerButtom;
 	}
 
 	private ContextMenu getContextMenu() {
@@ -203,10 +221,10 @@ public class RechnungArea {
 
 	private Stage getNumberInputWindow() {
 		Stage newStage = new Stage();
-		newStage.setTitle("Waren Anzahl Eingeben");
+		newStage.setTitle("Neue Anzahl Eingeben");
 		newStage.initStyle(StageStyle.UTILITY);
 		newStage.setResizable(false);
-		inputSubmitBtn.setPrefWidth(30);
+		inputSubmitBtn.setPrefWidth(70);
 		HBox comp = new HBox();
 		choisedNumber = new TextField();
 		choisedNumber.setPrefWidth(70);
@@ -264,7 +282,9 @@ public class RechnungArea {
 		// TODO : get address from from config class
 		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
 		sellerAddress.setFont(Font.font("Verdana", 8));
-		Line line = new Line(90, 40, 350, 40);
+		int addressLength = (sellerAddress.getText().length())*8;
+		System.out.println("MINI ADRESS LENGTH : "+addressLength);
+		Line line = new Line(90, 40, addressLength, 40);
 		line.setStroke(Color.BLACK);
 		miniAdress.getChildren().addAll(sellerAddress, line);
 
