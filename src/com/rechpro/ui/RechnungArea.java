@@ -283,7 +283,6 @@ public class RechnungArea {
 		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		int addressLength = (sellerAddress.getText().length())*8;
-		System.out.println("MINI ADRESS LENGTH : "+addressLength);
 		Line line = new Line(90, 40, addressLength, 40);
 		line.setStroke(Color.BLACK);
 		miniAdress.getChildren().addAll(sellerAddress, line);
