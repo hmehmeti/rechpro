@@ -1,2 +1,7 @@
 /bin/
 /.classpath
+.idea
+.settings
+.classpath
+.project
+RechPro.imi
