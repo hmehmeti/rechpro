@@ -71,24 +71,25 @@ public class ArticleController {
 
 				String lowerCaseFilter = newValue.toLowerCase();
 
-				if (article.getArticleNumber().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				if (article.getArticleNumber().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) 
 					return true; 
-				} else if (article.getName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				else if (article.getName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
 					return true;
-				} else if (article.getCategory().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				else if (article.getCategory().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
 					return true; 
-				}
+				
 				return false;
 			});
 		});
 		
 		articleTable.setOnMousePressed(e -> {
-			if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+			boolean isMouseDoppelClicked = e.isPrimaryButtonDown() && e.getClickCount() == 2;
+			if (isMouseDoppelClicked) {
 				selectedArticle = articleTable.getSelectionModel().getSelectedItem();
 				ArticleViewModelInRechnung a = transformer.articleViewModel2ArticleViewModelInRechnung(selectedArticle);
 				if(!RechnungArea.articles.contains(a))
 					RechnungArea.articles.add(a);
-				
+				RechnungArea.updateBillAmound();
 				RechnungArea.closeArticleSelectStage();
 			}
 		});

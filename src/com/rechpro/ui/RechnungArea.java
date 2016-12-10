@@ -1,10 +1,8 @@
 package com.rechpro.ui;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
-import com.rechpro.entity.Customer;
-import com.rechpro.persistence.DBService;
-import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.TableGenerator;
@@ -48,6 +46,10 @@ public class RechnungArea {
 	private TextField choisedNumber;
 	private ArticleViewModelInRechnung selectedArticle;
 	private Stage numberInputWindow;
+	private static Text bruttoBetrag = new Text();
+	private static Text mehrwertsteuer = new Text();
+	private static Text nettoBetrag = new Text();
+	private String currencyText = " €";
 
 	public final static ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 
@@ -100,25 +102,23 @@ public class RechnungArea {
 		BorderPane underCenter = new BorderPane();
 		Text doppelPunkt = new Text(" : ");
 		Text nettoBetragText = new Text("Nettobetrag ");
-		Text nettoBetrag = new Text("<Betrag>");
 		HBox nettoBetragColumn = new HBox();
-		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag);
+		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag, new Text(currencyText));
 		
 		Text steuerText = new Text("zzgl. 19 % MwSt. ");
 		Text doppelPunkt2 = new Text(" : ");
-		Text steuerBetrag = new Text("<Steuer Betrag>");
 		HBox steuerColumn = new HBox();
-		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, steuerBetrag);
+		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, mehrwertsteuer, new Text(currencyText));
 		
 		Text bruttoBetragText = new Text("Bruttobetrag ");
 		bruttoBetragText.setFont(new Font("Arial", 15));
 		Text doppelPunkt3 = new Text(" : ");
-		Text bruttoBetrag = new Text(""+calculateBetrag());
+		updateBillAmound();
 		HBox bruttoBetragColumn = new HBox();
-		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag);
-		VBox test = new VBox();
-		test.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
-		underCenter.setRight(test);
+		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag, new Text(currencyText));
+		VBox PriseTotalColumn = new VBox();
+		PriseTotalColumn.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
+		underCenter.setRight(PriseTotalColumn);
 		underCenter.setLeft(addButton);
 		
 		center.setTop(centerTop);
@@ -155,14 +155,6 @@ public class RechnungArea {
 		return grid;
 	}
 
-	private double calculateBetrag() {
-		double betrag = 0;
-		for(ArticleViewModelInRechnung article: articles)
-			betrag = betrag + article.getTotalPrise();
-
-		return betrag;
-	}
-
 	private ContextMenu getContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
 
@@ -190,6 +182,8 @@ public class RechnungArea {
 			articles.remove(selectedArticle);
 		else
 			return;
+		
+		updateBillAmound();
 	}
 
 	private void checkChoisedNumberAndSetArticleNumber() {
@@ -199,6 +193,7 @@ public class RechnungArea {
 			if (choisedNumberValue != 0) {
 				articleNumber = choisedNumberValue;
 				editSelectedArticleNumber();
+				
 			} else
 				return;
 		} catch (Exception e) {	
@@ -285,7 +280,6 @@ public class RechnungArea {
 	private void editSelectedArticleNumber() {
 		if (articleNumber != 0)
 			selectedArticle.setNumber(articleNumber);
-		
 		updateArticleInTableView(selectedArticle);
 	}
 
@@ -296,6 +290,30 @@ public class RechnungArea {
 			if (article.getArticleNumber() == selectedArticle.getArticleNumber())
 				articles.set(i, selectedArticle);
 		}
+		updateBillAmound();
+	}
+
+	public static void updateBillAmound() {
+		String pattern = "###,###.###";
+		DecimalFormat decimalFormat = new DecimalFormat(pattern);
+		double nettoBetragX = calculateNettoBetrag();
+		double vat = calculateMehrwertsteuer(nettoBetragX);
+		double bruttoBetragX = nettoBetragX + vat;
+		mehrwertsteuer.setText(decimalFormat.format(vat));
+		bruttoBetrag.setText(decimalFormat.format(bruttoBetragX));
+		nettoBetrag.setText(decimalFormat.format(nettoBetragX));
+	}
+	
+	private static double calculateNettoBetrag() {
+		double betrag = 0;
+		for(ArticleViewModelInRechnung article: articles)
+			betrag = betrag + article.getTotalPrise();
+		return betrag;
+	}
+
+	private static double calculateMehrwertsteuer(double betrag) {
+		
+		return (betrag* 19)/100;
 	}
 
 	private void openArticlesWindow() {
