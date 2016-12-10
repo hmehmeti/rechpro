@@ -5,6 +5,7 @@ public class PathClass {
 	//FILEs
 	public static final String APPLICATION_CSS = "/com/rechpro/ui/application.css";
 	public static final String RECHPRO_JFXML_FILE = "/resources/RechProjFXML.fxml";
+	public static final String WORD_TMPL_PATH = "/resources/rechnungTemplate.docx";
 	
 	//BUTTONs
 	public static final String ADD_NEW_CUSTOMER_BTN = "/com/rechpro/img/addNewCustomerBtn.png";
@@ -14,4 +15,6 @@ public class PathClass {
 	public static final String RECHNUNG_ICON_PATH = "/com/rechpro/img/rechnung.png";
 	public static final String SETTING_ICON_PATH = "/com/rechpro/img/setting.png";
 	public static final String ARTICLE_ICON_PATH = "/com/rechpro/img/ware.png";
+	public static final String WORD_ICON_PATH = "/com/rechpro/img/word_icon.png";
+	
 }
