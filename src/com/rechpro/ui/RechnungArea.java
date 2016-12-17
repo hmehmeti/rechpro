@@ -125,7 +125,7 @@ public class RechnungArea {
 		BorderPane footer = new BorderPane();
 		footer.setPrefWidth(700);
 		Button createWordFile = new Button();
-		createWordFile.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(PathClass.WORD_ICON_PATH))));
+		createWordFile.setGraphic(createImageView(PathClass.WORD_ICON_PATH, 50, 50));
 		
 		createWordFile.setOnAction(e -> {
 			WordprocessingMLPackage test;
