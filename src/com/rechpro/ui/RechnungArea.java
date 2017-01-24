@@ -1,7 +1,14 @@
 package com.rechpro.ui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
+
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
@@ -57,6 +64,13 @@ public class RechnungArea {
 		tableGenerator = new TableGenerator();
 	}
 
+	private WordprocessingMLPackage getTemplate(String name) throws Docx4JException, FileNotFoundException {
+		URL foo = getClass().getResource(name);
+		File file = new File(foo.getPath());
+		FileInputStream fileInputStream = new FileInputStream(file);
+		WordprocessingMLPackage template = WordprocessingMLPackage.load(fileInputStream);
+		return template;
+	}
 	public GridPane addGridPane() {
 
 		GridPane grid = new GridPane();
@@ -65,11 +79,11 @@ public class RechnungArea {
 
 		VBox mainWindow = new VBox(20);
 		
-		BorderPane header = createHeaderArea();
+		//BorderPane header = createHeaderArea();
 		BorderPane center = createCenterArea();
-		VBox footer = createFooterArea();
+		BorderPane footer = createFooterArea();
 		
-		mainWinBorderPane.setTop(header);
+		//mainWinBorderPane.setTop(header);
 		mainWinBorderPane.setCenter(center);
 		mainWinBorderPane.setBottom(footer);
 		
@@ -106,15 +120,30 @@ public class RechnungArea {
 		center.setBottom(underCenter);
 		return center;
 	}
-	private VBox createFooterArea() {
-		VBox footer = new VBox(5);
+	
+	private BorderPane createFooterArea() {
+		BorderPane footer = new BorderPane();
 		footer.setPrefWidth(700);
-		Text footerInfo = new Text("Füß Informationen");
+		Button createWordFile = new Button();
+		createWordFile.setGraphic(createImageView(PathClass.WORD_ICON_PATH, 50, 50));
+		
+		createWordFile.setOnAction(e -> {
+			WordprocessingMLPackage test;
+			try {
+				test =  getTemplate(PathClass.WORD_TMPL_PATH);
+				System.out.println("foo");
+			} catch (FileNotFoundException | Docx4JException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} );
 		Line line2 = new Line(90, 40, 800, 40);
 		line2.setStroke(Color.BLACK);
 		Line line3 = new Line(90, 40, 800, 40);
 		line3.setStroke(Color.BLACK);
-		footer.getChildren().addAll(line2, footerInfo, line3);
+		footer.setTop(line2);
+		footer.setLeft(createWordFile);
+		footer.setBottom(line3);
 		
 		return footer;
 	}
@@ -123,7 +152,6 @@ public class RechnungArea {
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
 
-		/** (Right) Seller and Customer Address | (Left) Date, Customer and Rechnung Nr. **/
 		VBox sellerAddressMini = getSellerMiniAddress();
 		VBox leftColumn = getLeftColumn();
 		VBox rightColumn = getRightColumn();
@@ -283,7 +311,6 @@ public class RechnungArea {
 		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		int addressLength = (sellerAddress.getText().length())*8;
-		System.out.println("MINI ADRESS LENGTH : "+addressLength);
 		Line line = new Line(90, 40, addressLength, 40);
 		line.setStroke(Color.BLACK);
 		miniAdress.getChildren().addAll(sellerAddress, line);
