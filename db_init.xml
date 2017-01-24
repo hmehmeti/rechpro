@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<project name="mysql_db_init">
+	<property name="connector_jar" value="./lib/mysql_jdbc_connector/mysql-connector-java-5.1.40-bin.jar"/>
+	<property name="db_alias" value="rechpro"/>
+	<property name="port" value="3306"/>
+	<property name="driver_class" value="com.mysql.jdbc.Driver"/>
+	<property name="username" value="root"/>
+	<property name="password" value="mysql"/>
+	
+	<target name="1_drop_db">
+		<sql classpath="${connector_jar}"
+			driver="${driver_class}"
+			url="jdbc:mysql://localhost:${port}/${db_alias}"
+			userid="${username}"
+			password="${password}"
+			print="yes">			
+			-- SQL script to drop tables
+			DROP TABLE IF EXISTS customer CASCADE;
+			DROP TABLE IF EXISTS rechnung CASCADE;
+			DROP TABLE IF EXISTS article CASCADE;
+			DROP TABLE IF EXISTS article_category CASCADE;			
+		</sql>
+	</target>
+	
+	<target name="2_create_db">
+		<sql classpath="${connector_jar}"
+			driver="${driver_class}"
+			url="jdbc:mysql://localhost:${port}/${db_alias}"
+			userid="${username}"
+			password="${password}"
+			print="yes">			
+-- SQL script to create tables
+			
+CREATE TABLE IF NOT EXISTS customer 
+(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	sex varchar(6) NOT NULL,
+	firstname VARCHAR(30) NOT NULL,
+	lastname VARCHAR(30) NOT NULL,
+	street VARCHAR(50),
+	home_no VARCHAR(50),
+	post_code VARCHAR(50),
+	city VARCHAR(50),
+	country VARCHAR(50),
+	phone VARCHAR(50),
+	mobile_phone VARCHAR(50),
+	fax VARCHAR(50),
+	email VARCHAR(50),
+	birth_day VARCHAR(50),
+	bank_no VARCHAR(50),
+	blz VARCHAR(50),
+	iban VARCHAR(50),
+	bic_no VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS rechnung
+(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	rechnung_number INT NOT NULL,
+	customer_id INT REFERENCES customer(id),
+	create_date DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS article_category
+(	
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+	name VARCHAR(50) NOT NULL,
+	description VARCHAR (255)
+);
+
+CREATE TABLE IF NOT EXISTS article
+(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+	article_number INT NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	description VARCHAR (255),
+	rechnung_id INT REFERENCES rechnung(id),
+	category INT REFERENCES article_category(id),	
+	price DOUBLE
+);
+		</sql>
+	</target>
+	
+	<target name="3_init_db_test_data">
+		<sql classpath="${connector_jar}"
+			driver="${driver_class}"
+			url="jdbc:mysql://localhost:${port}/${db_alias}"
+			userid="${username}"
+			password="${password}"
+			print="yes">
+-- SQL script to initialize the database with test data
+
+INSERT INTO customer VALUES (1, 'm', 'Elvi', 'Osmanlliu', 'Mozartstr..', '1', '76275', 'Ettlingen', 'Deutschland', '07243-', '015221234567', '', 'elviosmanlliu@gmail.com', '1.1.1980', '123456789', '12345', 'DE0121234567890', 'BIC');
+INSERT INTO rechnung VALUES (1, 1001, 1, '24.01.2017');
+INSERT INTO article_category VALUES (1, 'computer', 'hardware and accessories');
+INSERT INTO article VALUES (1, 1000, 'notebook', 'hp core i7, 8gb ram, 500gb ssd', 1001, 1, '800');
+ 		</sql>	
+	</target>
+	
+	<target name="0_init_db" depends="1_drop_db, 2_create_db, 3_init_db_test_data">
+	</target>	
+</project>
+
