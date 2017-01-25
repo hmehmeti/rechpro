@@ -24,15 +24,15 @@ public class TableGenerator {
         numberOfItem.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("number"));
         numberOfItem.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.10));
         
-        TableColumn<ArticleViewModelInRechnung,String> onePrise = new TableColumn<ArticleViewModelInRechnung,String>("Einzel Preis");
-        onePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("prise"));
-        onePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
+        TableColumn<ArticleViewModelInRechnung,String> onePrice = new TableColumn<ArticleViewModelInRechnung,String>("Einzel Preis");
+        onePrice.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("price"));
+        onePrice.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
        
-        TableColumn<ArticleViewModelInRechnung,String> entirePrise = new TableColumn<ArticleViewModelInRechnung,String>("Gesamt Preis");
-        entirePrise.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("totalPrise"));
-        entirePrise.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
+        TableColumn<ArticleViewModelInRechnung,String> entirePrice = new TableColumn<ArticleViewModelInRechnung,String>("Gesamt Preis");
+        entirePrice.setCellValueFactory(new PropertyValueFactory<ArticleViewModelInRechnung,String>("totalPrice"));
+        entirePrice.prefWidthProperty().bind(articleTable.widthProperty().multiply(0.15));
         
-        articleTable.getColumns().addAll(articleNumber, name, numberOfItem, onePrise, entirePrise);
+        articleTable.getColumns().addAll(articleNumber, name, numberOfItem, onePrice, entirePrice);
         
 		return articleTable;
 	}

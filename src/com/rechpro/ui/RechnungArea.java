@@ -185,9 +185,9 @@ public class RechnungArea {
 		updateBillAmound();
 		HBox bruttoBetragColumn = new HBox();
 		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag, new Text(currencyText));
-		VBox PriseTotalColumn = new VBox();
-		PriseTotalColumn.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
-		underCenter.setRight(PriseTotalColumn);
+		VBox PriceTotalColumn = new VBox();
+		PriceTotalColumn.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
+		underCenter.setRight(PriceTotalColumn);
 		underCenter.setLeft(addButton);
 		
 		return underCenter;
@@ -354,7 +354,7 @@ public class RechnungArea {
 	private static double calculateNettoBetrag() {
 		double betrag = 0;
 		for(ArticleViewModelInRechnung article: articles)
-			betrag = betrag + article.getTotalPrise();
+			betrag = betrag + article.getTotalPrice();
 		return betrag;
 	}
 
