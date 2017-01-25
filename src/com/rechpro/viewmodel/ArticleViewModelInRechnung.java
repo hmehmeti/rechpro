@@ -13,19 +13,19 @@ public class ArticleViewModelInRechnung {
 	private String description;
 	private int rechnungId;
 	private int category;
-	private Double prise;
+	private Double price;
 	private int number = 1;
 	
 	public ArticleViewModelInRechnung(){
 		//NOP
 	}
-	public ArticleViewModelInRechnung(int articleNumber, String name, String description, int rechnungId, int category, double prise) {
+	public ArticleViewModelInRechnung(int articleNumber, String name, String description, int rechnungId, int category, double price) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
 		this.rechnungId = rechnungId;
 		this.category = category;
-		this.prise = prise;
+		this.price = price;
 	}
 
 	public String getName() {
@@ -68,12 +68,12 @@ public class ArticleViewModelInRechnung {
 		this.category = category;
 	}
 
-	public Double getPrise() {
-		return prise;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setPrise(Double prise) {
-		this.prise = prise;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	public int getId() {
@@ -88,8 +88,8 @@ public class ArticleViewModelInRechnung {
 		return this.number;
 	}
 	
-	public double getTotalPrise(){
-		double total = Math.floor((this.number * this.prise) * 1000) / 1000;
+	public double getTotalPrice(){
+		double total = Math.floor((this.number * this.price) * 1000) / 1000;
 		return total;
 	}
 	@Override
@@ -102,7 +102,7 @@ public class ArticleViewModelInRechnung {
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + number;
-		result = prime * result + ((prise == null) ? 0 : prise.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + rechnungId;
 		return result;
 	}
@@ -131,10 +131,10 @@ public class ArticleViewModelInRechnung {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (prise == null) {
-			if (other.prise != null)
+		if (price == null) {
+			if (other.price != null)
 				return false;
-		} else if (!prise.equals(other.prise))
+		} else if (!price.equals(other.price))
 			return false;
 		if (rechnungId != other.rechnungId)
 			return false;

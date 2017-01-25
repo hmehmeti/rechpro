@@ -35,19 +35,19 @@ public class Article {
 	@Column(name="category")
 	private int category;
 	
-	@Column(name="prise")
-	private Double prise;
+	@Column(name="price")
+	private Double price;
 
 	public Article(){
 		//NOP
 	}
-	public Article(int articleNumber, String name, String description, int rechnungId, int category, double prise) {
+	public Article(int articleNumber, String name, String description, int rechnungId, int category, double price) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
 		this.rechnungId = rechnungId;
 		this.category = category;
-		this.prise = prise;
+		this.price = price;
 	}
 
 	public String getName() {
@@ -90,12 +90,12 @@ public class Article {
 		this.category = category;
 	}
 
-	public Double getPrise() {
-		return prise;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setPrise(Double prise) {
-		this.prise = prise;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	public int getId() {

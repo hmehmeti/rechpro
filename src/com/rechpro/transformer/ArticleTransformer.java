@@ -24,14 +24,14 @@ public class ArticleTransformer {
 		SimpleStringProperty description = new SimpleStringProperty(article.getDescription());
 		SimpleStringProperty rechnungId = new SimpleStringProperty(Integer.toString(article.getRechnungId()));
 		SimpleStringProperty category = new SimpleStringProperty(Integer.toString(article.getCategory()));
-		SimpleStringProperty prise = new SimpleStringProperty(Double.toString(article.getPrise()));
+		SimpleStringProperty price = new SimpleStringProperty(Double.toString(article.getPrice()));
 		
 		articleVM.setArticleNumber(articleNumber);
 		articleVM.setName(name);
 		articleVM.setDescription(description);
 		articleVM.setRechnungId(rechnungId);
 		articleVM.setCategory(category);
-		articleVM.setPrise(prise);
+		articleVM.setPrice(price);
 		
 		return articleVM;
 	}
@@ -42,8 +42,8 @@ public class ArticleTransformer {
 		String description = model.getDescription().get();
 		int rechnungId = Integer.parseInt(model.getRechnungId().get());
 		int categoryId = Integer.parseInt(model.getCategory().get());
-		double prise = Double.parseDouble(model.getPrise().get());
-		return new Article(articleName, name, description, rechnungId, categoryId, prise);
+		double price = Double.parseDouble(model.getPrice().get());
+		return new Article(articleName, name, description, rechnungId, categoryId, price);
 	}
 
 	public List<ArticleViewModel> convertAndGetAllArticle(List<Article> articles) {
@@ -60,8 +60,8 @@ public class ArticleTransformer {
 		String description = model.getDescription().get();
 		int rechnungId = Integer.parseInt(model.getRechnungId().get());
 		int categoryId = Integer.parseInt(model.getCategory().get());
-		double prise = Double.parseDouble(model.getPrise().get());
+		double price = Double.parseDouble(model.getPrice().get());
 		
-		return new ArticleViewModelInRechnung(articleName, name, description, rechnungId, categoryId, prise);
+		return new ArticleViewModelInRechnung(articleName, name, description, rechnungId, categoryId, price);
 	}
 }
