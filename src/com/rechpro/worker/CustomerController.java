@@ -6,13 +6,12 @@ import com.rechpro.entity.Customer;
 import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.ui.CenterArea;
-import com.rechpro.ui.CustomerArea;
 import com.rechpro.ui.ButtonOnLeftArea;
 import com.rechpro.ui.Launcher;
-import com.rechpro.ui.LeftArea;
 import com.rechpro.ui.RechnungArea;
 import com.rechpro.viewmodel.CustomerViewModel;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,7 +21,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 /**
  * View-Controller for the person table.
@@ -44,9 +45,7 @@ public class CustomerController {
 
 	private CustomerTransformer transformer;
 	private DBService<Customer> dbService;
-
-	private CustomerViewModel customerToCreateBill;
-
+	
 	private ObservableList<CustomerViewModel> masterData = FXCollections.observableArrayList();
 
 	/**
@@ -106,17 +105,31 @@ public class CustomerController {
 
 		// 5. Add sorted (and filtered) data to the table.
 		customerTable.setItems(sortedData);
-		customerTable.setOnContextMenuRequested(e -> {
-			customerToCreateBill = (CustomerViewModel) customerTable.getSelectionModel().getSelectedItem();
-			getContextMenu(customerToCreateBill).show(customerTable, e.getScreenX(), e.getScreenY());
-			System.out.println("Selected Customername :" + customerToCreateBill.getFirstName().get());
-		});
+		
+		// 6. Create context menu for selected customer
+		customerTable.setRowFactory(
+					new Callback<TableView<CustomerViewModel>, TableRow<CustomerViewModel>>() {
+						
+						@Override
+						public TableRow<CustomerViewModel> call(TableView<CustomerViewModel> tableView) {
+							final TableRow<CustomerViewModel> row = new TableRow<>();
+							final ContextMenu rowMenu = getContextMenuForCustomer(row);
+							
+						    // only display context menu for non-null items:
+						    row.contextMenuProperty().bind(
+						      Bindings.when(Bindings.isNotNull(row.itemProperty()))
+						      .then(rowMenu)
+						      .otherwise((ContextMenu)null));
+						    return row;
+						}
+					}
+				);
 	}
 
-	private ContextMenu getContextMenu(CustomerViewModel selectedArticle) {
+	private ContextMenu getContextMenuForCustomer(TableRow<CustomerViewModel> selectedRow) {
 		ContextMenu contextMenu = new ContextMenu();
-
-		MenuItem chreateBill = new MenuItem("Rechung Erstellen");
+		
+		MenuItem createBill = new MenuItem("Rechung Erstellen");
 		MenuItem updateCustomerData = new MenuItem("Kunden Daten Ändern");
 
 		updateCustomerData.setOnAction(e -> {
@@ -129,11 +142,11 @@ public class CustomerController {
 		 * });
 		 */
 
-		chreateBill.setOnAction(e -> {
-			RechnungArea.customerToCreateBill = customerToCreateBill;
+		createBill.setOnAction(e -> {
+			RechnungArea.customerToCreateBill = selectedRow.getItem();
 			Launcher.root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG));
 		});
-		contextMenu.getItems().addAll(chreateBill, updateCustomerData);
+		contextMenu.getItems().addAll(createBill, updateCustomerData);
 
 		return contextMenu;
 	}
