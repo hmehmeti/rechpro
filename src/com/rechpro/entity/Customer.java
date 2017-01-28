@@ -11,8 +11,6 @@ import javax.persistence.Table;
 
 import com.rechpro.worker.UserParameters;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-
 /**
  * @author eosmanlliu
  *

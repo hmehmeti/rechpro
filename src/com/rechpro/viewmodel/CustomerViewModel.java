@@ -2,7 +2,6 @@ package com.rechpro.viewmodel;
 
 import java.util.HashMap;
 
-import com.rechpro.entity.Customer;
 import com.rechpro.worker.UserParameters;
 
 import javafx.beans.property.SimpleStringProperty;

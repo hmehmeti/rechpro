@@ -2,9 +2,6 @@ package com.rechpro.persistence;
 
 import java.util.List;
 
-import com.rechpro.entity.Article;
-import com.rechpro.persistence.HibernateUtil;
-
 public class DBService<T> {
 
 	private String className;

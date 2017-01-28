@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rechpro.entity.Article;
-import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.ArticleViewModel;
+import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 
 import javafx.beans.property.SimpleStringProperty;
 
