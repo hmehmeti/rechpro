@@ -12,7 +12,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -29,6 +32,7 @@ import resources.PathClass;
  */
 public class CustomerArea {
 
+	private static final String KEINE_OBLIGATORISCHE_FELDER = "Obligatorische Felder sind nicht eingegeben";
 	private VBoxGenerator customerTableGenerator;
 	private Stage customerStage;
 	private static Button customerSaveBtn;
@@ -41,7 +45,7 @@ public class CustomerArea {
 	public CustomerArea() {
 		customController = new CustomerController();
 		customerTableGenerator = new VBoxGenerator();
-		addCustomerSelectionArea();
+		loadCustomerSelectionArea();
 		
 		//stackPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 	}
@@ -55,12 +59,17 @@ public class CustomerArea {
 		
 		// new window if createNewCustomerButton is clicked
 		customerStage = new Stage();
-		VBox customCreateWindow = customerTableGenerator.createCustomerCreationTable();
-		customerStage.setScene(new Scene(customCreateWindow));
-		createNewCustomerBtn.setOnAction(event->customerStage.show());
+		VBox customerCreateWindow = customerTableGenerator.createCustomerCreationTable();
+		customerStage.setScene(new Scene(customerCreateWindow));
+		createNewCustomerBtn.setOnAction(event-> {
+			resetInputValues(customerCreateWindow);
+			customerStage.show();
+		});
 		customerSaveBtn = customerTableGenerator.getCustomerSaveButton();
 		customerCancelBtn = customerTableGenerator.getCustomerCancelButton();
-		customerSaveBtn.setOnAction(event->checkMandatoryFieldAndSaveCustomer());
+		customerSaveBtn.setOnAction(event-> {
+			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
+		});
 		customerCancelBtn.setOnAction(event->customerStage.close());
 
 		customerArea.setSpacing(5);
@@ -69,16 +78,40 @@ public class CustomerArea {
 		return customerArea;
 	}
 
-	private void checkMandatoryFieldAndSaveCustomer() {
+	private void resetInputValues(VBox customerCreateWindow) {
+		Object hBoxObject = customerCreateWindow.getChildren().get(1);
+		if (hBoxObject instanceof HBox) {
+			HBox mainWindow = (HBox) hBoxObject;
+			Object vBoxObject = mainWindow.getChildren().get(2);
+			if (vBoxObject instanceof VBox) {
+				VBox thirdColumn = (VBox) vBoxObject;
+				for (int i = 0; i < thirdColumn.getChildren().size(); i++) {
+					Object columnObject = thirdColumn.getChildren().get(i);
+					if (columnObject instanceof TextField) {
+						((TextField) columnObject).setText("");
+					} else if (columnObject instanceof ChoiceBox) {
+						((ChoiceBox) columnObject).setValue("");
+					}
+				}
+			}
+		}
+	}
+
+	private void checkMandatoryFieldsAndSaveCustomer(VBox customerCreateWindow) {
 		if(customerTableGenerator.areMandatoryInputsDone()){
        	 transformAndPersist();
+       	 loadCustomerSelectionArea();
+       	 customerStage.close();
         } else {
-        	System.out.println("Obligatorische Felder sind nicht eingegeben");
+        	Object windowObject = customerCreateWindow.getChildren().get(2);
+        	if (windowObject instanceof Text) {
+        		Text infoMsg = (Text) windowObject;
+        		infoMsg.setText(KEINE_OBLIGATORISCHE_FELDER);
+        	}
         }
 	}
 
 	private Button getNewCustomerCreatButtonWithText(){
-		
 		Button createNewCustomerBtn = new Button();
 		createNewCustomerBtn.setGraphic(createImageView(PathClass.ADD_NEW_CUSTOMER_BTN, 40, 40));
 		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
@@ -119,7 +152,7 @@ public class CustomerArea {
 	/**
 	 * Hier wird die Tabelle, in der die Kunden gelistet und gesucht werden kann, erzugt und in CustomerArea hinzugefügt
 	 */
-	private void addCustomerSelectionArea() {
+	private void loadCustomerSelectionArea() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonTable.fxml"));
 		try {
 			AnchorPane customerSelectionArea = (AnchorPane) loader.load();

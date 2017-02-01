@@ -1,6 +1,8 @@
 package com.rechpro.worker;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -68,7 +70,6 @@ public class VBoxGenerator {
 	}
 
 	public VBox createCustomerCreationTable() {
-
 		customWindow = new VBox(10);
 
 		HBox mainWindow = new HBox();
@@ -79,7 +80,7 @@ public class VBoxGenerator {
 
 		VBox firtsColumn = new VBox(8);
 
-		Text sex = new Text("Andrede*");
+		Text sex = new Text("Anrede*");
 		Text firstName = new Text("Vorname*");
 		Text lastName = new Text("Nachname");
 		Text street = new Text("Straﬂe/Nr.*");
@@ -111,12 +112,13 @@ public class VBoxGenerator {
 				phoneField, mobilePhoneField, faxField, emailField, birthdayField, bankNoField, blzField, ibanField, bicNoField);
 
 		mainWindow.getChildren().addAll(firtsColumn, secondColumn, thirdColumn);
+		Text infoMsg = new Text();
 		HBox buttons = new HBox(20);
 		customerCancelBtn = new Button("Abbrechen");
 		customerSaveBtn = new Button("Speichern");
 		buttons.getChildren().addAll(customerCancelBtn, customerSaveBtn);
 		customWindow.setMargin(buttons, new Insets(10, 10, 10, 10));
-		customWindow.getChildren().addAll(customerData, mainWindow, buttons);
+		customWindow.getChildren().addAll(customerData, mainWindow, infoMsg, buttons);
 		return customWindow;
 	}
 	

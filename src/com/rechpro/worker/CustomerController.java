@@ -143,8 +143,8 @@ public class CustomerController {
 		 */
 
 		createBill.setOnAction(e -> {
-			RechnungArea.customerToCreateBill = selectedRow.getItem();
-			Launcher.root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG));
+			CustomerViewModel customerToCreateBill = selectedRow.getItem();
+			Launcher.root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG, customerToCreateBill));
 		});
 		contextMenu.getItems().addAll(createBill, updateCustomerData);
 

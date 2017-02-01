@@ -40,7 +40,7 @@ public class Launcher extends Application {
 			menuLeiste.getMenu(root);
 			footer.getFooter(root);
 			leftArea.createLeftArea(root);
-			root.setCenter(centerArea.loadCenterPane(ButtonOnLeftArea.KUNDEN));
+			root.setCenter(centerArea.loadCenterPane(ButtonOnLeftArea.KUNDEN, null));
 
 			scene = new Scene(root, 900, 500);
 			scene.getStylesheets().add(getClass().getResource(PathClass.APPLICATION_CSS).toExternalForm());

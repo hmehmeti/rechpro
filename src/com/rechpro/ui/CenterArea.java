@@ -1,5 +1,9 @@
 package com.rechpro.ui;
 
+import java.util.Random;
+
+import com.rechpro.viewmodel.CustomerViewModel;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -7,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 
 public class CenterArea {
 
-	public StackPane loadCenterPane(ButtonOnLeftArea button) {
+	public StackPane loadCenterPane(ButtonOnLeftArea button, CustomerViewModel customerToCreateBill) {
 		StackPane stackPane = new StackPane();
 		stackPane.setAlignment(Pos.CENTER);
 		Rectangle rec = new Rectangle();
@@ -15,7 +19,7 @@ public class CenterArea {
 		switch (button) {
 		case RECHNUNG:
 			rec.setFill(Color.WHITE);
-			stackPane.getChildren().addAll(new RechnungArea().addGridPane());
+			stackPane.getChildren().addAll(new RechnungArea(customerToCreateBill).addGridPane());
 			break;
 			
 		case EINSTELLUNG:

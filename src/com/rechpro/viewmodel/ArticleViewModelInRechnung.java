@@ -14,7 +14,7 @@ public class ArticleViewModelInRechnung {
 	private int rechnungId;
 	private int category;
 	private Double price;
-	private int number = 1;
+	private int amount = 1;
 	
 	public ArticleViewModelInRechnung(){
 		//NOP
@@ -80,16 +80,16 @@ public class ArticleViewModelInRechnung {
 		return id;
 	}
 	
-	public void setNumber(int number) {
-		this.number = number;
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
-	public int getNumber() {
-		return this.number;
+	public int getAmount() {
+		return this.amount;
 	}
 	
 	public double getTotalPrice(){
-		double total = Math.floor((this.number * this.price) * 1000) / 1000;
+		double total = Math.floor((this.amount * this.price) * 1000) / 1000;
 		return total;
 	}
 	@Override
@@ -101,7 +101,7 @@ public class ArticleViewModelInRechnung {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + number;
+		result = prime * result + amount;
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + rechnungId;
 		return result;

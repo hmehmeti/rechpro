@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -14,6 +17,7 @@ import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.TableGenerator;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -37,6 +42,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import resources.PathClass;
 
 /**
@@ -44,23 +50,29 @@ import resources.PathClass;
  * @email kamuran1905@yahoo.de
  **/
 public class RechnungArea {
-	public static CustomerViewModel customerToCreateBill;
-	private static Stage articleSelectStage;
-	private TableGenerator tableGenerator;
-	private TableView<ArticleViewModelInRechnung> articleTable;
-	private Button inputSubmitBtn = new Button("Ändern");
-	private int articleNumber = 0;
-	private TextField choisedNumber;
-	private ArticleViewModelInRechnung selectedArticle;
-	private Stage numberInputWindow;
+	
+	private static final String SELLER_ADDRESS = "Körnerstr. 24 78777 Karlsruhe";
+	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
+	private static final String CURRENCY = " €";
+	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
+
+	private CustomerViewModel customerToCreateBill;
+	
+	private Button inputSubmitBtn = new Button(INPUT_SUBMIT_BUTTON);
 	private static Text bruttoBetrag = new Text();
 	private static Text mehrwertsteuer = new Text();
 	private static Text nettoBetrag = new Text();
-	private String currencyText = " €";
+	private TextField choosedAmount = new TextField();
+	
+	private static Stage articleSelectStage;
+	private Stage numberInputWindow;
+	private TableView<ArticleViewModelInRechnung> articleTable;
+	private TableGenerator tableGenerator;
+	private ArticleViewModelInRechnung selectedArticle;
+	
 
-	public final static ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
-
-	public RechnungArea() {
+	public RechnungArea(CustomerViewModel customerToCreateBill) {
+		this.customerToCreateBill = customerToCreateBill;
 		tableGenerator = new TableGenerator();
 	}
 
@@ -88,10 +100,22 @@ public class RechnungArea {
 		mainWinBorderPane.setBottom(footer);
 		
 		// right click on Mouse on the article to remove or change the number of article
-		articleTable.setOnContextMenuRequested(e -> {
-			getContextMenu().show(center, e.getScreenX(), e.getScreenY());
-			selectedArticle = (ArticleViewModelInRechnung) articleTable.getSelectionModel().getSelectedItem();
-		});
+		articleTable.setRowFactory(
+					new Callback<TableView<ArticleViewModelInRechnung>, TableRow<ArticleViewModelInRechnung>>(){
+						@Override
+						public TableRow<ArticleViewModelInRechnung> call(TableView<ArticleViewModelInRechnung> tableView) {
+							final TableRow<ArticleViewModelInRechnung> row = new TableRow<>();
+							final ContextMenu rowMenu = getContextMenuForSelectedArticle(row);
+							
+							row.contextMenuProperty().bind(
+									Bindings.when(Bindings.isNotNull(row.itemProperty()))
+								      .then(rowMenu)
+								      .otherwise((ContextMenu)null));
+							
+							return row;
+						}
+					}
+				);
 
 		mainWindow.getChildren().addAll(mainWinBorderPane);
 		grid.getChildren().add(mainWindow);
@@ -172,19 +196,19 @@ public class RechnungArea {
 		Text doppelPunkt = new Text(" : ");
 		Text nettoBetragText = new Text("Nettobetrag ");
 		HBox nettoBetragColumn = new HBox();
-		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag, new Text(currencyText));
+		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag, new Text(CURRENCY));
 		
 		Text steuerText = new Text("zzgl. 19 % MwSt. ");
 		Text doppelPunkt2 = new Text(" : ");
 		HBox steuerColumn = new HBox();
-		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, mehrwertsteuer, new Text(currencyText));
+		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, mehrwertsteuer, new Text(CURRENCY));
 		
 		Text bruttoBetragText = new Text("Bruttobetrag ");
 		bruttoBetragText.setFont(new Font("Arial", 15));
 		Text doppelPunkt3 = new Text(" : ");
 		updateBillAmound();
 		HBox bruttoBetragColumn = new HBox();
-		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag, new Text(currencyText));
+		bruttoBetragColumn.getChildren().addAll(bruttoBetragText, doppelPunkt3, bruttoBetrag, new Text(CURRENCY));
 		VBox PriceTotalColumn = new VBox();
 		PriceTotalColumn.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
 		underCenter.setRight(PriceTotalColumn);
@@ -201,29 +225,38 @@ public class RechnungArea {
 		return centerButtom;
 	}
 
-	private ContextMenu getContextMenu() {
+	private ContextMenu getContextMenuForSelectedArticle(TableRow<ArticleViewModelInRechnung> selectedRow) {
 		ContextMenu contextMenu = new ContextMenu();
 
 		MenuItem deleteArticle = new MenuItem("Artikel Löschen");
 		MenuItem updateArticleNumber = new MenuItem("Anzahl Ändern");
 
 		updateArticleNumber.setOnAction(e -> {
+			selectedArticle = selectedRow.getItem();
+			// show actual amount
+			choosedAmount.setText(String.valueOf(selectedArticle.getAmount()));
 			numberInputWindow = getNumberInputWindow();
 			numberInputWindow.show();
 		});
 
+		
 		inputSubmitBtn.setOnAction(e -> {
-			checkChoisedNumberAndSetArticleNumber();
+			// set input value as new amount
+			int amount = Integer.parseInt(choosedAmount.getCharacters().toString());
+			checkChoosedAmountAndSetArticleNumber(amount);
 			numberInputWindow.close();
 		});
 
-		deleteArticle.setOnAction(e -> deleteSelectedArticle());
+		deleteArticle.setOnAction(e -> {
+			ArticleViewModelInRechnung selectedArticle = selectedRow.getItem();
+			deleteSelectedArticle(selectedArticle);
+		});
 		contextMenu.getItems().addAll(deleteArticle, updateArticleNumber);
 
 		return contextMenu;
 	}
 
-	private void deleteSelectedArticle() {
+	private void deleteSelectedArticle(ArticleViewModelInRechnung selectedArticle) {
 		if (articles.contains(selectedArticle))
 			articles.remove(selectedArticle);
 		else
@@ -232,19 +265,26 @@ public class RechnungArea {
 		updateBillAmound();
 	}
 
-	private void checkChoisedNumberAndSetArticleNumber() {
-		int choisedNumberValue = 0;
+	private void checkChoosedAmountAndSetArticleNumber(int amount) {
 		try {
-			choisedNumberValue = Integer.parseInt(choisedNumber.getText());
-			if (choisedNumberValue != 0) {
-				articleNumber = choisedNumberValue;
-				editSelectedArticleNumber();
-				
+			if (amount != 0) {
+				if (amount != 0)
+					selectedArticle.setAmount(amount);
+				updateArticleInTableView(selectedArticle);
 			} else
 				return;
 		} catch (Exception e) {	
 			e.printStackTrace();
 		}
+	}
+	
+	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
+		for(int i = 0; i < articles.size(); i++){
+			ArticleViewModelInRechnung article = articles.get(i);
+			if (article.getArticleNumber() == selectedArticle.getArticleNumber())
+				articles.set(i, selectedArticle);
+		}
+		updateBillAmound();
 	}
 
 	private Stage getNumberInputWindow() {
@@ -254,9 +294,8 @@ public class RechnungArea {
 		newStage.setResizable(false);
 		inputSubmitBtn.setPrefWidth(70);
 		HBox comp = new HBox();
-		choisedNumber = new TextField();
-		choisedNumber.setPrefWidth(70);
-		comp.getChildren().addAll(choisedNumber, inputSubmitBtn);
+		choosedAmount.setPrefWidth(70);
+		comp.getChildren().addAll(choosedAmount, inputSubmitBtn);
 		Scene stageScene = new Scene(comp, 200, 50);
 		newStage.setScene(stageScene);
 		return newStage;
@@ -284,12 +323,14 @@ public class RechnungArea {
 	private VBox getRightColumn() {
 		VBox rightColumn = new VBox(5);
 		Text customerNr;
-		Text dateText = new Text("Datum: 12.12.2014");
+		String pattern = "dd.MM.YYYY";
+		DateFormat dateFormat = new SimpleDateFormat(pattern);
+		Text dateText = new Text("Datum: ".concat(dateFormat.format(new Date())));
 		if (customerToCreateBill != null)
 			customerNr = new Text("KundenNr.: " + customerToCreateBill.getCustomerId().get());
 		else
-			customerNr = new Text("KundenNr.: 123456789");
-		Text rechnungNr = new Text("RechungsNr.: 1234567887");
+			customerNr = new Text("KundenNr.: ");
+		Text rechnungNr = new Text("RechungsNr.: ");
 
 		rightColumn.getChildren().addAll(dateText, customerNr, rechnungNr);
 		return rightColumn;
@@ -308,7 +349,7 @@ public class RechnungArea {
 	private VBox getSellerMiniAddress() {
 		VBox miniAdress = new VBox(3);
 		// TODO : get address from from config class
-		Text sellerAddress = new Text("Körnerstr. 24 78777 Karlsruhe");
+		Text sellerAddress = new Text(SELLER_ADDRESS);
 		sellerAddress.setFont(Font.font("Verdana", 8));
 		int addressLength = (sellerAddress.getText().length())*8;
 		Line line = new Line(90, 40, addressLength, 40);
@@ -322,22 +363,6 @@ public class RechnungArea {
 		if (articleSelectStage == null)
 			return;
 		articleSelectStage.close();
-	}
-
-	private void editSelectedArticleNumber() {
-		if (articleNumber != 0)
-			selectedArticle.setNumber(articleNumber);
-		updateArticleInTableView(selectedArticle);
-	}
-
-	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
-
-		for(int i = 0; i < articles.size(); i++){
-			ArticleViewModelInRechnung article = articles.get(i);
-			if (article.getArticleNumber() == selectedArticle.getArticleNumber())
-				articles.set(i, selectedArticle);
-		}
-		updateBillAmound();
 	}
 
 	public static void updateBillAmound() {

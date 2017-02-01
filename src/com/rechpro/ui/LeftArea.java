@@ -32,12 +32,12 @@ public class LeftArea {
 			Button btnKunden = new Button();
 			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHight));
 			btnKunden.setStyle(cssFont);
-			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.KUNDEN)));
+			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.KUNDEN, null)));
 
 			Button btnRechnung = new Button();
 			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHight));
 			btnRechnung.setStyle(cssFont);
-			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG)));
+			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG, null)));
 
 			Button btnWaren = new Button();
 			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));
