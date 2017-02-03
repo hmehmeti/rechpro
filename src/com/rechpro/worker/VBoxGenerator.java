@@ -45,7 +45,7 @@ public class VBoxGenerator {
 	TextField bicNoField;
 	
 	public VBoxGenerator(){
-		sexField = new ChoiceBox<String>(FXCollections.observableArrayList("Mann", "Frau", "Firma"));
+		sexField = new ChoiceBox<String>(FXCollections.observableArrayList("", "Frau", "Herr"));
 		firstNameField = new TextField();
 		lastNameField = new TextField();
 		
