@@ -90,7 +90,15 @@ public class CustomerArea {
 					if (columnObject instanceof TextField) {
 						((TextField) columnObject).setText("");
 					} else if (columnObject instanceof ChoiceBox) {
-						((ChoiceBox) columnObject).setValue("");
+						((ChoiceBox) columnObject).setValue(new String(""));;
+					} else if (columnObject instanceof HBox) {
+						// here should be the address fields
+						HBox otherHBoxObject = (HBox) columnObject;
+						for (Object otherObject : otherHBoxObject.getChildren()) {
+							if (otherObject instanceof TextField) {
+								((TextField) otherObject).setText("");
+							}
+						}
 					}
 				}
 			}
