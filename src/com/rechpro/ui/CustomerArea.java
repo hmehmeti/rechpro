@@ -6,7 +6,7 @@ import java.util.HashMap;
 import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.CustomerController;
 import com.rechpro.worker.UserParameters;
-import com.rechpro.worker.VBoxGenerator;
+import com.rechpro.worker.CustomerVBoxGenerator;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -33,7 +33,7 @@ import resources.PathClass;
 public class CustomerArea {
 
 	private static final String KEINE_OBLIGATORISCHE_FELDER = "Obligatorische Felder sind nicht eingegeben";
-	private VBoxGenerator customerTableGenerator;
+	private CustomerVBoxGenerator customerTableGenerator;
 	private Stage customerStage;
 	private static Button customerSaveBtn;
 	private static Button customerCancelBtn;
@@ -44,7 +44,7 @@ public class CustomerArea {
 	
 	public CustomerArea() {
 		customController = new CustomerController();
-		customerTableGenerator = new VBoxGenerator();
+		customerTableGenerator = new CustomerVBoxGenerator();
 		loadCustomerSelectionArea();
 		
 		//stackPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
@@ -65,8 +65,8 @@ public class CustomerArea {
 			resetInputValues(customerCreateWindow);
 			customerStage.show();
 		});
-		customerSaveBtn = customerTableGenerator.getCustomerSaveButton();
-		customerCancelBtn = customerTableGenerator.getCustomerCancelButton();
+		customerSaveBtn = customerTableGenerator.getSaveButton();
+		customerCancelBtn = customerTableGenerator.getCancelButton();
 		customerSaveBtn.setOnAction(event-> {
 			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
 		});
@@ -121,8 +121,8 @@ public class CustomerArea {
 
 	private Button getNewCustomerCreatButtonWithText(){
 		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(createImageView(PathClass.ADD_NEW_CUSTOMER_BTN, 40, 40));
-		createNewCustomerBtn.setStyle("-fx-font: 5 arial; -fx-base: #b6e7c9;");
+		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN, 40, 40));
+		createNewCustomerBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
 		return createNewCustomerBtn;
 	}
 
@@ -148,14 +148,6 @@ public class CustomerArea {
 		
 		customController.transformAndPersist(customParameterList);
 	}
-	
-	private ImageView createImageView(String imgPath, int width, int hight) {
-		ImageView ImgView = new ImageView(new Image(getClass().getResourceAsStream(imgPath)));
-		ImgView.setFitHeight(hight);
-		ImgView.setFitWidth(width);
-		return ImgView;
-	}
-
 	
 	/**
 	 * Hier wird die Tabelle, in der die Kunden gelistet und gesucht werden kann, erzugt und in CustomerArea hinzugefügt

@@ -42,8 +42,7 @@ public class LeftArea {
 			Button btnWaren = new Button();
 			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));
 			btnWaren.setStyle(cssFont);
-			//TODO: implement WAREN
-			//btnWaren.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.WAREN)));
+			btnWaren.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.WAREN, null)));
 			
 
 			Button btnEinstellung = new Button();

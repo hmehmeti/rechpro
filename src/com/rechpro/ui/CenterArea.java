@@ -22,15 +22,19 @@ public class CenterArea {
 			stackPane.getChildren().addAll(new RechnungArea(customerToCreateBill).addGridPane());
 			break;
 			
+		case WAREN:
+			stackPane.getChildren().add(new ArticleArea().getTableViewArticles());
+			break;
+			
+		case KUNDEN:
+			stackPane.getChildren().add(new CustomerArea().getTableViewKunde());
+			break;
+			
 		case EINSTELLUNG:
 			rec.setFill(Color.BROWN);
 			rec.widthProperty().bind(stackPane.widthProperty().subtract(50));
 			rec.heightProperty().bind(stackPane.heightProperty().subtract(50));
 			stackPane.getChildren().addAll(rec);
-			break;
-			
-		case KUNDEN:
-			stackPane.getChildren().add(new CustomerArea().getTableViewKunde());
 			break;
 			
 		default:
