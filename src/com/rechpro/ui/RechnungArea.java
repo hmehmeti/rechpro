@@ -15,7 +15,6 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
-import com.rechpro.worker.TableGenerator;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

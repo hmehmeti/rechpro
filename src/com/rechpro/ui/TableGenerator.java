@@ -1,4 +1,4 @@
-package com.rechpro.worker;
+package com.rechpro.ui;
 
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 

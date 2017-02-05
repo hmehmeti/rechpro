@@ -1,7 +1,7 @@
-package com.rechpro.worker;
+package com.rechpro.ui;
 
 
-import static com.rechpro.worker.VBoxGenerator.window;
+import static com.rechpro.ui.VBoxGenerator.window;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -12,13 +12,14 @@ import javafx.scene.text.Text;
 
 public abstract class VBoxGenerator {
 
-	protected String invalidTextFildCSS = "-fx-border-color: red;";
-	protected String validTextFieldCSS = "-fx-border-color: #DCDCDC;";
-	public static final String BUTTON_STYLE = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
+	protected static final String INVALID_TEXTFIELD_CSS = "-fx-border-color: red;";
+	protected static final String VALID_TEXTFIELD_CSS = "-fx-border-color: #DCDCDC;";
+	protected static final String BUTTON_STYLE = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
 	protected static final int VALUE_COLUMN_SPACING = 3;
-	protected static final int COLUMN_SPACING = 8;
+	protected static final int COLUMN_SPACING = 10;
 	protected static final int VBOX_SPACING = 10;
 	protected static final int COLUMN_TEXT_SIZE = 15;
+	protected static final int SPACE_BETWEEN_BUTTONS = 20;
 	
 	static Button saveBtn;
 	static Button cancelBtn;

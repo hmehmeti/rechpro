@@ -6,7 +6,6 @@ import java.util.HashMap;
 import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.CustomerController;
 import com.rechpro.worker.UserParameters;
-import com.rechpro.worker.CustomerVBoxGenerator;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -32,77 +31,51 @@ import resources.PathClass;
  */
 public class CustomerArea {
 
-	private static final String KEINE_OBLIGATORISCHE_FELDER = "Obligatorische Felder sind nicht eingegeben";
+	private static final int BUTTON_WIDTH_AND_HEIGHT = 20;
+	private static final int CUSTOMER_AREA_VBOX_SPACNG = 5;
+	private static final String NEW_CUSTOMER_BUTTON_TEXT = "Erstelle neue Kunde";
+	private static final int VBOX_SPACING = 2;
 	private CustomerVBoxGenerator customerTableGenerator;
-	private Stage customerStage;
-	private static Button customerSaveBtn;
-	private static Button customerCancelBtn;
-	final HBox hb = new HBox();
-	private StackPane stackPane = new StackPane();
 	private CustomerController customController;
-	public static TableView<CustomerViewModel> customerTable;
+	private Stage customerStage;
+	private StackPane stackPane;
 	
 	public CustomerArea() {
 		customController = new CustomerController();
 		customerTableGenerator = new CustomerVBoxGenerator();
+		customerStage = new Stage();
+		stackPane = new StackPane();
 		loadCustomerSelectionArea();
 		
 		//stackPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 	}
 	
 	protected VBox getTableViewKunde() {
-		VBox customerArea = new VBox(2);
+		VBox customerArea = new VBox();
 		// Button and Text to create new customer
-		VBox createNewCustomerBtnAndText = new VBox(2);
+		VBox createNewCustomerBtnAndText = new VBox(VBOX_SPACING);
 		Button createNewCustomerBtn = getNewCustomerCreatButtonWithText();
-		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, new Text("Erstelle neue Kunde"));
+		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, new Text(NEW_CUSTOMER_BUTTON_TEXT));
 		
 		// new window if createNewCustomerButton is clicked
-		customerStage = new Stage();
 		VBox customerCreateWindow = customerTableGenerator.createCustomerCreationTable();
 		customerStage.setScene(new Scene(customerCreateWindow));
 		createNewCustomerBtn.setOnAction(event-> {
-			resetInputValues(customerCreateWindow);
+			customerTableGenerator.resetInputValues(customerCreateWindow);
+			customerTableGenerator.setTextStyleToValid();
 			customerStage.show();
 		});
-		customerSaveBtn = customerTableGenerator.getSaveButton();
-		customerCancelBtn = customerTableGenerator.getCancelButton();
+		Button customerSaveBtn = customerTableGenerator.getSaveButton();
+		Button customerCancelBtn = customerTableGenerator.getCancelButton();
 		customerSaveBtn.setOnAction(event-> {
 			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
 		});
 		customerCancelBtn.setOnAction(event->customerStage.close());
 
-		customerArea.setSpacing(5);
+		customerArea.setSpacing(CUSTOMER_AREA_VBOX_SPACNG);
 		customerArea.setPadding(new Insets(10, 0, 0, 10));
 		customerArea.getChildren().addAll(stackPane, createNewCustomerBtnAndText);
 		return customerArea;
-	}
-
-	private void resetInputValues(VBox customerCreateWindow) {
-		Object hBoxObject = customerCreateWindow.getChildren().get(1);
-		if (hBoxObject instanceof HBox) {
-			HBox mainWindow = (HBox) hBoxObject;
-			Object vBoxObject = mainWindow.getChildren().get(2);
-			if (vBoxObject instanceof VBox) {
-				VBox thirdColumn = (VBox) vBoxObject;
-				for (int i = 0; i < thirdColumn.getChildren().size(); i++) {
-					Object columnObject = thirdColumn.getChildren().get(i);
-					if (columnObject instanceof TextField) {
-						((TextField) columnObject).setText("");
-					} else if (columnObject instanceof ChoiceBox) {
-						((ChoiceBox) columnObject).setValue(new String(""));;
-					} else if (columnObject instanceof HBox) {
-						// here should be the address fields
-						HBox otherHBoxObject = (HBox) columnObject;
-						for (Object otherObject : otherHBoxObject.getChildren()) {
-							if (otherObject instanceof TextField) {
-								((TextField) otherObject).setText("");
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	private void checkMandatoryFieldsAndSaveCustomer(VBox customerCreateWindow) {
@@ -111,17 +84,14 @@ public class CustomerArea {
        	 loadCustomerSelectionArea();
        	 customerStage.close();
         } else {
-        	Object windowObject = customerCreateWindow.getChildren().get(2);
-        	if (windowObject instanceof Text) {
-        		Text infoMsg = (Text) windowObject;
-        		infoMsg.setText(KEINE_OBLIGATORISCHE_FELDER);
-        	}
+        	customerTableGenerator.setInfoMsg(customerCreateWindow, CustomerVBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
         }
 	}
 
 	private Button getNewCustomerCreatButtonWithText(){
 		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN, 40, 40));
+		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator
+				.createImageView(this.getClass(), PathClass.ADD_BTN, BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
 		createNewCustomerBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
 		return createNewCustomerBtn;
 	}

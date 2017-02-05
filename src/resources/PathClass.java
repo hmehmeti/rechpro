@@ -8,7 +8,7 @@ public class PathClass {
 	public static final String WORD_TMPL_PATH = "/resources/rechnungTemplate.docx";
 	
 	//BUTTONs
-	public static final String ADD_BTN = "/com/rechpro/img/addNewCustomerBtn.png";
+	public static final String ADD_BTN = "/com/rechpro/img/addBtn.png";
 	
 	//ICONs
 	public static final String CUSTOMER_ICON_PATH = "/com/rechpro/img/customerIcon.png";
