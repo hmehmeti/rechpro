@@ -193,43 +193,44 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 	}
 	
 	public boolean areMandatoryInputsDone() {
+		boolean result = true;
 		if(sexField.getSelectionModel().isEmpty()){
 			firstNameField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(firstNameField.getText())){
 			firstNameField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(streetField.getText())){
 			streetField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(homeNrField.getText())){
 			homeNrField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(postCode.getText())){
 			postCode.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(city.getText())){
 			city.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(country.getText())){
 			country.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(bankNoField.getText())){
 			bankNoField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if(StringUtils.isEmpty(blzField.getText())){
 			blzField.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
-		return true;
+		return result;
 	}
 	
 	public String getSexField() {

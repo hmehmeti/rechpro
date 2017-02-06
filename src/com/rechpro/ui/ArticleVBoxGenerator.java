@@ -126,23 +126,24 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	
 	@Override
 	boolean areMandatoryInputsDone() {
+		boolean result = true;
 		if (StringUtils.isEmpty(articleName.getText())) {
 			articleName.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if (StringUtils.isEmpty(articleNumber.getText())) {
 			articleNumber.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if (StringUtils.isEmpty(articlePrice.getText())) {
 			articlePrice.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
 		if (articleCategory.getSelectionModel().isEmpty()) {
 			articleCategory.setStyle(INVALID_TEXTFIELD_CSS);
-			return false;
+			result = false;
 		}
-		return true;
+		return result;
 	}
 	
 	public TextField getArticleNumber() {
