@@ -1,5 +1,7 @@
 package com.rechpro.worker;
 
+import java.util.HashMap;
+
 import com.rechpro.entity.Article;
 import com.rechpro.persistence.DBService;
 import com.rechpro.transformer.ArticleTransformer;
@@ -97,5 +99,10 @@ public class ArticleController {
 		SortedList<ArticleViewModel> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(articleTable.comparatorProperty());
 		articleTable.setItems(sortedData);
+	}
+
+	public void transformAndPersist(HashMap<Enum, String> articleParameterList) {
+		Article article = transformer.entityFromParameterList(articleParameterList);
+		dbService.addEntity(article);
 	}
 }

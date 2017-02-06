@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 
 public abstract class VBoxGenerator {
 
+	protected static final String KEINE_OBLIGATORISCHE_FELDER = "Obligatorische Felder sind nicht eingegeben!";
 	protected static final String INVALID_TEXTFIELD_CSS = "-fx-border-color: red;";
 	protected static final String VALID_TEXTFIELD_CSS = "-fx-border-color: #DCDCDC;";
 	protected static final String BUTTON_STYLE = "-fx-font: 5 arial; -fx-base: #b6e7c9;";

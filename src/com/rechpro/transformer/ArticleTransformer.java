@@ -1,6 +1,7 @@
 package com.rechpro.transformer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.rechpro.entity.Article;
@@ -17,7 +18,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class ArticleTransformer {
 
-	public ArticleViewModel entityToViewModel (Article article){
+	public ArticleViewModel entityToViewModel(Article article){
 		ArticleViewModel articleVM = new ArticleViewModel();
 		SimpleStringProperty articleNumber = new SimpleStringProperty(Integer.toString(article.getArticleNumber()));
 		SimpleStringProperty name = new SimpleStringProperty(article.getName());
@@ -44,6 +45,10 @@ public class ArticleTransformer {
 		int categoryId = Integer.parseInt(model.getCategory().get());
 		double price = Double.parseDouble(model.getPrice().get());
 		return new Article(articleName, name, description, rechnungId, categoryId, price);
+	}
+	
+	public Article entityFromParameterList(HashMap<Enum, String> articleParameterList) {
+		return new Article(articleParameterList);
 	}
 
 	public List<ArticleViewModel> convertAndGetAllArticle(List<Article> articles) {

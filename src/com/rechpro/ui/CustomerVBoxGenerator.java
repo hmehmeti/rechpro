@@ -19,8 +19,8 @@ import javafx.scene.text.Text;
 public class CustomerVBoxGenerator extends VBoxGenerator {
 	
 	private static final String CREATE_CUSTOMER_LABEL = "Kunde erstellen";
-	public static final String KEINE_OBLIGATORISCHE_FELDER = "Obligatorische Felder sind nicht eingegeben!";
-
+	private static final String[] ANREDE_VALUES = {"", "Frau", "Herr"};
+	
 	ChoiceBox<String> sexField;
 	TextField firstNameField;
 	TextField lastNameField;
@@ -50,7 +50,7 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 	}
 	
 	public void initialiseCustomerFields() {
-		sexField = new ChoiceBox<String>(FXCollections.observableArrayList("", "Frau", "Herr"));
+		sexField = new ChoiceBox<String>(FXCollections.observableArrayList(ANREDE_VALUES));
 		firstNameField = new TextField();
 		lastNameField = new TextField();
 		streetAndHomeNrField = new HBox(2);
@@ -164,7 +164,7 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 					if (columnObject instanceof TextField) {
 						((TextField) columnObject).setText("");
 					} else if (columnObject instanceof ChoiceBox) {
-						((ChoiceBox) columnObject).setValue(new String(""));;
+						((ChoiceBox) columnObject).setValue(new String(""));
 					} else if (columnObject instanceof HBox) {
 						// here should be the address fields
 						HBox otherHBoxObject = (HBox) columnObject;

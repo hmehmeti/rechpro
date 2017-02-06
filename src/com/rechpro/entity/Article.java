@@ -1,11 +1,15 @@
 package com.rechpro.entity;
 
+import java.util.HashMap;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.rechpro.worker.ArticleParameters;
 
 /**
  * @author kdogan
@@ -50,6 +54,12 @@ public class Article {
 		this.price = price;
 	}
 
+	public Article(HashMap<Enum, String> articleParameterList) {
+		this.name = articleParameterList.get(ArticleParameters.NAME);
+		this.articleNumber = Integer.valueOf(articleParameterList.get(ArticleParameters.ARTICLENUMBER));
+		this.price = Double.valueOf(articleParameterList.get(ArticleParameters.PRICE));
+		this.description = articleParameterList.get(ArticleParameters.DESCRIPTION);
+	}
 	public String getName() {
 		return name;
 	}

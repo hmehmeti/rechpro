@@ -84,7 +84,7 @@ public class CustomerArea {
        	 loadCustomerSelectionArea();
        	 customerStage.close();
         } else {
-        	customerTableGenerator.setInfoMsg(customerCreateWindow, CustomerVBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
+        	customerTableGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
         }
 	}
 

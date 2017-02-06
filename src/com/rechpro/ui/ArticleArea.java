@@ -1,8 +1,10 @@
 package com.rechpro.ui;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.rechpro.worker.ArticleController;
+import com.rechpro.worker.ArticleParameters;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -69,8 +71,13 @@ public class ArticleArea {
 	}
 	
 	private void checkMandatoryFieldsAndSaveArticle(VBox articleCreateWindow) {
-		// TODO Auto-generated method stub
-		
+		if (articleGenerator.areMandatoryInputsDone()) {
+			transformAndPersist();
+			loadArticleSelectionArea();
+			articleStage.close();
+		} else {
+			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
+		}
 	}
 
 	private Button getNewArticleCreatButtonWithText() {
@@ -88,6 +95,18 @@ public class ArticleArea {
 		});
 		
 		return createNewArticleBtn;
+	}
+	
+	private void transformAndPersist() {
+		HashMap<Enum, String> articleParameterList = new HashMap<Enum, String>();
+		
+		articleParameterList.put(ArticleParameters.ARTICLENUMBER, articleGenerator.getArticleNumber().getText());
+		articleParameterList.put(ArticleParameters.NAME, articleGenerator.getArticleName().getText());
+		articleParameterList.put(ArticleParameters.PRICE, articleGenerator.getArticlePrice().getText());
+		articleParameterList.put(ArticleParameters.DESCRIPTION, articleGenerator.getArticleDescription().getText());
+		// TODO: implement persisting category
+		
+		articleController.transformAndPersist(articleParameterList);
 	}
 
 	/**

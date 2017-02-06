@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 public class ArticleVBoxGenerator extends VBoxGenerator {
 	
 	private static final String CREATE_ARTICLE_LABEL = "Neuer Artikel erstellen";
-	private static final String[] ARTICLE_CATEGORIES = {"hardware", "software"};
+	private static final String[] ARTICLE_CATEGORIES = {"", "hardware", "software"};
 	
 	private TextField articleNumber;
 	private TextField articleName;
@@ -56,11 +56,11 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		window.setMargin(articleData, new Insets(10, 10, 10, 10));
 		
 		VBox firstColumn = new VBox(COLUMN_SPACING);
-		Text name = new Text("Article name");
-		Text number = new Text("Article number");
-		Text category = new Text("Article category");
+		Text name = new Text("Article name*");
+		Text number = new Text("Article number*");
+		Text category = new Text("Article category*");
 		Text description = new Text("Article description");
-		Text price = new Text("Article price");
+		Text price = new Text("Article price*");
 		firstColumn.getChildren().addAll(name, number, price, category, description);
 		setSize(firstColumn, COLUMN_TEXT_SIZE);
 		
@@ -161,5 +161,5 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	public TextField getArticlePrice() {
 		return articlePrice;
 	}
-
+	
 }
