@@ -21,6 +21,7 @@ public abstract class VBoxGenerator {
 	protected static final int VBOX_SPACING = 10;
 	protected static final int COLUMN_TEXT_SIZE = 15;
 	protected static final int SPACE_BETWEEN_BUTTONS = 20;
+	public static final String WAREN_NUMMER_EXISTIERT =  "Eingegebene Warennumer ist vergeben. Bitte eine neue eingegeben!";
 	
 	static Button saveBtn;
 	static Button cancelBtn;

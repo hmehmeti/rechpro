@@ -71,13 +71,25 @@ public class ArticleArea {
 	}
 	
 	private void checkMandatoryFieldsAndSaveArticle(VBox articleCreateWindow) {
-		if (articleGenerator.areMandatoryInputsDone()) {
-			transformAndPersist();
-			loadArticleSelectionArea();
-			articleStage.close();
-		} else {
+		boolean mandatorySuccess = articleGenerator.areMandatoryInputsDone();
+		if (!mandatorySuccess) 
 			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
-		}
+		
+		int warennummer = Integer.parseInt(articleGenerator.getArticleNumber().getText());
+		boolean warenummerExist = articleController.existWarenNummer(warennummer);
+		
+		if(warenummerExist)
+			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.WAREN_NUMMER_EXISTIERT);
+		
+		if(mandatorySuccess && !warenummerExist)
+			articleCanBeCreated();
+	}
+
+
+	private void articleCanBeCreated() {
+		transformAndPersist();
+		articleStage.close();
+		loadArticleSelectionArea();
 	}
 
 	private Button getNewArticleCreatButtonWithText() {

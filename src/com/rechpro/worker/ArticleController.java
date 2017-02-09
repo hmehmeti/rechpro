@@ -1,6 +1,7 @@
 package com.rechpro.worker;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.rechpro.entity.Article;
 import com.rechpro.persistence.DBService;
@@ -104,5 +105,16 @@ public class ArticleController {
 	public void transformAndPersist(HashMap<Enum, String> articleParameterList) {
 		Article article = transformer.entityFromParameterList(articleParameterList);
 		dbService.addEntity(article);
+	}
+
+	public boolean existWarenNummer(int warennummer) {
+		boolean warenNumberExist  = false;
+		List<Article> articleEntities = dbService.getEntities();
+		
+		for(Article article : articleEntities){
+			if(article.getArticleNumber() == warennummer)
+				warenNumberExist = true;
+		}
+		return warenNumberExist;
 	}
 }
