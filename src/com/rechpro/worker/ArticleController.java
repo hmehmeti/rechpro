@@ -1,7 +1,11 @@
 package com.rechpro.worker;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.hibernate.engine.internal.Collections;
 
 import com.rechpro.entity.Article;
 import com.rechpro.persistence.DBService;
@@ -108,13 +112,11 @@ public class ArticleController {
 	}
 
 	public boolean existWarenNummer(int warennummer) {
-		boolean warenNumberExist  = false;
 		List<Article> articleEntities = dbService.getEntities();
+		List<Article> foo = articleEntities.stream().filter(o->o.getArticleNumber() == warennummer).collect(Collectors.toList());
+		if(!foo.isEmpty())
+			return true;
 		
-		for(Article article : articleEntities){
-			if(article.getArticleNumber() == warennummer)
-				warenNumberExist = true;
-		}
-		return warenNumberExist;
+		return false;
 	}
 }
