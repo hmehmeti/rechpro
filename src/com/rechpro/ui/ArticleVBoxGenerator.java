@@ -29,7 +29,7 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	private static final String ARTICLE_NAME_TEXT = "Artikel Name*";
 	private static final String CREATE_ARTICLE_LABEL = "Neuer Artikel erstellen";
 	
-	public static final String ARTICLE_NUMBER_EXISTS =  "Eingegebene Warennumer ist vergeben. \nBitte eine neue eingegeben!";
+	public static final String ARTICLE_NUMBER_EXISTS =  "Eingegebene Warennumer ist vergeben. \nBitte eine neue eingeben!";
 	
 	private TextField articleNumber;
 	private TextField articleName;

@@ -71,20 +71,18 @@ public class ArticleArea {
 	}
 	
 	private void checkMandatoryFieldsAndSaveArticle(VBox articleCreateWindow) {
-		boolean mandatorySuccess = articleGenerator.areMandatoryInputsDone();
-		if (!mandatorySuccess) 
+		if (!articleGenerator.areMandatoryInputsDone()) 
 			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
-		
-		int articleNumber = Integer.parseInt(articleGenerator.getArticleNumber().getText());
-		boolean articleNumberExists = articleController.existsArticleNumber(articleNumber);
-		
-		if(articleNumberExists)
-			articleGenerator.setInfoMsg(articleCreateWindow, ArticleVBoxGenerator.ARTICLE_NUMBER_EXISTS);
-		
-		if(mandatorySuccess && !articleNumberExists) {
-			transformAndPersist();
-			articleStage.close();
-			loadArticleSelectionArea();
+		else {
+			int articleNumber = Integer.parseInt(articleGenerator.getArticleNumber().getText());
+			
+			if(articleController.existsArticleNumber(articleNumber))
+				articleGenerator.setInfoMsg(articleCreateWindow, ArticleVBoxGenerator.ARTICLE_NUMBER_EXISTS);
+			else {
+				transformAndPersist();
+				articleStage.close();
+				loadArticleSelectionArea();
+			}
 		}
 	}
 
