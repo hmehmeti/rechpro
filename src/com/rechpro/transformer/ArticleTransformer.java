@@ -24,27 +24,31 @@ public class ArticleTransformer {
 		SimpleStringProperty name = new SimpleStringProperty(article.getName());
 		SimpleStringProperty description = new SimpleStringProperty(article.getDescription());
 		SimpleStringProperty rechnungId = new SimpleStringProperty(Integer.toString(article.getRechnungId()));
-		SimpleStringProperty category = new SimpleStringProperty(Integer.toString(article.getCategory()));
+		SimpleStringProperty categoryName = new SimpleStringProperty(article.getCategory().getName());
 		SimpleStringProperty price = new SimpleStringProperty(Double.toString(article.getPrice()));
 		
 		articleVM.setArticleNumber(articleNumber);
 		articleVM.setName(name);
 		articleVM.setDescription(description);
 		articleVM.setRechnungId(rechnungId);
-		articleVM.setCategory(category);
+		articleVM.setCategoryName(categoryName);
 		articleVM.setPrice(price);
 		
 		return articleVM;
 	}
 	
+	/*
+	 * @param
+	 * 		model - category name of view-model will be read from database, 
+	 * 				so there is no need to save the category with this name
+	 */
 	public Article viewModelToEntity(ArticleViewModel model) {
 		int articleName = Integer.parseInt(model.getArticleNumber().get());
 		String name = model.getName().get();
 		String description = model.getDescription().get();
 		int rechnungId = Integer.parseInt(model.getRechnungId().get());
-		int categoryId = Integer.parseInt(model.getCategory().get());
 		double price = Double.parseDouble(model.getPrice().get());
-		return new Article(articleName, name, description, rechnungId, categoryId, price);
+		return new Article(articleName, name, description, rechnungId, price);
 	}
 	
 	public Article entityFromParameterList(HashMap<Enum, String> articleParameterList) {
@@ -64,9 +68,9 @@ public class ArticleTransformer {
 		String name = model.getName().get();
 		String description = model.getDescription().get();
 		int rechnungId = Integer.parseInt(model.getRechnungId().get());
-		int categoryId = Integer.parseInt(model.getCategory().get());
+		String categoryName = model.getCategoryName().get();
 		double price = Double.parseDouble(model.getPrice().get());
 		
-		return new ArticleViewModelInRechnung(articleName, name, description, rechnungId, categoryId, price);
+		return new ArticleViewModelInRechnung(articleName, name, description, rechnungId, categoryName, price);
 	}
 }

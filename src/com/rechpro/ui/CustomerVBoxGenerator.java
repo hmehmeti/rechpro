@@ -98,9 +98,9 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		HBox mainWindow = new HBox();
 		window.setMargin(mainWindow, new Insets(10, 10, 10, 10));
 		
-		Label customerData = new Label(CREATE_CUSTOMER_LABEL);
-		customerData.setFont(Font.font("Roboto", 20));
-		window.setMargin(customerData, new Insets(10, 10, 10, 10));
+		Label customerDataLabel = new Label(CREATE_CUSTOMER_LABEL);
+		customerDataLabel.setFont(Font.font("Roboto", 20));
+		window.setMargin(customerDataLabel, new Insets(10, 10, 10, 10));
 
 		VBox firstColumn = new VBox(COLUMN_SPACING);
 		Text sex = new Text("Anrede*");
@@ -147,8 +147,7 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		buttons.getChildren().addAll(cancelBtn, saveBtn);
 		window.setMargin(buttons, new Insets(10, 10, 10, 10));
 		
-		window.setMargin(buttons, new Insets(10, 10, 10, 10));
-		window.getChildren().addAll(customerData, mainWindow, infoMsgBox, buttons);
+		window.getChildren().addAll(customerDataLabel, mainWindow, infoMsgBox, buttons);
 		return window;
 	}
 	

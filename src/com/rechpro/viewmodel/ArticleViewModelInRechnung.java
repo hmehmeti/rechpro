@@ -12,19 +12,19 @@ public class ArticleViewModelInRechnung {
 	private int articleNumber;
 	private String description;
 	private int rechnungId;
-	private int category;
+	private String categoryName;
 	private Double price;
 	private int amount = 1;
 	
 	public ArticleViewModelInRechnung(){
 		//NOP
 	}
-	public ArticleViewModelInRechnung(int articleNumber, String name, String description, int rechnungId, int category, double price) {
+	public ArticleViewModelInRechnung(int articleNumber, String name, String description, int rechnungId, String categoryName, double price) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
 		this.rechnungId = rechnungId;
-		this.category = category;
+		this.categoryName = categoryName;
 		this.price = price;
 	}
 
@@ -60,12 +60,12 @@ public class ArticleViewModelInRechnung {
 		this.rechnungId = rechnung_id;
 	}
 
-	public int getCategory() {
-		return category;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	public void setCategory(int category) {
-		this.category = category;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public Double getPrice() {
@@ -97,7 +97,7 @@ public class ArticleViewModelInRechnung {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + articleNumber;
-		result = prime * result + category;
+		result = prime * result + categoryName.hashCode();
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -117,7 +117,7 @@ public class ArticleViewModelInRechnung {
 		ArticleViewModelInRechnung other = (ArticleViewModelInRechnung) obj;
 		if (articleNumber != other.articleNumber)
 			return false;
-		if (category != other.category)
+		if (!(categoryName.equals(other.categoryName)))
 			return false;
 		if (description == null) {
 			if (other.description != null)

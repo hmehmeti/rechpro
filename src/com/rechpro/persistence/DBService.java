@@ -27,8 +27,8 @@ public class DBService<T> {
 	}
 	
 	public List<T> getEntities() {
-		HibernateUtil<T> articleHibernateUtil = new HibernateUtil<>();
-		List<T> articles = articleHibernateUtil.getObjectsWithHibernateTransaction(className);
-		return articles;
+		HibernateUtil<T> hibernateUtil = new HibernateUtil<>();
+		List<T> entities = hibernateUtil.getObjectsWithHibernateTransaction(className);
+		return entities;
 	}
 }

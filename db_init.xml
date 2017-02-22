@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="mysql_db_init">
-	<property name="connector_jar" value="./lib/mysql_jdbc_connector/mysql-connector-java-5.1.40-bin.jar"/>
+	<property name="connector_jar" value="C:/Users/Home/.m2/repository/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"/>
 	<property name="db_alias" value="rechpro"/>
 	<property name="port" value="3306"/>
 	<property name="driver_class" value="com.mysql.jdbc.Driver"/>
@@ -19,7 +19,7 @@
 			DROP TABLE IF EXISTS customer CASCADE;
 			DROP TABLE IF EXISTS rechnung CASCADE;
 			DROP TABLE IF EXISTS article CASCADE;
-			DROP TABLE IF EXISTS article_category CASCADE;			
+			DROP TABLE IF EXISTS category CASCADE;		
 		</sql>
 	</target>
 	
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS rechnung
 	create_date DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS article_category
+CREATE TABLE IF NOT EXISTS category
 (	
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 	name VARCHAR(50) NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS article
 	name VARCHAR(50) NOT NULL,
 	description VARCHAR (255),
 	rechnung_id INT REFERENCES rechnung(id),
-	category INT REFERENCES article_category(id),	
+	category_id INT REFERENCES category(id),	
 	price DOUBLE
 );
 		</sql>
@@ -93,9 +93,12 @@ CREATE TABLE IF NOT EXISTS article
 
 INSERT INTO customer VALUES (1, 'm', 'Elvi', 'Osmanlliu', 'Mozartstr..', '1', '76275', 'Ettlingen', 'Deutschland', '07243-', '015221234567', '', 'elviosmanlliu@gmail.com', '1.1.1980', '123456789', '12345', 'DE0121234567890', 'BIC');
 INSERT INTO rechnung VALUES (1, 1001, 1, '24.01.2017');
-INSERT INTO article_category VALUES (1, 'computer', 'hardware and accessories');
+INSERT INTO category VALUES (1, 'computer', 'hardware and accessories');
+INSERT INTO category VALUES (2, 'software', 'opensource and commercial');
 INSERT INTO article VALUES (1, 1000, 'notebook', 'hp core i7, 8gb ram, 500gb ssd', 1001, 1, '800');
- 		</sql>	
+INSERT INTO article VALUES (2, 1001, 'dektop', 'acer core i7, 16gb ram, 500gb hdd', 1001, 1, '400');
+		
+		</sql>	
 	</target>
 	
 	<target name="0_init_db" depends="1_drop_db, 2_create_db, 3_init_db_test_data">

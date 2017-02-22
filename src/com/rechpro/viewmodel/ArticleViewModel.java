@@ -13,19 +13,19 @@ public class ArticleViewModel {
 	private StringProperty name;
 	private StringProperty description;
 	private StringProperty rechnungId;
-	private StringProperty category;
+	private StringProperty categoryName;
 	private StringProperty price;
 	
 	public ArticleViewModel(){
 		//NOP
 	}
 	
-	public ArticleViewModel(StringProperty articleNumber, StringProperty name, StringProperty description, StringProperty rechnungId, StringProperty category, StringProperty price) {
+	public ArticleViewModel(StringProperty articleNumber, StringProperty name, StringProperty description, StringProperty rechnungId, StringProperty categoryName, StringProperty price) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
 		this.rechnungId = rechnungId;
-		this.category = category;
+		this.categoryName = categoryName;
 		this.price = price;
 	}
 	public StringProperty getArticleNumber() {
@@ -52,11 +52,11 @@ public class ArticleViewModel {
 	public void setRechnungId(StringProperty rechnungId) {
 		this.rechnungId = rechnungId;
 	}
-	public StringProperty getCategory() {
-		return category;
+	public StringProperty getCategoryName() {
+		return categoryName;
 	}
-	public void setCategory(StringProperty category) {
-		this.category = category;
+	public void setCategoryName(StringProperty categoryName) {
+		this.categoryName = categoryName;
 	}
 	public StringProperty getPrice() {
 		return price;

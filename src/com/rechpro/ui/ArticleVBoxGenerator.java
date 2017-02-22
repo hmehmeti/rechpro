@@ -1,6 +1,12 @@
 package com.rechpro.ui;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
+
+import com.rechpro.entity.Category;
+import com.rechpro.persistence.DBService;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -16,16 +22,25 @@ import javafx.scene.text.Text;
 
 public class ArticleVBoxGenerator extends VBoxGenerator {
 	
+	private static final String ARTICLE_PRICE_TEXT = "Article price*";
+	private static final String ARTICLE_DESCRIPTION_TEXT = "Artikel Beschreibung";
+	private static final String ARTICLE_CATEGORY_TEXT = "Artikel Kategorie*";
+	private static final String ARTICLE_NUMBER_TEXT = "Artikel Nummer*";
+	private static final String ARTICLE_NAME_TEXT = "Artikel Name*";
 	private static final String CREATE_ARTICLE_LABEL = "Neuer Artikel erstellen";
-	private static final String[] ARTICLE_CATEGORIES = {"", "hardware", "software"};
+	
+	public static final String ARTICLE_NUMBER_EXISTS =  "Eingegebene Warennumer ist vergeben. \nBitte eine neue eingegeben!";
 	
 	private TextField articleNumber;
 	private TextField articleName;
 	private TextField articleDescription;
 	private TextField articlePrice;
-	private ChoiceBox<String> articleCategory;
+	private ChoiceBox<String> articleCategoryNames;
+	
+	private List<String> categoryNames;
 	
 	public ArticleVBoxGenerator() {
+		categoryNames = getArticleCategoryNames();
 		initialiseArticleFields();
 		setTextStyleToValid();
 	}
@@ -35,15 +50,24 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		articleName = new TextField();
 		articleDescription = new TextField();
 		articlePrice = new TextField();
-		articleCategory = new ChoiceBox<String>(FXCollections.observableArrayList(ARTICLE_CATEGORIES));
+		articleCategoryNames = new ChoiceBox<String>(FXCollections.observableArrayList(categoryNames));
 		
+	}
+	
+	private List<String> getArticleCategoryNames() {
+		DBService<Category> dbService = new DBService<Category>(Category.class.getName());
+		List<Category> categories = dbService.getEntities();
+		List<String> categoryNames = categories.stream()
+										.map(Category::getName)
+										.collect(Collectors.toList());
+		return categoryNames;
 	}
 	
 	protected void setTextStyleToValid() {
 		articleNumber.setStyle(VALID_TEXTFIELD_CSS);
 		articleName.setStyle(VALID_TEXTFIELD_CSS);
 		articlePrice.setStyle(VALID_TEXTFIELD_CSS);
-		articleCategory.setStyle(VALID_TEXTFIELD_CSS);
+		articleCategoryNames.setStyle(VALID_TEXTFIELD_CSS);
 	}
 
 	public VBox createAddingNewArticleTable() {
@@ -51,16 +75,16 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		HBox mainWindow = new HBox();
 		window.setMargin(mainWindow, new Insets(10, 10, 10, 10));
 		
-		Label articleData = new Label(CREATE_ARTICLE_LABEL);
-		articleData.setFont(Font.font("Roboto", 20));
-		window.setMargin(articleData, new Insets(10, 10, 10, 10));
+		Label articleDataLabel = new Label(CREATE_ARTICLE_LABEL);
+		articleDataLabel.setFont(Font.font("Roboto", 20));
+		window.setMargin(articleDataLabel, new Insets(10, 10, 10, 10));
 		
 		VBox firstColumn = new VBox(COLUMN_SPACING);
-		Text name = new Text("Article name*");
-		Text number = new Text("Article number*");
-		Text category = new Text("Article category*");
-		Text description = new Text("Article description");
-		Text price = new Text("Article price*");
+		Text name = new Text(ARTICLE_NAME_TEXT);
+		Text number = new Text(ARTICLE_NUMBER_TEXT);
+		Text category = new Text(ARTICLE_CATEGORY_TEXT);
+		Text description = new Text(ARTICLE_DESCRIPTION_TEXT);
+		Text price = new Text(ARTICLE_PRICE_TEXT);
 		firstColumn.getChildren().addAll(name, number, price, category, description);
 		setSize(firstColumn, COLUMN_TEXT_SIZE);
 		
@@ -72,7 +96,7 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		
 		VBox thirdColumn = new VBox(VALUE_COLUMN_SPACING);
 		thirdColumn.getChildren().addAll(articleName, articleNumber, articlePrice, 
-				articleCategory, articleDescription);
+				articleCategoryNames, articleDescription);
 		
 		mainWindow.getChildren().addAll(firstColumn, secondColumn, thirdColumn);
 		
@@ -82,13 +106,13 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		infoMsgBox.getChildren().add(infoMsg);
 		window.setMargin(infoMsgBox, new Insets(10, 10, 10, 10));
 		
-		HBox buttons = new HBox(20);
+		HBox buttons = new HBox(SPACE_BETWEEN_BUTTONS);
 		cancelBtn = new Button("Abbrechen");
 		saveBtn = new Button("Speichern");
 		buttons.getChildren().addAll(cancelBtn, saveBtn);		
 		window.setMargin(buttons, new Insets(10, 10, 10, 10));
 		
-		window.getChildren().addAll(articleData, mainWindow, infoMsgBox, buttons);
+		window.getChildren().addAll(articleDataLabel, mainWindow, infoMsgBox, buttons);
 		return window;
 	}
 	
@@ -139,8 +163,8 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 			articlePrice.setStyle(INVALID_TEXTFIELD_CSS);
 			result = false;
 		}
-		if (articleCategory.getSelectionModel().isEmpty()) {
-			articleCategory.setStyle(INVALID_TEXTFIELD_CSS);
+		if (articleCategoryNames.getSelectionModel().isEmpty()) {
+			articleCategoryNames.setStyle(INVALID_TEXTFIELD_CSS);
 			result = false;
 		}
 		return result;
@@ -160,6 +184,10 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 
 	public TextField getArticlePrice() {
 		return articlePrice;
+	}
+	
+	public String getArticleCategoryName() {
+		return articleCategoryNames.getSelectionModel().getSelectedItem();
 	}
 	
 }

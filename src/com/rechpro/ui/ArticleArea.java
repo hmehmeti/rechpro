@@ -75,21 +75,17 @@ public class ArticleArea {
 		if (!mandatorySuccess) 
 			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
 		
-		int warennummer = Integer.parseInt(articleGenerator.getArticleNumber().getText());
-		boolean warenummerExist = articleController.existWarenNummer(warennummer);
+		int articleNumber = Integer.parseInt(articleGenerator.getArticleNumber().getText());
+		boolean articleNumberExists = articleController.existsArticleNumber(articleNumber);
 		
-		if(warenummerExist)
-			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.WAREN_NUMMER_EXISTIERT);
+		if(articleNumberExists)
+			articleGenerator.setInfoMsg(articleCreateWindow, ArticleVBoxGenerator.ARTICLE_NUMBER_EXISTS);
 		
-		if(mandatorySuccess && !warenummerExist)
-			articleCanBeCreated();
-	}
-
-
-	private void articleCanBeCreated() {
-		transformAndPersist();
-		articleStage.close();
-		loadArticleSelectionArea();
+		if(mandatorySuccess && !articleNumberExists) {
+			transformAndPersist();
+			articleStage.close();
+			loadArticleSelectionArea();
+		}
 	}
 
 	private Button getNewArticleCreatButtonWithText() {
@@ -116,7 +112,7 @@ public class ArticleArea {
 		articleParameterList.put(ArticleParameters.NAME, articleGenerator.getArticleName().getText());
 		articleParameterList.put(ArticleParameters.PRICE, articleGenerator.getArticlePrice().getText());
 		articleParameterList.put(ArticleParameters.DESCRIPTION, articleGenerator.getArticleDescription().getText());
-		// TODO: implement persisting category
+		articleParameterList.put(ArticleParameters.CATEGORY, articleGenerator.getArticleCategoryName());
 		
 		articleController.transformAndPersist(articleParameterList);
 	}

@@ -15,6 +15,7 @@
 		
 		<mapping class="com.rechpro.entity.Customer"/>
 		<mapping class="com.rechpro.entity.Article"/>
+		<mapping class="com.rechpro.entity.Category"/>
 		
 	</session-factory>
 </hibernate-configuration>

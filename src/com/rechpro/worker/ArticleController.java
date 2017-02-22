@@ -40,6 +40,8 @@ public class ArticleController {
 	private TableColumn<ArticleViewModel, String> articleNameColumn;
 	@FXML
 	private TableColumn<ArticleViewModel, String> categoryColumn;
+	@FXML
+	private TableColumn<ArticleViewModel, String> descriptionColumn;
 
 	private ArticleViewModel selectedArticle;
 	private ArticleTransformer transformer;
@@ -66,7 +68,8 @@ public class ArticleController {
 	private void initialize() {
 		articleId.setCellValueFactory(cellData -> cellData.getValue().getArticleNumber());
 		articleNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
-		categoryColumn.setCellValueFactory(cellData -> cellData.getValue().getCategory());
+		categoryColumn.setCellValueFactory(cellData -> cellData.getValue().getCategoryName());
+		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getDescription());
 
 		FilteredList<ArticleViewModel> filteredData = new FilteredList<>(masterData, p -> true);
 
@@ -82,7 +85,7 @@ public class ArticleController {
 					return true; 
 				else if (article.getName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
 					return true;
-				else if (article.getCategory().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
+				else if (article.getCategoryName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
 					return true; 
 				
 				return false;
@@ -111,10 +114,10 @@ public class ArticleController {
 		dbService.addEntity(article);
 	}
 
-	public boolean existWarenNummer(int warennummer) {
+	public boolean existsArticleNumber(int articleNumber) {
 		List<Article> articleEntities = dbService.getEntities();
-		List<Article> foo = articleEntities.stream().filter(o->o.getArticleNumber() == warennummer).collect(Collectors.toList());
-		if(!foo.isEmpty())
+		List<Article> filteredResult = articleEntities.stream().filter(o->o.getArticleNumber() == articleNumber).collect(Collectors.toList());
+		if(!filteredResult.isEmpty())
 			return true;
 		
 		return false;

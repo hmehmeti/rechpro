@@ -1,14 +1,19 @@
 package com.rechpro.entity;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.rechpro.persistence.CategoryDBService;
 import com.rechpro.worker.ArticleParameters;
 
 /**
@@ -36,21 +41,21 @@ public class Article {
 	@Column(name="rechnung_id")
 	private int rechnungId;
 	
-	@Column(name="category")
-	private int category;
-	
 	@Column(name="price")
 	private Double price;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="category_id", referencedColumnName="id")
+	private Category category;
 
 	public Article(){
-		//NOP
+		//MUST have a default constructor to initialise Entity
 	}
-	public Article(int articleNumber, String name, String description, int rechnungId, int category, double price) {
+	public Article(int articleNumber, String name, String description, int rechnungId, double price) {
 		this.articleNumber = articleNumber;
 		this.name = name;
 		this.description = description;
 		this.rechnungId = rechnungId;
-		this.category = category;
 		this.price = price;
 	}
 
@@ -59,7 +64,16 @@ public class Article {
 		this.articleNumber = Integer.valueOf(articleParameterList.get(ArticleParameters.ARTICLENUMBER));
 		this.price = Double.valueOf(articleParameterList.get(ArticleParameters.PRICE));
 		this.description = articleParameterList.get(ArticleParameters.DESCRIPTION);
+		String categoryName = articleParameterList.get(ArticleParameters.CATEGORY);
+		CategoryDBService dbService = new CategoryDBService();
+		try {
+			this.category = dbService.getCategoryForName(categoryName);
+		} catch (NoSuchElementException e) {
+			System.out.println("ERROR: No category found in database for given name!");
+		}
+		
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -92,14 +106,6 @@ public class Article {
 		this.rechnungId = rechnung_id;
 	}
 
-	public int getCategory() {
-		return category;
-	}
-
-	public void setCategory(int category) {
-		this.category = category;
-	}
-
 	public Double getPrice() {
 		return price;
 	}
@@ -110,5 +116,13 @@ public class Article {
 
 	public int getId() {
 		return id;
+	}
+	
+	public Category getCategory() {
+		return category;
+	}
+	
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 }
