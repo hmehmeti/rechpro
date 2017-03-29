@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Category;
-import com.rechpro.persistence.DBService;
+import com.rechpro.persistence.CategoryDBService;
+import com.rechpro.persistence.ICategoryDBService;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -37,10 +41,12 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	private TextField articlePrice;
 	private ChoiceBox<String> articleCategoryNames;
 	
+	private ICategoryDBService dbService;
 	private List<String> categoryNames;
 	
 	public ArticleVBoxGenerator() {
-		categoryNames = getArticleCategoryNames();
+		dbService = getCategoryDBServiceBean();
+		categoryNames = getArticleCategoryNames(dbService);
 		initialiseArticleFields();
 		setTextStyleToValid();
 	}
@@ -54,13 +60,18 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		
 	}
 	
-	private List<String> getArticleCategoryNames() {
-		DBService<Category> dbService = new DBService<Category>(Category.class.getName());
-		List<Category> categories = dbService.getEntities();
+	private List<String> getArticleCategoryNames(ICategoryDBService dbService) {
+		List<Category> categories = dbService.retrieveAllCategories();
 		List<String> categoryNames = categories.stream()
 										.map(Category::getName)
 										.collect(Collectors.toList());
 		return categoryNames;
+	}
+	
+	private ICategoryDBService getCategoryDBServiceBean() {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ICategoryDBService dbService = (ICategoryDBService) context.getBean("categoryDBService");
+		return dbService;
 	}
 	
 	protected void setTextStyleToValid() {

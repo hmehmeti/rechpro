@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hibernate.engine.internal.Collections;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Article;
-import com.rechpro.persistence.DBService;
+import com.rechpro.persistence.ArticleDBService;
+import com.rechpro.persistence.CategoryDBService;
+import com.rechpro.persistence.IArticleDBService;
 import com.rechpro.transformer.ArticleTransformer;
 import com.rechpro.ui.RechnungArea;
 import com.rechpro.viewmodel.ArticleViewModel;
@@ -45,7 +50,7 @@ public class ArticleController {
 
 	private ArticleViewModel selectedArticle;
 	private ArticleTransformer transformer;
-	private DBService<Article> dbService;
+	private IArticleDBService dbService;
 
 	private ObservableList<ArticleViewModel> masterData = FXCollections.observableArrayList();
 
@@ -53,11 +58,17 @@ public class ArticleController {
 	 * Just add some sample data in the constructor.
 	 */
 	public ArticleController() {
+		dbService = getArticleDBServiceBean();
 		transformer = new ArticleTransformer();
-		dbService = new DBService<Article>("Article");
-		masterData.addAll(transformer.convertAndGetAllArticle(dbService.getEntities()));
+		masterData.addAll(transformer.convertAndGetAllArticle(dbService.retrieveAllArticles()));
 	}
 
+	private IArticleDBService getArticleDBServiceBean() {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		IArticleDBService dbService = (IArticleDBService) context.getBean("articleDBService");
+		return dbService;
+	}
+	
 	/**
 	 * Initializes the controller class. This method is automatically called
 	 * after the fxml file has been loaded.
@@ -111,11 +122,11 @@ public class ArticleController {
 
 	public void transformAndPersist(HashMap<Enum, String> articleParameterList) {
 		Article article = transformer.entityFromParameterList(articleParameterList);
-		dbService.addEntity(article);
+		dbService.createArticle(article);
 	}
 
 	public boolean existsArticleNumber(int articleNumber) {
-		List<Article> articleEntities = dbService.getEntities();
+		List<Article> articleEntities = dbService.retrieveAllArticles();
 		List<Article> filteredResult = articleEntities.stream().filter(o->o.getArticleNumber() == articleNumber).collect(Collectors.toList());
 		if(!filteredResult.isEmpty())
 			return true;

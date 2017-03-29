@@ -2,8 +2,14 @@ package com.rechpro.worker;
 
 import java.util.HashMap;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Customer;
-import com.rechpro.persistence.DBService;
+import com.rechpro.persistence.CategoryDBService;
+import com.rechpro.persistence.CustomerDBService;
+import com.rechpro.persistence.ICustomerDBService;
 import com.rechpro.transformer.CustomerTransformer;
 import com.rechpro.ui.ButtonOnLeftArea;
 import com.rechpro.ui.CenterArea;
@@ -44,7 +50,7 @@ public class CustomerController {
 	private TableColumn<CustomerViewModel, String> lastNameColumn;
 
 	private CustomerTransformer transformer;
-	private DBService<Customer> dbService;
+	private ICustomerDBService dbService;
 	
 	private ObservableList<CustomerViewModel> masterData = FXCollections.observableArrayList();
 
@@ -52,9 +58,15 @@ public class CustomerController {
 	 * Just add some sample data in the constructor.
 	 */
 	public CustomerController() {
+		dbService = getCustomerDBServiceBean();
 		transformer = new CustomerTransformer();
-		dbService = new DBService<Customer>("Customer");
-		masterData.addAll(transformer.convertAndGetAllCustomer(dbService.getEntities()));
+		masterData.addAll(transformer.convertAndGetAllCustomer(dbService.retrieveAllCustomers()));
+	}
+	
+	private ICustomerDBService getCustomerDBServiceBean() {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ICustomerDBService dbService = (ICustomerDBService) context.getBean("customerDBService");
+		return dbService;
 	}
 
 	/**
@@ -153,6 +165,6 @@ public class CustomerController {
 
 	public void transformAndPersist(HashMap<Enum, String> customParameterList) {
 		Customer customer = transformer.entityFromParameterList(customParameterList);
-		dbService.addEntity(customer);
+		dbService.createCustomer(customer);
 	}
 }

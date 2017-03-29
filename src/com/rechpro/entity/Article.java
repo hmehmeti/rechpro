@@ -13,7 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import com.rechpro.appcontext.ApplicationContextProvider;
+import com.rechpro.persistence.ArticleDBService;
 import com.rechpro.persistence.CategoryDBService;
+import com.rechpro.persistence.ICategoryDBService;
 import com.rechpro.worker.ArticleParameters;
 
 /**
@@ -65,13 +71,14 @@ public class Article {
 		this.price = Double.valueOf(articleParameterList.get(ArticleParameters.PRICE));
 		this.description = articleParameterList.get(ArticleParameters.DESCRIPTION);
 		String categoryName = articleParameterList.get(ArticleParameters.CATEGORY);
-		CategoryDBService dbService = new CategoryDBService();
-		try {
-			this.category = dbService.getCategoryForName(categoryName);
-		} catch (NoSuchElementException e) {
-			System.out.println("ERROR: No category found in database for given name!");
-		}
-		
+		ICategoryDBService dbService = getCategoryDBServiceBean();
+		this.category = dbService.retrieveCategory(categoryName);
+	}
+	
+	private ICategoryDBService getCategoryDBServiceBean() {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ICategoryDBService dbService = (ICategoryDBService) context.getBean("categoryDBService");
+		return dbService;
 	}
 	
 	public String getName() {

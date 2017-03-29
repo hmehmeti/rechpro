@@ -1,24 +1,32 @@
 package com.rechpro.persistence;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rechpro.entity.Category;
+import com.rechpro.persistence.dao.hibernate.CategoryDAO;
 
-public class CategoryDBService {
+@Service
+public class CategoryDBService implements ICategoryDBService{
 
-	private DBService<Category> dbService;
-	
-	public CategoryDBService() {
-		dbService = new DBService<>(Category.class.getName());
+	@Autowired(required=true)
+	private CategoryDAO categoryDao;
+
+	@Transactional
+	public Category retrieveCategory(String name) {
+		return this.categoryDao.findCategoryByName(name);
 	}
-	
-	public Category getCategoryForName(String name) throws NoSuchElementException {
-		List<Category> categories = dbService.getEntities();
-		Category category = categories.stream()
-				.filter(categoryObj -> categoryObj.getName().equals(name))
-				.findFirst()
-				.get();
-		return category;
+
+	@Transactional
+	public Category createCategory(Category category) {
+		return this.categoryDao.persistOrMerge(category);
+	}
+
+	@Transactional
+	public List<Category> retrieveAllCategories() {
+		return this.categoryDao.retrieveAllCategories();
 	}
 }

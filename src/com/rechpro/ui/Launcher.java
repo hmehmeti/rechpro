@@ -2,6 +2,10 @@ package com.rechpro.ui;
 
 import java.io.IOException;
 
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import com.rechpro.appcontext.ApplicationContextProvider;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,7 +15,7 @@ import resources.PathClass;
 
 public class Launcher extends Application {
 	public static BorderPane root;
-
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -56,6 +60,10 @@ public class Launcher extends Application {
 	}
 
 	public static void main(String[] args) {
+		FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(
+				"conf/rechpro-applicationcontext.xml");
+		ApplicationContextProvider acProvider = new ApplicationContextProvider();
+		acProvider.setApplicationContext(context);
 		launch(args);
 	}
 }
