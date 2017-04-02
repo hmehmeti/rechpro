@@ -18,7 +18,7 @@ public class CategoryDAO implements ICategoryDAO {
 	@Override
 	public Category findCategoryByName(String name) {
 		return (Category) this.sessionFactory.getCurrentSession().createQuery(
-				"from Category cat where cat.name=?").setParameter("", name)
+				"from Category cat where cat.name=?").setParameter(0, name)
 				.uniqueResult();
 	}
 
