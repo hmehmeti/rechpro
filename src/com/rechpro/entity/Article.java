@@ -1,7 +1,6 @@
 package com.rechpro.entity;
 
-import java.util.HashMap;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,11 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.rechpro.appcontext.ApplicationContextProvider;
-import com.rechpro.persistence.ArticleDBService;
-import com.rechpro.persistence.CategoryDBService;
 import com.rechpro.persistence.ICategoryDBService;
 import com.rechpro.worker.ArticleParameters;
 
@@ -65,7 +61,7 @@ public class Article {
 		this.price = price;
 	}
 
-	public Article(HashMap<Enum, String> articleParameterList) {
+	public Article(Map<Enum, String> articleParameterList) {
 		this.name = articleParameterList.get(ArticleParameters.NAME);
 		this.articleNumber = Integer.valueOf(articleParameterList.get(ArticleParameters.ARTICLENUMBER));
 		this.price = Double.valueOf(articleParameterList.get(ArticleParameters.PRICE));

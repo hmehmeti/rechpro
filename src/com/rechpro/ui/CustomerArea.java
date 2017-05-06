@@ -57,25 +57,34 @@ public class CustomerArea {
 		Button createNewCustomerBtn = getNewCustomerCreatButtonWithText();
 		createNewCustomerBtnAndText.getChildren().addAll(createNewCustomerBtn, new Text(NEW_CUSTOMER_BUTTON_TEXT));
 		
+		customerArea.setSpacing(CUSTOMER_AREA_VBOX_SPACNG);
+		customerArea.setPadding(new Insets(10, 0, 0, 10));
+		customerArea.getChildren().addAll(stackPane, createNewCustomerBtnAndText);
+		return customerArea;
+	}
+	
+	private Button getNewCustomerCreatButtonWithText() {
+		Button createNewCustomerBtn = new Button();
+		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
+				BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
+		createNewCustomerBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
+
 		// new window if createNewCustomerButton is clicked
 		VBox customerCreateWindow = customerTableGenerator.createCustomerCreationTable();
 		customerStage.setScene(new Scene(customerCreateWindow));
-		createNewCustomerBtn.setOnAction(event-> {
+		createNewCustomerBtn.setOnAction(event -> {
 			customerTableGenerator.resetInputValues(customerCreateWindow);
 			customerTableGenerator.setTextStyleToValid();
 			customerStage.show();
 		});
 		Button customerSaveBtn = customerTableGenerator.getSaveButton();
 		Button customerCancelBtn = customerTableGenerator.getCancelButton();
-		customerSaveBtn.setOnAction(event-> {
+		customerSaveBtn.setOnAction(event -> {
 			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
 		});
-		customerCancelBtn.setOnAction(event->customerStage.close());
+		customerCancelBtn.setOnAction(event -> customerStage.close());
 
-		customerArea.setSpacing(CUSTOMER_AREA_VBOX_SPACNG);
-		customerArea.setPadding(new Insets(10, 0, 0, 10));
-		customerArea.getChildren().addAll(stackPane, createNewCustomerBtnAndText);
-		return customerArea;
+		return createNewCustomerBtn;
 	}
 
 	private void checkMandatoryFieldsAndSaveCustomer(VBox customerCreateWindow) {
@@ -84,16 +93,8 @@ public class CustomerArea {
        	 loadCustomerSelectionArea();
        	 customerStage.close();
         } else {
-        	customerTableGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
+        	customerTableGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.MISSED_REQUIRED_FIELD);
         }
-	}
-
-	private Button getNewCustomerCreatButtonWithText(){
-		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator
-				.createImageView(this.getClass(), PathClass.ADD_BTN, BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
-		createNewCustomerBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
-		return createNewCustomerBtn;
 	}
 
 	private void transformAndPersist() {

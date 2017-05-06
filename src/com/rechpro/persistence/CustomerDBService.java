@@ -16,13 +16,15 @@ public class CustomerDBService implements ICustomerDBService {
 	private CustomerDAO customerDao;
 	
 	@Transactional
+	@Override
 	public Customer createCustomer(Customer customer) {
 		return this.customerDao.persistOrMerge(customer);
 	}
 
 	@Transactional
+	@Override
 	public List<Customer> retrieveAllCustomers() {
-		return this.customerDao.retrieveAllCustomers();
+		return this.customerDao.findAllCustomers();
 	}
 
 }

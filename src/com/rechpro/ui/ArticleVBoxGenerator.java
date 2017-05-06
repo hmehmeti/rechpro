@@ -42,11 +42,10 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	private ChoiceBox<String> articleCategoryNames;
 	
 	private ICategoryDBService dbService;
-	private List<String> categoryNames;
+	private  List<String> categoryNames;
 	
 	public ArticleVBoxGenerator() {
 		dbService = getCategoryDBServiceBean();
-		categoryNames = getArticleCategoryNames(dbService);
 		initialiseArticleFields();
 		setTextStyleToValid();
 	}
@@ -56,16 +55,8 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		articleName = new TextField();
 		articleDescription = new TextField();
 		articlePrice = new TextField();
+		categoryNames = dbService.retrieveAllCategorieNames();
 		articleCategoryNames = new ChoiceBox<String>(FXCollections.observableArrayList(categoryNames));
-		
-	}
-	
-	private List<String> getArticleCategoryNames(ICategoryDBService dbService) {
-		List<Category> categories = dbService.retrieveAllCategories();
-		List<String> categoryNames = categories.stream()
-										.map(Category::getName)
-										.collect(Collectors.toList());
-		return categoryNames;
 	}
 	
 	private ICategoryDBService getCategoryDBServiceBean() {
@@ -82,13 +73,14 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	}
 
 	public VBox createAddingNewArticleTable() {
-		window = new VBox(VBOX_SPACING);
+		VBox window = new VBox(VBOX_SPACING);
+		
 		HBox mainWindow = new HBox();
-		window.setMargin(mainWindow, new Insets(10, 10, 10, 10));
+		VBox.setMargin(mainWindow, new Insets(10, 10, 10, 10));
 		
 		Label articleDataLabel = new Label(CREATE_ARTICLE_LABEL);
-		articleDataLabel.setFont(Font.font("Roboto", 20));
-		window.setMargin(articleDataLabel, new Insets(10, 10, 10, 10));
+		articleDataLabel.setFont(Font.font(LABEL_FONT, 20));
+		VBox.setMargin(articleDataLabel, new Insets(10, 10, 10, 10));
 		
 		VBox firstColumn = new VBox(COLUMN_SPACING);
 		Text name = new Text(ARTICLE_NAME_TEXT);
@@ -97,13 +89,13 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		Text description = new Text(ARTICLE_DESCRIPTION_TEXT);
 		Text price = new Text(ARTICLE_PRICE_TEXT);
 		firstColumn.getChildren().addAll(name, number, price, category, description);
-		setSize(firstColumn, COLUMN_TEXT_SIZE);
+		setTextFontAndSize(firstColumn, LABEL_FONT, COLUMN_TEXT_SIZE);
 		
 		VBox secondColumn = new VBox(COLUMN_SPACING);
 		for (int i = 0; i < firstColumn.getChildren().size(); i++) {
 			secondColumn.getChildren().add(new Text(" : "));
 		}
-		setSize(secondColumn, COLUMN_TEXT_SIZE);
+		setTextFontAndSize(secondColumn,LABEL_FONT, COLUMN_TEXT_SIZE);
 		
 		VBox thirdColumn = new VBox(VALUE_COLUMN_SPACING);
 		thirdColumn.getChildren().addAll(articleName, articleNumber, articlePrice, 
@@ -115,48 +107,18 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 		Text infoMsg = new Text();
 		infoMsg.setFill(Color.RED);
 		infoMsgBox.getChildren().add(infoMsg);
-		window.setMargin(infoMsgBox, new Insets(10, 10, 10, 10));
+		VBox.setMargin(infoMsgBox, new Insets(10, 10, 10, 10));
 		
 		HBox buttons = new HBox(SPACE_BETWEEN_BUTTONS);
-		cancelBtn = new Button("Abbrechen");
-		saveBtn = new Button("Speichern");
-		buttons.getChildren().addAll(cancelBtn, saveBtn);		
-		window.setMargin(buttons, new Insets(10, 10, 10, 10));
+		Button cancelBtn = new Button(CANCEL_BTN_LABEL);
+		setCancelButton(cancelBtn);
+		Button saveBtn = new Button(SAVE_BTN_LABEL);
+		setSaveButton(saveBtn);
+		buttons.getChildren().addAll(saveBtn, cancelBtn);		
+		VBox.setMargin(buttons, new Insets(10, 10, 10, 10));
 		
 		window.getChildren().addAll(articleDataLabel, mainWindow, infoMsgBox, buttons);
 		return window;
-	}
-	
-	protected void resetInputValues(VBox customerCreateWindow) {
-		Object hBoxObject = customerCreateWindow.getChildren().get(1);
-		if (hBoxObject instanceof HBox) {
-			HBox mainWindow = (HBox) hBoxObject;
-			Object vBoxObject = mainWindow.getChildren().get(2);
-			if (vBoxObject instanceof VBox) {
-				VBox thirdColumn = (VBox) vBoxObject;
-				for (int i = 0; i < thirdColumn.getChildren().size(); i++) {
-					Object columnObject = thirdColumn.getChildren().get(i);
-					if (columnObject instanceof TextField) {
-						((TextField) columnObject).setText("");
-					} else if (columnObject instanceof ChoiceBox) {
-						((ChoiceBox) columnObject).setValue(new String(""));
-					}
-				}
-			}
-		}
-		setInfoMsg(customerCreateWindow, "");
-	}
-	
-	public void setInfoMsg(VBox customerCreateWindow, String msg) {
-		Object windowObject = customerCreateWindow.getChildren().get(2);
-    	if (windowObject instanceof HBox) {
-    		HBox infoMsgBox = (HBox) windowObject;
-    		Object infoObject = infoMsgBox.getChildren().get(0);
-        	if (infoObject instanceof Text) {
-        		Text infoMsg = (Text) infoObject;
-        		infoMsg.setText(msg);
-        	}
-    	}
 	}
 	
 	@Override

@@ -1,11 +1,15 @@
 package com.rechpro.entity;
 
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.rechpro.worker.CategoryParameters;
 
 /**
  * 
@@ -56,6 +60,11 @@ public class Category {
 
 	public Category(String categoryName) {
 		name = categoryName;
+	}
+
+	public Category(Map<Enum, String> categoryParameterList) {
+		this.name = categoryParameterList.get(CategoryParameters.NAME);
+		this.description = categoryParameterList.get(CategoryParameters.DESCRIPTION);
 	}
 
 	public String getName() {

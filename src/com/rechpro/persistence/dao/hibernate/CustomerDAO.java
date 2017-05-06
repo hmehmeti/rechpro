@@ -22,7 +22,7 @@ public class CustomerDAO implements ICustomerDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Customer> retrieveAllCustomers() {
+	public List<Customer> findAllCustomers() {
 		return (List<Customer>) this.sessionFactory.getCurrentSession().createQuery(
 				"from Customer").getResultList();
 	}

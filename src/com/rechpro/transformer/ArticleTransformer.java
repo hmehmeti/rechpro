@@ -1,8 +1,8 @@
 package com.rechpro.transformer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.rechpro.entity.Article;
 import com.rechpro.viewmodel.ArticleViewModel;
@@ -51,7 +51,7 @@ public class ArticleTransformer {
 		return new Article(articleName, name, description, rechnungId, price);
 	}
 	
-	public Article entityFromParameterList(HashMap<Enum, String> articleParameterList) {
+	public Article entityFromParameterList(Map<Enum, String> articleParameterList) {
 		return new Article(articleParameterList);
 	}
 

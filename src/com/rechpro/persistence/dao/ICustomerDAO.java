@@ -7,6 +7,6 @@ import com.rechpro.entity.Customer;
 public interface ICustomerDAO {
 
 	public Customer persistOrMerge(Customer customer);
-	public List<Customer> retrieveAllCustomers();
+	public List<Customer> findAllCustomers();
 	
 }

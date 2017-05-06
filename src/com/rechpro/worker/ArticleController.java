@@ -1,18 +1,13 @@
 package com.rechpro.worker;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.hibernate.engine.internal.Collections;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Article;
-import com.rechpro.persistence.ArticleDBService;
-import com.rechpro.persistence.CategoryDBService;
 import com.rechpro.persistence.IArticleDBService;
 import com.rechpro.transformer.ArticleTransformer;
 import com.rechpro.ui.RechnungArea;
@@ -29,7 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 /**
- * View-Controller for the person table.
+ * View-Controller for the article table.
  * 
  * @author Kamuran Dogan
  */
@@ -40,7 +35,7 @@ public class ArticleController {
 	@FXML
 	private TableView<ArticleViewModel> articleTable;
 	@FXML
-	private TableColumn<ArticleViewModel, String> articleId;
+	private TableColumn<ArticleViewModel, String> articleNumberColumn;
 	@FXML
 	private TableColumn<ArticleViewModel, String> articleNameColumn;
 	@FXML
@@ -58,12 +53,12 @@ public class ArticleController {
 	 * Just add some sample data in the constructor.
 	 */
 	public ArticleController() {
-		dbService = getArticleDBServiceBean();
+		dbService = getArticleDBService();
 		transformer = new ArticleTransformer();
 		masterData.addAll(transformer.convertAndGetAllArticle(dbService.retrieveAllArticles()));
 	}
 
-	private IArticleDBService getArticleDBServiceBean() {
+	private IArticleDBService getArticleDBService() {
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		IArticleDBService dbService = (IArticleDBService) context.getBean("articleDBService");
 		return dbService;
@@ -77,7 +72,7 @@ public class ArticleController {
 	 */
 	@FXML
 	private void initialize() {
-		articleId.setCellValueFactory(cellData -> cellData.getValue().getArticleNumber());
+		articleNumberColumn.setCellValueFactory(cellData -> cellData.getValue().getArticleNumber());
 		articleNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
 		categoryColumn.setCellValueFactory(cellData -> cellData.getValue().getCategoryName());
 		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getDescription());
@@ -98,6 +93,8 @@ public class ArticleController {
 					return true;
 				else if (article.getCategoryName().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
 					return true; 
+				else if (article.getDescription().getValue().toLowerCase().indexOf(lowerCaseFilter) != -1)
+					return true;
 				
 				return false;
 			});
@@ -120,7 +117,7 @@ public class ArticleController {
 		articleTable.setItems(sortedData);
 	}
 
-	public void transformAndPersist(HashMap<Enum, String> articleParameterList) {
+	public void transformAndPersist(Map<Enum, String> articleParameterList) {
 		Article article = transformer.entityFromParameterList(articleParameterList);
 		dbService.createArticle(article);
 	}

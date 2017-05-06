@@ -7,6 +7,6 @@ import com.rechpro.entity.Article;
 public interface IArticleDAO {
 
 	public Article persistOrMerge(Article article);
-	public List<Article> retrieveAllArticles();
+	public List<Article> findAllArticles();
 	
 }

@@ -94,13 +94,13 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 	}
 
 	public VBox createCustomerCreationTable() {
-		window = new VBox(VBOX_SPACING);
+		VBox window = new VBox(VBOX_SPACING);
 		HBox mainWindow = new HBox();
-		window.setMargin(mainWindow, new Insets(10, 10, 10, 10));
+		VBox.setMargin(mainWindow, new Insets(10, 10, 10, 10));
 		
 		Label customerDataLabel = new Label(CREATE_CUSTOMER_LABEL);
 		customerDataLabel.setFont(Font.font("Roboto", 20));
-		window.setMargin(customerDataLabel, new Insets(10, 10, 10, 10));
+		VBox.setMargin(customerDataLabel, new Insets(10, 10, 10, 10));
 
 		VBox firstColumn = new VBox(COLUMN_SPACING);
 		Text sex = new Text("Anrede*");
@@ -119,13 +119,13 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		Text bicNo = new Text("BIC");
 		firstColumn.getChildren().addAll(sex, firstName, lastName, street, postCodePlaceCountry, phone, mobilePhone,
 				fax, email, birthday, bankNo, blz, iban, bicNo);
-		setSize(firstColumn, COLUMN_TEXT_SIZE);
+		setTextFontAndSize(firstColumn, LABEL_FONT, COLUMN_TEXT_SIZE);
 		
 		VBox secondColumn = new VBox(COLUMN_SPACING);
 		for (int i = 0; i < firstColumn.getChildren().size(); i++) {
 			secondColumn.getChildren().add(new Text(" : "));
 		}
-		setSize(secondColumn, COLUMN_TEXT_SIZE);
+		setTextFontAndSize(secondColumn, LABEL_FONT, COLUMN_TEXT_SIZE);
 		
 		VBox thirdColumn = new VBox(VALUE_COLUMN_SPACING);		
 		streetAndHomeNrField.getChildren().addAll(streetField, homeNrField);
@@ -139,13 +139,15 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		Text infoMsg = new Text();
 		infoMsg.setFill(Color.RED);
 		infoMsgBox.getChildren().add(infoMsg);
-		window.setMargin(infoMsgBox, new Insets(10, 10, 10, 10));
+		VBox.setMargin(infoMsgBox, new Insets(10, 10, 10, 10));
 		
 		HBox buttons = new HBox(SPACE_BETWEEN_BUTTONS);
-		cancelBtn = new Button("Abbrechen");
-		saveBtn = new Button("Speichern");
-		buttons.getChildren().addAll(cancelBtn, saveBtn);
-		window.setMargin(buttons, new Insets(10, 10, 10, 10));
+		Button cancelBtn = new Button("Abbrechen");
+		setCancelButton(cancelBtn);
+		Button saveBtn = new Button("Speichern");
+		setSaveButton(saveBtn);
+		buttons.getChildren().addAll(saveBtn, cancelBtn);
+		VBox.setMargin(buttons, new Insets(10, 10, 10, 10));
 		
 		window.getChildren().addAll(customerDataLabel, mainWindow, infoMsgBox, buttons);
 		return window;

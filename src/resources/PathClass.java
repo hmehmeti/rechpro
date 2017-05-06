@@ -15,6 +15,7 @@ public class PathClass {
 	public static final String RECHNUNG_ICON_PATH = "/com/rechpro/img/rechnung.png";
 	public static final String SETTING_ICON_PATH = "/com/rechpro/img/setting.png";
 	public static final String ARTICLE_ICON_PATH = "/com/rechpro/img/ware.png";
+	public static final String KATEGORIE_ICON_PATH = "/com/rechpro/img/category.png";
 	public static final String WORD_ICON_PATH = "/com/rechpro/img/word_icon.png";
 	
 }

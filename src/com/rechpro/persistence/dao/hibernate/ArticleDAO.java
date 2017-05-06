@@ -22,7 +22,7 @@ public class ArticleDAO implements IArticleDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Article> retrieveAllArticles() {
+	public List<Article> findAllArticles() {
 		return (List<Article>) this.sessionFactory.getCurrentSession().createQuery(
 				"from Article").getResultList();
 	}

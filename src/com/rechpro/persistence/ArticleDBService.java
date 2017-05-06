@@ -16,13 +16,15 @@ public class ArticleDBService implements IArticleDBService {
 	private ArticleDAO articleDao;
 	
 	@Transactional
+	@Override
 	public Article createArticle(Article article) {
 		return this.articleDao.persistOrMerge(article);
 	}
 
 	@Transactional
+	@Override
 	public List<Article> retrieveAllArticles() {
-		return this.articleDao.retrieveAllArticles();
+		return this.articleDao.findAllArticles();
 	}
 	
 }

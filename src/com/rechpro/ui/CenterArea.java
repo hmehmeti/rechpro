@@ -26,6 +26,10 @@ public class CenterArea {
 			stackPane.getChildren().add(new ArticleArea().getTableViewArticles());
 			break;
 			
+		case KATEGORIE:
+			stackPane.getChildren().add(new CategoryArea().getTableViewCategories());
+			break;
+			
 		case KUNDEN:
 			stackPane.getChildren().add(new CustomerArea().getTableViewKunde());
 			break;

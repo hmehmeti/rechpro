@@ -21,7 +21,7 @@ public class LeftArea {
 
 		String cssFont = "-fx-font: 5 arial; -fx-base: #b6e7c9;";
 		int buttonWidth = 60;
-		int buttonHight = 60;
+		int buttonHeight = 60;
 
 		try {
 			VBox vbox = new VBox(10);
@@ -30,28 +30,32 @@ public class LeftArea {
 			text.setFont(Font.font("Helvetica", FontWeight.BOLD, 15));
 
 			Button btnKunden = new Button();
-			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHight));
+			btnKunden.setGraphic(createImageView(PathClass.CUSTOMER_ICON_PATH, buttonWidth, buttonHeight));
 			btnKunden.setStyle(cssFont);
 			btnKunden.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.KUNDEN, null)));
 
 			Button btnRechnung = new Button();
-			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHight));
+			btnRechnung.setGraphic(createImageView(PathClass.RECHNUNG_ICON_PATH, buttonWidth, buttonHeight));
 			btnRechnung.setStyle(cssFont);
 			btnRechnung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.RECHNUNG, null)));
 
 			Button btnWaren = new Button();
-			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHight));
+			btnWaren.setGraphic(createImageView(PathClass.ARTICLE_ICON_PATH, buttonWidth, buttonHeight));
 			btnWaren.setStyle(cssFont);
 			btnWaren.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.WAREN, null)));
 			
+			Button btnCategory = new Button();
+			btnCategory.setGraphic(createImageView(PathClass.KATEGORIE_ICON_PATH, buttonWidth, buttonHeight));
+			btnCategory.setStyle(cssFont);
+			btnCategory.setOnAction(event -> root.setCenter(new CenterArea().loadCenterPane(ButtonOnLeftArea.KATEGORIE, null)));
 
 			Button btnEinstellung = new Button();
-			btnEinstellung.setGraphic(createImageView(PathClass.SETTING_ICON_PATH, buttonWidth, buttonHight));
+			btnEinstellung.setGraphic(createImageView(PathClass.SETTING_ICON_PATH, buttonWidth, buttonHeight));
 			btnEinstellung.setStyle(cssFont);
 			//TODO: implement EINSTELLUNG
 			//btnEinstellung.setOnAction(event->root.setCenter(new CenterArea().loadCenterPane(EnumButton.EINSTELLUNG)));
 
-			vbox.getChildren().addAll(text, btnRechnung, btnWaren, btnKunden, btnEinstellung);
+			vbox.getChildren().addAll(text, btnRechnung, btnWaren, btnCategory, btnKunden, btnEinstellung);
 			hbox.getChildren().addAll(vbox, new Separator(Orientation.VERTICAL));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -29,7 +29,7 @@ public class CategoryDAO implements ICategoryDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Category> retrieveAllCategories() {
+	public List<Category> findAllCategories() {
 		return (List<Category>) this.sessionFactory.getCurrentSession().createQuery(
 				"from Category").getResultList();
 	}

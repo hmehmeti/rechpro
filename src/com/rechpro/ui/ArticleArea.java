@@ -2,6 +2,7 @@ package com.rechpro.ui;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.rechpro.worker.ArticleController;
 import com.rechpro.worker.ArticleParameters;
@@ -22,12 +23,10 @@ import resources.PathClass;
  * @author hmehmeti
  *
  */
-public class ArticleArea {
+public class ArticleArea extends ElementArea {
 	
-	private static final int ARTICLE_AREA_VBOX_SPACING = 5;
-	private static final int BUTTON_WIDTH_AND_HEIGHT = 20;
 	private static final String NEW_ARTICLE_TEXT = "Neuer Artikel";
-	private static final int VBOX_SPACING = 2;
+	
 	private ArticleVBoxGenerator articleGenerator;
 	private ArticleController articleController;
 	private StackPane stackPane;
@@ -39,40 +38,53 @@ public class ArticleArea {
 		articleController = new ArticleController();
 		stackPane = new StackPane();
 		articleStage = new Stage();
-		loadArticleSelectionArea();
 	}
 
 	public Node getTableViewArticles() {
 		VBox articleArea = new VBox(VBOX_SPACING);
-		// Button and Text to create new article
-		VBox createNewArticleBtnAndText = new VBox(VBOX_SPACING);
-		Button createNewArticleBtn = getNewArticleCreatButtonWithText();
-		createNewArticleBtnAndText.getChildren().addAll(createNewArticleBtn, new Text(NEW_ARTICLE_TEXT));
+		// show the list of articles in table form
+		loadArticleSelectionArea();
 		
-		//when entering a new article, a new window is shown
+		// Button and Text to create new article
+		Button createNewArticleBtn = getNewArticleCreateButtonWithText();
+		VBox createNewArticleBtnAndText = new VBox(VBOX_SPACING);
+		createNewArticleBtnAndText.getChildren().addAll(createNewArticleBtn, new Text(NEW_ARTICLE_TEXT));
+		articleArea.setSpacing(ELEMENT_AREA_VBOX_SPACING);
+		articleArea.setPadding(new Insets(10, 0, 0, 10));
+		articleArea.getChildren().addAll(stackPane, createNewArticleBtnAndText);
+		return articleArea;
+	}
+	
+	private Button getNewArticleCreateButtonWithText() {
+		Button createNewArticleBtn = new Button();
+		createNewArticleBtn.setGraphic(VBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
+				BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
+		createNewArticleBtn.setStyle(VBoxGenerator.BUTTON_STYLE);
+
+		// when entering a new article, a new window is shown
 		VBox articleCreateWindow = articleGenerator.createAddingNewArticleTable();
 		articleStage.setScene(new Scene(articleCreateWindow));
-		createNewArticleBtn.setOnAction(event-> {
+		createNewArticleBtn.setOnAction(event -> {
 			articleGenerator.resetInputValues(articleCreateWindow);
 			articleGenerator.setTextStyleToValid();
 			articleStage.show();
 		});
 		Button articleSaveBtn = articleGenerator.getSaveButton();
 		Button articleCancelBtn = articleGenerator.getCancelButton();
-		articleSaveBtn.setOnAction(event-> {
-			checkMandatoryFieldsAndSaveArticle(articleCreateWindow);
-		});
-		articleCancelBtn.setOnAction(event->articleStage.close());
-				
-		articleArea.setSpacing(ARTICLE_AREA_VBOX_SPACING);
-		articleArea.setPadding(new Insets(10, 0, 0, 10));
-		articleArea.getChildren().addAll(stackPane, createNewArticleBtnAndText);
-		return articleArea;
+		if (articleSaveBtn != null && articleCancelBtn != null) {
+			articleSaveBtn.setOnAction(event -> {
+				checkMandatoryFieldsAndSave(articleCreateWindow);
+			});
+			articleCancelBtn.setOnAction(event -> articleStage.close());
+		}
+
+		return createNewArticleBtn;
 	}
 	
-	private void checkMandatoryFieldsAndSaveArticle(VBox articleCreateWindow) {
+	@Override
+	protected void checkMandatoryFieldsAndSave(VBox articleCreateWindow) {
 		if (!articleGenerator.areMandatoryInputsDone()) 
-			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.KEINE_OBLIGATORISCHE_FELDER);
+			articleGenerator.setInfoMsg(articleCreateWindow, VBoxGenerator.MISSED_REQUIRED_FIELD);
 		else {
 			int articleNumber = Integer.parseInt(articleGenerator.getArticleNumber().getText());
 			
@@ -85,27 +97,9 @@ public class ArticleArea {
 			}
 		}
 	}
-
-	private Button getNewArticleCreatButtonWithText() {
-		Button createNewArticleBtn = new Button();
-		createNewArticleBtn.setGraphic(ArticleVBoxGenerator
-				.createImageView(this.getClass(), PathClass.ADD_BTN, BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
-		createNewArticleBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
-		
-		// new window if createNewArticle button is clicked
-		VBox articleWindow = articleGenerator.createAddingNewArticleTable();
-		articleStage.setScene(new Scene(articleWindow));
-		createNewArticleBtn.setOnAction(event-> {
-//			resetInputValues(articleWindow);
-			articleStage.show();
-		});
-		
-		return createNewArticleBtn;
-	}
 	
 	private void transformAndPersist() {
-		HashMap<Enum, String> articleParameterList = new HashMap<Enum, String>();
-		
+		Map<Enum, String> articleParameterList = new HashMap<>();
 		articleParameterList.put(ArticleParameters.ARTICLENUMBER, articleGenerator.getArticleNumber().getText());
 		articleParameterList.put(ArticleParameters.NAME, articleGenerator.getArticleName().getText());
 		articleParameterList.put(ArticleParameters.PRICE, articleGenerator.getArticlePrice().getText());
