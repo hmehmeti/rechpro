@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package com.rechpro.viewmodel;
 
 import javafx.beans.property.StringProperty;
 

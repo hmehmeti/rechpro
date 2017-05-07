@@ -1,7 +1,9 @@
-package com.rechpro.ui;
+package com.rechpro.ui.area;
 
-import java.util.Random;
-
+import com.rechpro.ui.selectionarea.ArticleSelectionArea;
+import com.rechpro.ui.selectionarea.CategorySelectionArea;
+import com.rechpro.ui.selectionarea.CustomerSelectionArea;
+import com.rechpro.ui.selectionarea.RechnungSelectionArea;
 import com.rechpro.viewmodel.CustomerViewModel;
 
 import javafx.geometry.Pos;
@@ -19,19 +21,19 @@ public class CenterArea {
 		switch (button) {
 		case RECHNUNG:
 			rec.setFill(Color.WHITE);
-			stackPane.getChildren().addAll(new RechnungArea(customerToCreateBill).addGridPane());
+			stackPane.getChildren().addAll(new RechnungSelectionArea(customerToCreateBill).addGridPane());
 			break;
 			
 		case WAREN:
-			stackPane.getChildren().add(new ArticleArea().getTableViewArticles());
+			stackPane.getChildren().add(new ArticleSelectionArea().getTableViewArticles());
 			break;
 			
 		case KATEGORIE:
-			stackPane.getChildren().add(new CategoryArea().getTableViewCategories());
+			stackPane.getChildren().add(new CategorySelectionArea().getTableViewCategories());
 			break;
 			
 		case KUNDEN:
-			stackPane.getChildren().add(new CustomerArea().getTableViewKunde());
+			stackPane.getChildren().add(new CustomerSelectionArea().getTableViewKunde());
 			break;
 			
 		case EINSTELLUNG:

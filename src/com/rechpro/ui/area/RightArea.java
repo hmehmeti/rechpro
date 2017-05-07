@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package com.rechpro.ui.area;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;

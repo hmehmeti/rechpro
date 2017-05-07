@@ -1,24 +1,13 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
-import java.io.IOException;
 import java.util.HashMap;
 
-import com.rechpro.viewmodel.CustomerViewModel;
 import com.rechpro.worker.CustomerController;
 import com.rechpro.worker.UserParameters;
 
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -29,7 +18,7 @@ import resources.PathClass;
  * @author hmehmeti
  *
  */
-public class CustomerArea {
+public class CustomerSelectionArea extends ElementSelectionArea {
 
 	private static final int BUTTON_WIDTH_AND_HEIGHT = 20;
 	private static final int CUSTOMER_AREA_VBOX_SPACNG = 5;
@@ -40,18 +29,19 @@ public class CustomerArea {
 	private Stage customerStage;
 	private StackPane stackPane;
 	
-	public CustomerArea() {
+	public CustomerSelectionArea() {
 		customController = new CustomerController();
 		customerGenerator = new CustomerVBoxGenerator();
 		customerStage = new Stage();
 		stackPane = new StackPane();
-		loadCustomerSelectionArea();
-		
 		//stackPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 	}
 	
-	protected VBox getTableViewKunde() {
+	public VBox getTableViewKunde() {
 		VBox customerArea = new VBox();
+		// show the list of customers in a table form
+		loadSelectionArea("CustomerSelectionTable.fxml", stackPane);
+		
 		// Button and Text to create new customer
 		VBox createNewCustomerBtnAndText = new VBox(VBOX_SPACING);
 		Button createNewCustomerBtn = getNewCustomerCreatButtonWithText();
@@ -80,24 +70,26 @@ public class CustomerArea {
 		Button customerSaveBtn = customerGenerator.getSaveButton();
 		Button customerCancelBtn = customerGenerator.getCancelButton();
 		customerSaveBtn.setOnAction(event -> {
-			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
+			checkMandatoryFieldsAndSave(customerCreateWindow);
 		});
 		customerCancelBtn.setOnAction(event -> customerStage.close());
 
 		return createNewCustomerBtn;
 	}
 
-	private void checkMandatoryFieldsAndSaveCustomer(VBox customerCreateWindow) {
+	@Override
+	public void checkMandatoryFieldsAndSave(VBox customerCreateWindow) {
 		if(customerGenerator.areMandatoryInputsDone()){
        	 transformAndPersist();
-       	 loadCustomerSelectionArea();
+       	 loadSelectionArea("CustomerSelectionTable.fxml", stackPane);
        	 customerStage.close();
         } else {
         	customerGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.MISSED_REQUIRED_FIELD);
         }
 	}
 
-	private void transformAndPersist() {
+	@Override
+	public void transformAndPersist() {
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
 		customParameterList.put(UserParameters.SEX, customerGenerator.getSexField());
 		customParameterList.put(UserParameters.FIRSTNAME ,customerGenerator.getFirstNameField().getText());
@@ -120,16 +112,4 @@ public class CustomerArea {
 		customController.transformAndPersist(customParameterList);
 	}
 	
-	/**
-	 * Hier wird die Tabelle, in der die Kunden gelistet und gesucht werden kann, erzugt und in CustomerArea hinzugefügt
-	 */
-	private void loadCustomerSelectionArea() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonTable.fxml"));
-		try {
-			AnchorPane customerSelectionArea = (AnchorPane) loader.load();
-			stackPane.getChildren().add(customerSelectionArea);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }
