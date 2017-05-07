@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
 import java.util.List;
 

@@ -1,10 +1,11 @@
-package com.rechpro.ui;
+package com.rechpro.transformer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.rechpro.entity.Category;
+import com.rechpro.viewmodel.CategoryViewModel;
 
 import javafx.beans.property.SimpleStringProperty;
 

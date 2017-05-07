@@ -11,10 +11,10 @@ import com.rechpro.persistence.CategoryDBService;
 import com.rechpro.persistence.CustomerDBService;
 import com.rechpro.persistence.ICustomerDBService;
 import com.rechpro.transformer.CustomerTransformer;
-import com.rechpro.ui.ButtonOnLeftArea;
-import com.rechpro.ui.CenterArea;
 import com.rechpro.ui.Launcher;
-import com.rechpro.ui.RechnungArea;
+import com.rechpro.ui.area.ButtonOnLeftArea;
+import com.rechpro.ui.area.CenterArea;
+import com.rechpro.ui.selectionarea.RechnungSelectionArea;
 import com.rechpro.viewmodel.CustomerViewModel;
 
 import javafx.beans.binding.Bindings;
@@ -43,7 +43,7 @@ public class CustomerController {
 	@FXML
 	private TableView<CustomerViewModel> customerTable;
 	@FXML
-	private TableColumn<CustomerViewModel, String> customerId;
+	private TableColumn<CustomerViewModel, String> customerIdColumn;
 	@FXML
 	private TableColumn<CustomerViewModel, String> firstNameColumn;
 	@FXML
@@ -78,7 +78,7 @@ public class CustomerController {
 	@FXML
 	private void initialize() {
 		// 0. Initialize the columns.
-		customerId.setCellValueFactory(cellData -> cellData.getValue().getCustomerId());
+		customerIdColumn.setCellValueFactory(cellData -> cellData.getValue().getCustomerId());
 		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getFirstName());
 		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLastName());
 

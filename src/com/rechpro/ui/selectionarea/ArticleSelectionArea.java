@@ -1,18 +1,15 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.rechpro.worker.ArticleController;
 import com.rechpro.worker.ArticleParameters;
 
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -23,7 +20,7 @@ import resources.PathClass;
  * @author hmehmeti
  *
  */
-public class ArticleArea extends ElementArea {
+public class ArticleSelectionArea extends ElementSelectionArea {
 	
 	private static final String NEW_ARTICLE_TEXT = "Neuer Artikel";
 	
@@ -33,7 +30,7 @@ public class ArticleArea extends ElementArea {
 	private Stage articleStage;
 
 	
-	public ArticleArea() {
+	public ArticleSelectionArea() {
 		articleGenerator = new ArticleVBoxGenerator();
 		articleController = new ArticleController();
 		stackPane = new StackPane();
@@ -43,7 +40,7 @@ public class ArticleArea extends ElementArea {
 	public Node getTableViewArticles() {
 		VBox articleArea = new VBox(VBOX_SPACING);
 		// show the list of articles in table form
-		loadArticleSelectionArea();
+		loadSelectionArea("ArticleSelectionTable.fxml", stackPane);
 		
 		// Button and Text to create new article
 		Button createNewArticleBtn = getNewArticleCreateButtonWithText();
@@ -93,12 +90,13 @@ public class ArticleArea extends ElementArea {
 			else {
 				transformAndPersist();
 				articleStage.close();
-				loadArticleSelectionArea();
+				loadSelectionArea("ArticleSelectionTable.fxml", stackPane);
 			}
 		}
 	}
 	
-	private void transformAndPersist() {
+	@Override
+	public void transformAndPersist() {
 		Map<Enum, String> articleParameterList = new HashMap<>();
 		articleParameterList.put(ArticleParameters.ARTICLENUMBER, articleGenerator.getArticleNumber().getText());
 		articleParameterList.put(ArticleParameters.NAME, articleGenerator.getArticleName().getText());
@@ -107,19 +105,6 @@ public class ArticleArea extends ElementArea {
 		articleParameterList.put(ArticleParameters.CATEGORY, articleGenerator.getArticleCategoryName());
 		
 		articleController.transformAndPersist(articleParameterList);
-	}
-
-	/**
-	 * Hier wird die Tabelle, in der die Artikeln gelistet und gesucht werden können, erzeugt.
-	 */
-	private void loadArticleSelectionArea() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("ArticleSelectionTable.fxml"));
-		try {
-			AnchorPane articleSelectionArea = (AnchorPane) loader.load();
-			stackPane.getChildren().add(articleSelectionArea);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

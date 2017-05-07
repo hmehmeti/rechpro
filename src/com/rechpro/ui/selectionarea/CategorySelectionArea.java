@@ -1,18 +1,15 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.rechpro.worker.CategoryController;
 import com.rechpro.worker.CategoryParameters;
 
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -24,7 +21,7 @@ import resources.PathClass;
  * @author eosmanlliu
  *
  */
-public class CategoryArea extends ElementArea {
+public class CategorySelectionArea extends ElementSelectionArea {
 
 	private final String NEW_CATEGORY_TEXT = "Neue Kategorie";
 	
@@ -33,7 +30,7 @@ public class CategoryArea extends ElementArea {
 	private Stage categoryStage;
 	private StackPane stackPane;
 	
-	public CategoryArea() {
+	public CategorySelectionArea() {
 		categoryGenerator = new CategoryVBoxGenerator();
 		categoryController = new CategoryController();
 		categoryStage = new Stage();
@@ -43,7 +40,7 @@ public class CategoryArea extends ElementArea {
 	public Node getTableViewCategories() {
 		VBox categoryArea = new VBox(VBOX_SPACING);
 		// show the list of categories in a table form
-		loadCategorySelectionArea();
+		loadSelectionArea("CategorySelectionTable.fxml", stackPane);
 		
 		// Button and Text to create new category
 		Button createNewCategoryBtn = getNewCategoryCreateButton();
@@ -93,29 +90,17 @@ public class CategoryArea extends ElementArea {
 			} else {
 				transformAndPersist();
 				categoryStage.close();
-				loadCategorySelectionArea();
+				loadSelectionArea("CategorySelectionTable.fxml", stackPane);
 			}
 		}
 	}
 
-	private void transformAndPersist() {
+	@Override
+	public void transformAndPersist() {
 		Map<Enum, String> categoryParameterList = new HashMap<>();
 		categoryParameterList.put(CategoryParameters.NAME, categoryGenerator.getCategoryName().getText());
 		categoryParameterList.put(CategoryParameters.DESCRIPTION, categoryGenerator.getCategoryDescription().getText());
 		categoryController.transformAndPersist(categoryParameterList);
-	}
-	
-	/**
-	 * Hier wird die Tabelle, in der die Kategorien gesucht und gelistet werden, erzeugt.
-	 */
-	private void loadCategorySelectionArea() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("CategorySelectionTable.fxml"));
-		try {
-			AnchorPane categorySelectionArea = (AnchorPane) loader.load();
-			stackPane.getChildren().add(categorySelectionArea);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

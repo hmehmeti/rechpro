@@ -5,6 +5,9 @@ import java.io.IOException;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.rechpro.appcontext.ApplicationContextProvider;
+import com.rechpro.ui.area.ButtonOnLeftArea;
+import com.rechpro.ui.area.CenterArea;
+import com.rechpro.ui.area.LeftArea;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

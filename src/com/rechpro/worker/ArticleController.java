@@ -10,7 +10,7 @@ import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Article;
 import com.rechpro.persistence.IArticleDBService;
 import com.rechpro.transformer.ArticleTransformer;
-import com.rechpro.ui.RechnungArea;
+import com.rechpro.ui.selectionarea.RechnungSelectionArea;
 import com.rechpro.viewmodel.ArticleViewModel;
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 
@@ -105,10 +105,10 @@ public class ArticleController {
 			if (isMouseDoppelClicked) {
 				selectedArticle = articleTable.getSelectionModel().getSelectedItem();
 				ArticleViewModelInRechnung a = transformer.articleViewModel2ArticleViewModelInRechnung(selectedArticle);
-				if(!RechnungArea.articles.contains(a))
-					RechnungArea.articles.add(a);
-				RechnungArea.updateBillAmound();
-				RechnungArea.closeArticleSelectStage();
+				if(!RechnungSelectionArea.articles.contains(a))
+					RechnungSelectionArea.articles.add(a);
+				RechnungSelectionArea.updateBillAmound();
+				RechnungSelectionArea.closeArticleSelectStage();
 			}
 		});
 

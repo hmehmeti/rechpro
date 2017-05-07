@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationContext;
 import com.rechpro.appcontext.ApplicationContextProvider;
 import com.rechpro.entity.Category;
 import com.rechpro.persistence.ICategoryDBService;
-import com.rechpro.ui.CategoryTransformer;
-import com.rechpro.ui.CategoryViewModel;
+import com.rechpro.transformer.CategoryTransformer;
+import com.rechpro.viewmodel.CategoryViewModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

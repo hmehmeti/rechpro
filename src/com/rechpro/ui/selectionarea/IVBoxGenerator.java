@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
