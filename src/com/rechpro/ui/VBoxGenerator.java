@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class VBoxGenerator {
+public abstract class VBoxGenerator implements IVBoxGenerator {
 
 	protected static final String MISSED_REQUIRED_FIELD = "Obligatorische Felder sind nicht eingegeben!";
 	protected static final String INVALID_TEXTFIELD_CSS = "-fx-border-color: red;";
@@ -43,21 +43,21 @@ public abstract class VBoxGenerator {
 	}
 
 
-	static ImageView createImageView(Class classType, String imgPath, int width, int hight) {
+	public ImageView createImageView(Class classType, String imgPath, int width, int hight) {
 		ImageView ImgView = new ImageView(new Image(classType.getResourceAsStream(imgPath)));
 		ImgView.setFitHeight(hight);
 		ImgView.setFitWidth(width);
 		return ImgView;
 	}
 
-	protected void setTextFontAndSize(VBox column, String font, int textSize) {
+	public void setTextFontAndSize(VBox column, String font, int textSize) {
 		for (int i = 0; i < column.getChildren().size(); i++) {
 			Text text = (Text) column.getChildren().get(i);
 			text.setFont(Font.font(font, textSize));
 		}
 	}
 	
-	protected void resetInputValues(VBox createWindow) {
+	public void resetInputValues(VBox createWindow) {
 		Object hBoxObject = createWindow.getChildren().get(1);
 		if (hBoxObject instanceof HBox) {
 			HBox mainWindow = (HBox) hBoxObject;
@@ -70,6 +70,14 @@ public abstract class VBoxGenerator {
 						((TextField) columnObject).setText("");
 					} else if (columnObject instanceof ChoiceBox) {
 						((ChoiceBox) columnObject).setValue(null);
+					} else if (columnObject instanceof HBox) {
+						// here can be the address fields of a customer
+						HBox otherHBoxObject = (HBox) columnObject;
+						for (Object otherObject : otherHBoxObject.getChildren()) {
+							if (otherObject instanceof TextField) {
+								((TextField) otherObject).setText("");
+							}
+						}
 					}
 				}
 			}
@@ -77,7 +85,7 @@ public abstract class VBoxGenerator {
 		setInfoMsg(createWindow, "");
 	}
 	
-	protected void setInfoMsg(VBox createWindow, String msg) {
+	public void setInfoMsg(VBox createWindow, String msg) {
 		Object windowObject = createWindow.getChildren().get(2);
     	if (windowObject instanceof HBox) {
     		HBox infoMsgBox = (HBox) windowObject;
@@ -89,6 +97,6 @@ public abstract class VBoxGenerator {
     	}
 	}
 	
-	abstract boolean areMandatoryInputsDone();
+	public abstract boolean areMandatoryInputsDone();
 
 }

@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 public class CustomerVBoxGenerator extends VBoxGenerator {
 	
 	private static final String CREATE_CUSTOMER_LABEL = "Kunde erstellen";
-	private static final String[] ANREDE_VALUES = {"", "Frau", "Herr"};
+	private static final String[] ANREDE_VALUES = {"Firma", "Frau", "Herr"};
 	
 	ChoiceBox<String> sexField;
 	TextField firstNameField;
@@ -75,7 +75,6 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		sexField.setStyle(VALID_TEXTFIELD_CSS);
 		firstNameField.setStyle(VALID_TEXTFIELD_CSS);
 		lastNameField.setStyle(VALID_TEXTFIELD_CSS);
-//		streetAndHomeNrField.setStyle(VALID_TEXTFIELD_CSS);
 		streetField.setStyle(VALID_TEXTFIELD_CSS);
 		homeNrField.setStyle(VALID_TEXTFIELD_CSS);
 		postCodeCityCountryField.setStyle(VALID_TEXTFIELD_CSS);
@@ -105,7 +104,7 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		VBox firstColumn = new VBox(COLUMN_SPACING);
 		Text sex = new Text("Anrede*");
 		Text firstName = new Text("Vorname*");
-		Text lastName = new Text("Nachname");
+		Text lastName = new Text("Nachname*");
 		Text street = new Text("Straﬂe/Nr.*");
 		Text postCodePlaceCountry = new Text("PLZ/Ort/Land*");
 		Text phone = new Text("Telefon Nr.");
@@ -153,34 +152,6 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
 		return window;
 	}
 	
-	protected void resetInputValues(VBox customerCreateWindow) {
-		Object hBoxObject = customerCreateWindow.getChildren().get(1);
-		if (hBoxObject instanceof HBox) {
-			HBox mainWindow = (HBox) hBoxObject;
-			Object vBoxObject = mainWindow.getChildren().get(2);
-			if (vBoxObject instanceof VBox) {
-				VBox thirdColumn = (VBox) vBoxObject;
-				for (int i = 0; i < thirdColumn.getChildren().size(); i++) {
-					Object columnObject = thirdColumn.getChildren().get(i);
-					if (columnObject instanceof TextField) {
-						((TextField) columnObject).setText("");
-					} else if (columnObject instanceof ChoiceBox) {
-						((ChoiceBox) columnObject).setValue(new String(""));
-					} else if (columnObject instanceof HBox) {
-						// here should be the address fields
-						HBox otherHBoxObject = (HBox) columnObject;
-						for (Object otherObject : otherHBoxObject.getChildren()) {
-							if (otherObject instanceof TextField) {
-								((TextField) otherObject).setText("");
-							}
-						}
-					}
-				}
-			}
-		}
-		setInfoMsg(customerCreateWindow, "");
-	}
-	
 	public void setInfoMsg(VBox customerCreateWindow, String msg) {
 		Object windowObject = customerCreateWindow.getChildren().get(2);
     	if (windowObject instanceof HBox) {
@@ -193,14 +164,19 @@ public class CustomerVBoxGenerator extends VBoxGenerator {
     	}
 	}
 	
+	@Override
 	public boolean areMandatoryInputsDone() {
 		boolean result = true;
 		if(sexField.getSelectionModel().isEmpty()){
-			firstNameField.setStyle(INVALID_TEXTFIELD_CSS);
+			sexField.setStyle(INVALID_TEXTFIELD_CSS);
 			result = false;
 		}
 		if(StringUtils.isEmpty(firstNameField.getText())){
 			firstNameField.setStyle(INVALID_TEXTFIELD_CSS);
+			result = false;
+		}
+		if(StringUtils.isEmpty(lastNameField.getText())){
+			lastNameField.setStyle(INVALID_TEXTFIELD_CSS);
 			result = false;
 		}
 		if(StringUtils.isEmpty(streetField.getText())){

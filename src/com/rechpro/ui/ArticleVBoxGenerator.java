@@ -26,11 +26,11 @@ import javafx.scene.text.Text;
 
 public class ArticleVBoxGenerator extends VBoxGenerator {
 	
-	private static final String ARTICLE_PRICE_TEXT = "Article price*";
-	private static final String ARTICLE_DESCRIPTION_TEXT = "Artikel Beschreibung";
-	private static final String ARTICLE_CATEGORY_TEXT = "Artikel Kategorie*";
-	private static final String ARTICLE_NUMBER_TEXT = "Artikel Nummer*";
-	private static final String ARTICLE_NAME_TEXT = "Artikel Name*";
+	private static final String ARTICLE_PRICE_TEXT = "Preis*";
+	private static final String ARTICLE_DESCRIPTION_TEXT = "Beschreibung";
+	private static final String ARTICLE_CATEGORY_TEXT = "Kategorie*";
+	private static final String ARTICLE_NUMBER_TEXT = "Nummer*";
+	private static final String ARTICLE_NAME_TEXT = "Name*";
 	private static final String CREATE_ARTICLE_LABEL = "Neuer Artikel erstellen";
 	
 	public static final String ARTICLE_NUMBER_EXISTS =  "Eingegebene Warennumer ist vergeben. \nBitte eine neue eingeben!";
@@ -122,7 +122,7 @@ public class ArticleVBoxGenerator extends VBoxGenerator {
 	}
 	
 	@Override
-	boolean areMandatoryInputsDone() {
+	public boolean areMandatoryInputsDone() {
 		boolean result = true;
 		if (StringUtils.isEmpty(articleName.getText())) {
 			articleName.setStyle(INVALID_TEXTFIELD_CSS);

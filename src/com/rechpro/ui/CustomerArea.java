@@ -35,14 +35,14 @@ public class CustomerArea {
 	private static final int CUSTOMER_AREA_VBOX_SPACNG = 5;
 	private static final String NEW_CUSTOMER_BUTTON_TEXT = "Erstelle neue Kunde";
 	private static final int VBOX_SPACING = 2;
-	private CustomerVBoxGenerator customerTableGenerator;
+	private CustomerVBoxGenerator customerGenerator;
 	private CustomerController customController;
 	private Stage customerStage;
 	private StackPane stackPane;
 	
 	public CustomerArea() {
 		customController = new CustomerController();
-		customerTableGenerator = new CustomerVBoxGenerator();
+		customerGenerator = new CustomerVBoxGenerator();
 		customerStage = new Stage();
 		stackPane = new StackPane();
 		loadCustomerSelectionArea();
@@ -65,20 +65,20 @@ public class CustomerArea {
 	
 	private Button getNewCustomerCreatButtonWithText() {
 		Button createNewCustomerBtn = new Button();
-		createNewCustomerBtn.setGraphic(CustomerVBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
+		createNewCustomerBtn.setGraphic(customerGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
 				BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
 		createNewCustomerBtn.setStyle(CustomerVBoxGenerator.BUTTON_STYLE);
 
 		// new window if createNewCustomerButton is clicked
-		VBox customerCreateWindow = customerTableGenerator.createCustomerCreationTable();
+		VBox customerCreateWindow = customerGenerator.createCustomerCreationTable();
 		customerStage.setScene(new Scene(customerCreateWindow));
 		createNewCustomerBtn.setOnAction(event -> {
-			customerTableGenerator.resetInputValues(customerCreateWindow);
-			customerTableGenerator.setTextStyleToValid();
+			customerGenerator.resetInputValues(customerCreateWindow);
+			customerGenerator.setTextStyleToValid();
 			customerStage.show();
 		});
-		Button customerSaveBtn = customerTableGenerator.getSaveButton();
-		Button customerCancelBtn = customerTableGenerator.getCancelButton();
+		Button customerSaveBtn = customerGenerator.getSaveButton();
+		Button customerCancelBtn = customerGenerator.getCancelButton();
 		customerSaveBtn.setOnAction(event -> {
 			checkMandatoryFieldsAndSaveCustomer(customerCreateWindow);
 		});
@@ -88,34 +88,34 @@ public class CustomerArea {
 	}
 
 	private void checkMandatoryFieldsAndSaveCustomer(VBox customerCreateWindow) {
-		if(customerTableGenerator.areMandatoryInputsDone()){
+		if(customerGenerator.areMandatoryInputsDone()){
        	 transformAndPersist();
        	 loadCustomerSelectionArea();
        	 customerStage.close();
         } else {
-        	customerTableGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.MISSED_REQUIRED_FIELD);
+        	customerGenerator.setInfoMsg(customerCreateWindow, VBoxGenerator.MISSED_REQUIRED_FIELD);
         }
 	}
 
 	private void transformAndPersist() {
 		HashMap<Enum, String> customParameterList = new HashMap<Enum, String>();
-		customParameterList.put(UserParameters.SEX, customerTableGenerator.getSexField());
-		customParameterList.put(UserParameters.FIRSTNAME ,customerTableGenerator.getFirstNameField().getText());
-		customParameterList.put(UserParameters.LASTNAME ,customerTableGenerator.getLastNameField().getText());
-		customParameterList.put(UserParameters.STREET ,customerTableGenerator.getStreetField().getText());
-		customParameterList.put(UserParameters.HOME_NO ,customerTableGenerator.getHomeNrField().getText());
-		customParameterList.put(UserParameters.POSTCODE ,customerTableGenerator.getPostCode().getText());
-		customParameterList.put(UserParameters.CITY ,customerTableGenerator.getCity().getText());
-		customParameterList.put(UserParameters.COUNTRY ,customerTableGenerator.getCountry().getText());
-		customParameterList.put(UserParameters.PHONE ,customerTableGenerator.getPhoneField().getText());
-		customParameterList.put(UserParameters.MOBILE_PHONE ,customerTableGenerator.getMobilePhoneField().getText());
-		customParameterList.put(UserParameters.FAX ,customerTableGenerator.getFaxField().getText());
-		customParameterList.put(UserParameters.EMAIL ,customerTableGenerator.getEmailField().getText());
-		customParameterList.put(UserParameters.BIRTHDAY ,customerTableGenerator.getBirthdayField().getText());
-		customParameterList.put(UserParameters.BANK_NO ,customerTableGenerator.getBankNoField().getText());
-		customParameterList.put(UserParameters.BLZ ,customerTableGenerator.getBlzField().getText());
-		customParameterList.put(UserParameters.IBAN ,customerTableGenerator.getIbanField().getText());
-		customParameterList.put(UserParameters.BIC_NO ,customerTableGenerator.getBicNoField().getText());
+		customParameterList.put(UserParameters.SEX, customerGenerator.getSexField());
+		customParameterList.put(UserParameters.FIRSTNAME ,customerGenerator.getFirstNameField().getText());
+		customParameterList.put(UserParameters.LASTNAME ,customerGenerator.getLastNameField().getText());
+		customParameterList.put(UserParameters.STREET ,customerGenerator.getStreetField().getText());
+		customParameterList.put(UserParameters.HOME_NO ,customerGenerator.getHomeNrField().getText());
+		customParameterList.put(UserParameters.POSTCODE ,customerGenerator.getPostCode().getText());
+		customParameterList.put(UserParameters.CITY ,customerGenerator.getCity().getText());
+		customParameterList.put(UserParameters.COUNTRY ,customerGenerator.getCountry().getText());
+		customParameterList.put(UserParameters.PHONE ,customerGenerator.getPhoneField().getText());
+		customParameterList.put(UserParameters.MOBILE_PHONE ,customerGenerator.getMobilePhoneField().getText());
+		customParameterList.put(UserParameters.FAX ,customerGenerator.getFaxField().getText());
+		customParameterList.put(UserParameters.EMAIL ,customerGenerator.getEmailField().getText());
+		customParameterList.put(UserParameters.BIRTHDAY ,customerGenerator.getBirthdayField().getText());
+		customParameterList.put(UserParameters.BANK_NO ,customerGenerator.getBankNoField().getText());
+		customParameterList.put(UserParameters.BLZ ,customerGenerator.getBlzField().getText());
+		customParameterList.put(UserParameters.IBAN ,customerGenerator.getIbanField().getText());
+		customParameterList.put(UserParameters.BIC_NO ,customerGenerator.getBicNoField().getText());
 		
 		customController.transformAndPersist(customParameterList);
 	}

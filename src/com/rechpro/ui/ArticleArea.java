@@ -57,7 +57,7 @@ public class ArticleArea extends ElementArea {
 	
 	private Button getNewArticleCreateButtonWithText() {
 		Button createNewArticleBtn = new Button();
-		createNewArticleBtn.setGraphic(VBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
+		createNewArticleBtn.setGraphic(articleGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
 				BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
 		createNewArticleBtn.setStyle(VBoxGenerator.BUTTON_STYLE);
 

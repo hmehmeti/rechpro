@@ -57,7 +57,7 @@ public class CategoryArea extends ElementArea {
 	
 	protected Button getNewCategoryCreateButton() {
 		Button createNewCatBtn = new Button();
-		createNewCatBtn.setGraphic(VBoxGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
+		createNewCatBtn.setGraphic(categoryGenerator.createImageView(this.getClass(), PathClass.ADD_BTN,
 				BUTTON_WIDTH_AND_HEIGHT, BUTTON_WIDTH_AND_HEIGHT));
 		createNewCatBtn.setStyle(VBoxGenerator.BUTTON_STYLE);
 		
