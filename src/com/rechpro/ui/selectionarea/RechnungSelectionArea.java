@@ -1,4 +1,4 @@
-package com.rechpro.ui;
+package com.rechpro.ui.selectionarea;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +13,7 @@ import java.util.Date;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
+import com.rechpro.ui.TableGenerator;
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
 
@@ -48,7 +49,7 @@ import resources.PathClass;
  * @author kdogan
  * @email kamuran1905@yahoo.de
  **/
-public class RechnungArea {
+public class RechnungSelectionArea {
 	
 	private static final String SELLER_ADDRESS = "Körnerstr. 24 78777 Karlsruhe";
 	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
@@ -70,7 +71,7 @@ public class RechnungArea {
 	private ArticleViewModelInRechnung selectedArticle;
 	
 
-	public RechnungArea(CustomerViewModel customerToCreateBill) {
+	public RechnungSelectionArea(CustomerViewModel customerToCreateBill) {
 		this.customerToCreateBill = customerToCreateBill;
 		tableGenerator = new TableGenerator();
 	}
