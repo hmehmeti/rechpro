@@ -18,8 +18,8 @@ import javafx.scene.text.Text;
 
 public class CategoryVBoxGenerator extends VBoxGenerator {
 	
-	private static final String CATEGORY_DESCRIPTION_TEXT = "Kategorie Beschreibung";
-	private static final String CATEGORY_NAME_TEXT = "Kategorie Name*";
+	private static final String CATEGORY_DESCRIPTION_TEXT = "Beschreibung";
+	private static final String CATEGORY_NAME_TEXT = "Name*";
 	private static final String CREATE_CATEGORY_LABEL = "Neue Kategorie erstellen";
 	public static final String CATEGORY_NAME_EXISTS =  "Eingegebene Kategorie existiert schon. \nBitte eine neue eingeben!";
 	
@@ -95,7 +95,7 @@ public class CategoryVBoxGenerator extends VBoxGenerator {
 	}
 	
 	@Override
-	boolean areMandatoryInputsDone() {
+	public boolean areMandatoryInputsDone() {
 		boolean result = true;
 		if (StringUtils.isEmpty(categoryName.getText())) {
 			categoryName.setStyle(INVALID_TEXTFIELD_CSS);
