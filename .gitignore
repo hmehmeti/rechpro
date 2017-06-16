@@ -4,5 +4,6 @@
 .settings
 .classpath
 .project
+.metadata
 RechPro.iml
 /target/

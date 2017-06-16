@@ -56,7 +56,7 @@ public class RechnungSelectionArea {
 	private static final String CURRENCY = " �";
 	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 
-	private CustomerViewModel customerToCreateBill;
+	private static CustomerViewModel customerToCreateBill;
 	
 	private Button inputSubmitBtn = new Button(INPUT_SUBMIT_BUTTON);
 	private static Text bruttoBetrag = new Text();
