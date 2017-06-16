@@ -51,9 +51,9 @@ import resources.PathClass;
  **/
 public class RechnungSelectionArea {
 	
-	private static final String SELLER_ADDRESS = "Körnerstr. 24 78777 Karlsruhe";
-	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
-	private static final String CURRENCY = " €";
+	private static final String SELLER_ADDRESS = "Kï¿½rnerstr. 24 78777 Karlsruhe";
+	private static final String INPUT_SUBMIT_BUTTON = "ï¿½ndern";
+	private static final String CURRENCY = " ï¿½";
 	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 
 	private CustomerViewModel customerToCreateBill;
@@ -72,7 +72,8 @@ public class RechnungSelectionArea {
 	
 
 	public RechnungSelectionArea(CustomerViewModel customerToCreateBill) {
-		this.customerToCreateBill = customerToCreateBill;
+		if(customerToCreateBill !=null)
+			RechnungSelectionArea.customerToCreateBill = customerToCreateBill;
 		tableGenerator = new TableGenerator();
 	}
 
@@ -190,7 +191,7 @@ public class RechnungSelectionArea {
 	}
 
 	private BorderPane createUnderCenterArea() {
-		final Button addButton = new Button("Artikel Hinzufügen");
+		final Button addButton = new Button("Artikel Hinzufï¿½gen");
 		addButton.setOnAction(e -> openArticlesWindow());
 		BorderPane underCenter = new BorderPane();
 		Text doppelPunkt = new Text(" : ");
@@ -228,8 +229,8 @@ public class RechnungSelectionArea {
 	private ContextMenu getContextMenuForSelectedArticle(TableRow<ArticleViewModelInRechnung> selectedRow) {
 		ContextMenu contextMenu = new ContextMenu();
 
-		MenuItem deleteArticle = new MenuItem("Artikel Löschen");
-		MenuItem updateArticleNumber = new MenuItem("Anzahl Ändern");
+		MenuItem deleteArticle = new MenuItem("Artikel Lï¿½schen");
+		MenuItem updateArticleNumber = new MenuItem("Anzahl ï¿½ndern");
 
 		updateArticleNumber.setOnAction(e -> {
 			selectedArticle = selectedRow.getItem();
