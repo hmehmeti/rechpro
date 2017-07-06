@@ -3,13 +3,36 @@ package com.rechpro.ui.selectionarea;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FileChooserUI;
+
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.CharacterRun;
+import org.apache.poi.hwpf.usermodel.Paragraph;
+import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.hwpf.usermodel.Section;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.sl.draw.geom.Path;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
@@ -22,20 +45,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -50,40 +63,38 @@ import resources.PathClass;
  * @email kamuran1905@yahoo.de
  **/
 public class RechnungSelectionArea {
-	
-	private static final String SELLER_ADDRESS = "K�rnerstr. 24 78777 Karlsruhe";
-	private static final String INPUT_SUBMIT_BUTTON = "�ndern";
+
+	private static String SELLER_ADDRESS = "Körnerstr. 24 78777 Karlsruhe";
+	private static String SELER_STREET = "Körnerstr.";
+	private static String SELER_HOME_NO = "24";
+	private static String SELER_PLZ = "78777";
+	private static String SELER_CITY = "Karlsruhe";
+	private static String SELER_NAME = "DOGAN";
+	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
 	private static final String CURRENCY = " �";
 	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
 
 	private static CustomerViewModel customerToCreateBill;
-	
+
 	private Button inputSubmitBtn = new Button(INPUT_SUBMIT_BUTTON);
 	private static Text bruttoBetrag = new Text();
 	private static Text mehrwertsteuer = new Text();
 	private static Text nettoBetrag = new Text();
 	private TextField choosedAmount = new TextField();
-	
+
 	private static Stage articleSelectStage;
 	private Stage numberInputWindow;
 	private TableView<ArticleViewModelInRechnung> articleTable;
 	private TableGenerator tableGenerator;
 	private ArticleViewModelInRechnung selectedArticle;
-	
 
 	public RechnungSelectionArea(CustomerViewModel customerToCreateBill) {
-		if(customerToCreateBill !=null)
+		if (customerToCreateBill != null)
 			RechnungSelectionArea.customerToCreateBill = customerToCreateBill;
 		tableGenerator = new TableGenerator();
 	}
 
-	private WordprocessingMLPackage getTemplate(String name) throws Docx4JException, FileNotFoundException {
-		URL foo = getClass().getResource(name);
-		File file = new File(foo.getPath());
-		FileInputStream fileInputStream = new FileInputStream(file);
-		WordprocessingMLPackage template = WordprocessingMLPackage.load(fileInputStream);
-		return template;
-	}
+	@SuppressWarnings("restriction")
 	public GridPane addGridPane() {
 
 		GridPane grid = new GridPane();
@@ -91,32 +102,30 @@ public class RechnungSelectionArea {
 		mainWinBorderPane.setPrefSize(700, 1000);
 
 		VBox mainWindow = new VBox(20);
-		
-		//BorderPane header = createHeaderArea();
+
+		// BorderPane header = createHeaderArea();
 		BorderPane center = createCenterArea();
 		BorderPane footer = createFooterArea();
-		
-		//mainWinBorderPane.setTop(header);
+
+		// mainWinBorderPane.setTop(header);
 		mainWinBorderPane.setCenter(center);
 		mainWinBorderPane.setBottom(footer);
-		
-		// right click on Mouse on the article to remove or change the number of article
+
+		// right click on Mouse on the article to remove or change the number of
+		// article
 		articleTable.setRowFactory(
-					new Callback<TableView<ArticleViewModelInRechnung>, TableRow<ArticleViewModelInRechnung>>(){
-						@Override
-						public TableRow<ArticleViewModelInRechnung> call(TableView<ArticleViewModelInRechnung> tableView) {
-							final TableRow<ArticleViewModelInRechnung> row = new TableRow<>();
-							final ContextMenu rowMenu = getContextMenuForSelectedArticle(row);
-							
-							row.contextMenuProperty().bind(
-									Bindings.when(Bindings.isNotNull(row.itemProperty()))
-								      .then(rowMenu)
-								      .otherwise((ContextMenu)null));
-							
-							return row;
-						}
+				new Callback<TableView<ArticleViewModelInRechnung>, TableRow<ArticleViewModelInRechnung>>() {
+					@Override
+					public TableRow<ArticleViewModelInRechnung> call(TableView<ArticleViewModelInRechnung> tableView) {
+						final TableRow<ArticleViewModelInRechnung> row = new TableRow<>();
+						final ContextMenu rowMenu = getContextMenuForSelectedArticle(row);
+
+						row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty()))
+								.then(rowMenu).otherwise((ContextMenu) null));
+
+						return row;
 					}
-				);
+				});
 
 		mainWindow.getChildren().addAll(mainWinBorderPane);
 		grid.getChildren().add(mainWindow);
@@ -124,18 +133,73 @@ public class RechnungSelectionArea {
 		return grid;
 	}
 
-	private BorderPane createHeaderArea() {
-		BorderPane header = new BorderPane();
-		header.setPrefSize(700, 150);
-		ImageView logo = createImageView(PathClass.ARTICLE_ICON_PATH, 80, 80);
-		header.setRight(logo);
-		return header;
+	private void createWordDocument() {
+		FileInputStream fileInputstream;
+		String filePath = getClass().getResource(PathClass.WORD_TMPL_PATH).getPath();
+		FileInputStream fileInputStream;
+		try {
+			fileInputstream = new FileInputStream(filePath);
+			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
+
+			for (XWPFTable tbl : xdoc.getTables()) {
+				for (XWPFTableRow row : tbl.getRows()) {
+					for (XWPFTableCell cell : row.getTableCells()) {
+						for (XWPFParagraph p : cell.getParagraphs()) {
+							for (XWPFRun run : p.getRuns()) {
+								System.out.println("run : " + run);
+								String text = run.getText(0);
+								if (text == null) {
+									continue;
+								} else {
+									if (text.contains("sName") || text.contains("sN") || text.contains("ame")) {
+										if (text == "ame")
+											text = "";
+										else
+											text = SELER_NAME;
+										run.setText(text, 0);
+									} else if (text.contains("sStreet")) {
+										text = SELER_STREET;
+									} else if (text.contains("sCity")) {
+										text = SELER_CITY;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			JFrame parentFrame = new JFrame();
+			JFileChooser fileChooser = new JFileChooser();
+			FileFilter filter = new FileNameExtensionFilter("MS Word 2010", "docx");
+			fileChooser.setFileFilter(filter);
+			fileChooser.setDialogTitle("Wählen Sie einen Name für das Dokument aus");
+			int userSelection = fileChooser.showSaveDialog(parentFrame);
+			File outputFile = null;
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+				outputFile = fileChooser.getSelectedFile();
+				// Write the Document in file system
+				FileOutputStream out;
+				if (outputFile.toString().endsWith(".docx")) {
+					out = new FileOutputStream(outputFile);
+				} else {
+					out = new FileOutputStream(outputFile + ".docx");
+				}
+				xdoc.write(out);
+				out.close();
+			}
+
+		} catch (IOException | InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	@SuppressWarnings("restriction")
 	private BorderPane createCenterArea() {
 		BorderPane center = new BorderPane();
 		center.setPrefSize(700, 400);
-		
+
 		BorderPane centerTop = createCenterTopArea();
 		BorderPane centerButtom = createCenterButtomArea();
 		BorderPane underCenter = createUnderCenterArea();
@@ -145,23 +209,17 @@ public class RechnungSelectionArea {
 		center.setBottom(underCenter);
 		return center;
 	}
-	
+
+	@SuppressWarnings("restriction")
 	private BorderPane createFooterArea() {
 		BorderPane footer = new BorderPane();
 		footer.setPrefWidth(700);
 		Button createWordFile = new Button();
 		createWordFile.setGraphic(createImageView(PathClass.WORD_ICON_PATH, 50, 50));
-		
+
 		createWordFile.setOnAction(e -> {
-			WordprocessingMLPackage test;
-			try {
-				test =  getTemplate(PathClass.WORD_TMPL_PATH);
-				System.out.println("foo");
-			} catch (FileNotFoundException | Docx4JException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		} );
+			createWordDocument();
+		});
 		Line line2 = new Line(90, 40, 800, 40);
 		line2.setStroke(Color.BLACK);
 		Line line3 = new Line(90, 40, 800, 40);
@@ -169,10 +227,11 @@ public class RechnungSelectionArea {
 		footer.setTop(line2);
 		footer.setLeft(createWordFile);
 		footer.setBottom(line3);
-		
+
 		return footer;
 	}
 
+	@SuppressWarnings("restriction")
 	private BorderPane createCenterTopArea() {
 		BorderPane centerTop = new BorderPane();
 		centerTop.setPrefHeight(100);
@@ -186,10 +245,11 @@ public class RechnungSelectionArea {
 		centerTop.setLeft(leftColumn);
 		centerTop.setRight(rightColumn);
 		centerTop.setBottom(rechnungTextRow);
-		
+
 		return centerTop;
 	}
 
+	@SuppressWarnings("restriction")
 	private BorderPane createUnderCenterArea() {
 		final Button addButton = new Button("Artikel Hinzuf�gen");
 		addButton.setOnAction(e -> openArticlesWindow());
@@ -198,12 +258,12 @@ public class RechnungSelectionArea {
 		Text nettoBetragText = new Text("Nettobetrag ");
 		HBox nettoBetragColumn = new HBox();
 		nettoBetragColumn.getChildren().addAll(nettoBetragText, doppelPunkt, nettoBetrag, new Text(CURRENCY));
-		
+
 		Text steuerText = new Text("zzgl. 19 % MwSt. ");
 		Text doppelPunkt2 = new Text(" : ");
 		HBox steuerColumn = new HBox();
 		steuerColumn.getChildren().addAll(steuerText, doppelPunkt2, mehrwertsteuer, new Text(CURRENCY));
-		
+
 		Text bruttoBetragText = new Text("Bruttobetrag ");
 		bruttoBetragText.setFont(new Font("Arial", 15));
 		Text doppelPunkt3 = new Text(" : ");
@@ -214,10 +274,11 @@ public class RechnungSelectionArea {
 		PriceTotalColumn.getChildren().addAll(nettoBetragColumn, steuerColumn, bruttoBetragColumn);
 		underCenter.setRight(PriceTotalColumn);
 		underCenter.setLeft(addButton);
-		
+
 		return underCenter;
 	}
 
+	@SuppressWarnings("restriction")
 	private BorderPane createCenterButtomArea() {
 		articleTable = tableGenerator.getSelectedArticleTable();
 		BorderPane centerButtom = new BorderPane();
@@ -226,6 +287,7 @@ public class RechnungSelectionArea {
 		return centerButtom;
 	}
 
+	@SuppressWarnings("restriction")
 	private ContextMenu getContextMenuForSelectedArticle(TableRow<ArticleViewModelInRechnung> selectedRow) {
 		ContextMenu contextMenu = new ContextMenu();
 
@@ -240,7 +302,6 @@ public class RechnungSelectionArea {
 			numberInputWindow.show();
 		});
 
-		
 		inputSubmitBtn.setOnAction(e -> {
 			// set input value as new amount
 			int amount = Integer.parseInt(choosedAmount.getCharacters().toString());
@@ -262,7 +323,7 @@ public class RechnungSelectionArea {
 			articles.remove(selectedArticle);
 		else
 			return;
-		
+
 		updateBillAmound();
 	}
 
@@ -274,13 +335,13 @@ public class RechnungSelectionArea {
 				updateArticleInTableView(selectedArticle);
 			} else
 				return;
-		} catch (Exception e) {	
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void updateArticleInTableView(ArticleViewModelInRechnung selectedArticle) {
-		for(int i = 0; i < articles.size(); i++){
+		for (int i = 0; i < articles.size(); i++) {
 			ArticleViewModelInRechnung article = articles.get(i);
 			if (article.getArticleNumber() == selectedArticle.getArticleNumber())
 				articles.set(i, selectedArticle);
@@ -288,6 +349,7 @@ public class RechnungSelectionArea {
 		updateBillAmound();
 	}
 
+	@SuppressWarnings("restriction")
 	private Stage getNumberInputWindow() {
 		Stage newStage = new Stage();
 		newStage.setTitle("Neue Anzahl Eingeben");
@@ -302,10 +364,12 @@ public class RechnungSelectionArea {
 		return newStage;
 	}
 
+	@SuppressWarnings("restriction")
 	private VBox getLeftColumn() {
 		VBox customerAndAddress = new VBox(5);
 		if (customerToCreateBill != null) {
-			String customName = customerToCreateBill.getFirstName().get() + " "	+ customerToCreateBill.getLastName().get();
+			String customName = customerToCreateBill.getFirstName().get() + " "
+					+ customerToCreateBill.getLastName().get();
 			Text custumerName = new Text(customName);
 			String street = customerToCreateBill.getStreet().get();
 			String number = customerToCreateBill.getNo().get();
@@ -321,6 +385,7 @@ public class RechnungSelectionArea {
 		return customerAndAddress;
 	}
 
+	@SuppressWarnings("restriction")
 	private VBox getRightColumn() {
 		VBox rightColumn = new VBox(5);
 		Text customerNr;
@@ -337,6 +402,7 @@ public class RechnungSelectionArea {
 		return rightColumn;
 	}
 
+	@SuppressWarnings("restriction")
 	private VBox getRechnungTextRow() {
 		VBox billHBox = new VBox();
 		Label billText = new Label("RECHNUNG");
@@ -347,12 +413,13 @@ public class RechnungSelectionArea {
 		return billHBox;
 	}
 
+	@SuppressWarnings("restriction")
 	private VBox getSellerMiniAddress() {
 		VBox miniAdress = new VBox(3);
 		// TODO : get address from from config class
 		Text sellerAddress = new Text(SELLER_ADDRESS);
 		sellerAddress.setFont(Font.font("Verdana", 8));
-		int addressLength = (sellerAddress.getText().length())*8;
+		int addressLength = (sellerAddress.getText().length()) * 8;
 		Line line = new Line(90, 40, addressLength, 40);
 		line.setStroke(Color.BLACK);
 		miniAdress.getChildren().addAll(sellerAddress, line);
@@ -376,17 +443,17 @@ public class RechnungSelectionArea {
 		bruttoBetrag.setText(decimalFormat.format(bruttoBetragX));
 		nettoBetrag.setText(decimalFormat.format(nettoBetragX));
 	}
-	
+
 	private static double calculateNettoBetrag() {
 		double betrag = 0;
-		for(ArticleViewModelInRechnung article: articles)
+		for (ArticleViewModelInRechnung article : articles)
 			betrag = betrag + article.getTotalPrice();
 		return betrag;
 	}
 
 	private static double calculateMehrwertsteuer(double betrag) {
-		
-		return (betrag* 19)/100;
+
+		return (betrag * 19) / 100;
 	}
 
 	private void openArticlesWindow() {
