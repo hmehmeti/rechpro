@@ -27,7 +27,12 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.sl.draw.geom.Path;
+import org.apache.poi.util.SystemOutLogger;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -35,6 +40,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 
 import com.rechpro.ui.TableGenerator;
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
@@ -140,34 +146,61 @@ public class RechnungSelectionArea {
 		try {
 			fileInputstream = new FileInputStream(filePath);
 			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
+			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
+			//read footer
+			 XWPFFooter footer = policy.getDefaultFooter();
+			 
+			 List<IBodyElement> bodys = xdoc.getBodyElements();
+			 XWPFTable tab = xdoc.createTable();
+			for (IBodyElement bE : bodys) {
+				if (bE.getClass().isInstance(tab)) {
+					XWPFTable myTable = (XWPFTable) bE;
 
-			for (XWPFTable tbl : xdoc.getTables()) {
-				for (XWPFTableRow row : tbl.getRows()) {
-					for (XWPFTableCell cell : row.getTableCells()) {
-						for (XWPFParagraph p : cell.getParagraphs()) {
-							for (XWPFRun run : p.getRuns()) {
-								System.out.println("run : " + run);
-								String text = run.getText(0);
-								if (text == null) {
-									continue;
-								} else {
-									if (text.contains("sName") || text.contains("sN") || text.contains("ame")) {
-										if (text == "ame")
-											text = "";
-										else
-											text = SELER_NAME;
-										run.setText(text, 0);
-									} else if (text.contains("sStreet")) {
-										text = SELER_STREET;
-									} else if (text.contains("sCity")) {
-										text = SELER_CITY;
-									}
-								}
-							}
+					for (XWPFTableRow row : myTable.getRows()) {
+						for (XWPFTableCell cell : row.getTableCells()) {
+							String t = cell.getText();
+							t = t.replaceAll("sName", SELER_NAME);
+							t = t.replaceAll("sStreet", SELER_STREET);
+							t = t.replaceAll("sHomeNo", SELER_HOME_NO);
+							t = t.replaceAll("sPLZ", SELER_PLZ);
+							t = t.replaceAll("sCity", SELER_CITY);
+							
+							t = t.replaceAll("cName", "Mustermann");
+							t = t.replaceAll("cStreet", "Musterstr.");
+							t = t.replaceAll("cHomeNo", "25");
+							t = t.replaceAll("cPLZ", "76555");
+							t = t.replaceAll("cCity", "Stuttgart");
+							System.out.println("RESULT  : "+t);
+							cell.setText(t);
 						}
 					}
 				}
 			}
+			
+//			for (XWPFTable tbl : xdoc.getTables()) {
+//				for (XWPFTableRow row : tbl.getRows()) {
+//					for (XWPFTableCell cell : row.getTableCells()) {
+//						for (XWPFParagraph p : cell.getParagraphs()) {
+//							for (XWPFRun run : p.getRuns()) {
+//								String text = run.getText(0);
+//								System.out.println("run : "+run);
+//								if (text == null) {
+//									continue;
+//								} else {
+//									if (text.contains("sName")) {
+//										text = SELER_NAME;
+//										run.setText(text, 0);
+//									} else if (text.contains("sStreet")) {
+//										text = SELER_STREET;
+//									} else if (text.contains("sCity")) {
+//										text = SELER_CITY;
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
 
 			JFrame parentFrame = new JFrame();
 			JFileChooser fileChooser = new JFileChooser();
