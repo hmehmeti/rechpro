@@ -31,6 +31,7 @@ import org.apache.poi.util.SystemOutLogger;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.IRunElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -75,7 +76,8 @@ public class RechnungSelectionArea {
 	private static String SELER_HOME_NO = "24";
 	private static String SELER_PLZ = "78777";
 	private static String SELER_CITY = "Karlsruhe";
-	private static String SELER_NAME = "DOGAN";
+	private static String SELER_COUNTRY = "Deutschland";
+	private static String SELER_NAME = "Dogan";
 	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
 	private static final String CURRENCY = " �";
 	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
@@ -147,60 +149,23 @@ public class RechnungSelectionArea {
 			fileInputstream = new FileInputStream(filePath);
 			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
 			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
-			//read footer
-			 XWPFFooter footer = policy.getDefaultFooter();
-			 
-			 List<IBodyElement> bodys = xdoc.getBodyElements();
-			 XWPFTable tab = xdoc.createTable();
+			// read footer
+			XWPFFooter footer = policy.getDefaultFooter();
+			List<XWPFParagraph> paragraphsInFooter = footer.getParagraphs(); 
+			for (XWPFParagraph paragraphInFooter : paragraphsInFooter){
+				List<XWPFRun> runsInFooter = paragraphInFooter.getRuns();
+				for(XWPFRun runInFooter : runsInFooter){
+					updateRunText(runInFooter);
+				}
+			}
+			List<IBodyElement> bodys = xdoc.getBodyElements();
+			XWPFTable tab = xdoc.createTable();
 			for (IBodyElement bE : bodys) {
 				if (bE.getClass().isInstance(tab)) {
 					XWPFTable myTable = (XWPFTable) bE;
-
-					for (XWPFTableRow row : myTable.getRows()) {
-						for (XWPFTableCell cell : row.getTableCells()) {
-							String t = cell.getText();
-							t = t.replaceAll("sName", SELER_NAME);
-							t = t.replaceAll("sStreet", SELER_STREET);
-							t = t.replaceAll("sHomeNo", SELER_HOME_NO);
-							t = t.replaceAll("sPLZ", SELER_PLZ);
-							t = t.replaceAll("sCity", SELER_CITY);
-							
-							t = t.replaceAll("cName", "Mustermann");
-							t = t.replaceAll("cStreet", "Musterstr.");
-							t = t.replaceAll("cHomeNo", "25");
-							t = t.replaceAll("cPLZ", "76555");
-							t = t.replaceAll("cCity", "Stuttgart");
-							System.out.println("RESULT  : "+t);
-							cell.setText(t);
-						}
-					}
+					handleTableRow(myTable);
 				}
 			}
-			
-//			for (XWPFTable tbl : xdoc.getTables()) {
-//				for (XWPFTableRow row : tbl.getRows()) {
-//					for (XWPFTableCell cell : row.getTableCells()) {
-//						for (XWPFParagraph p : cell.getParagraphs()) {
-//							for (XWPFRun run : p.getRuns()) {
-//								String text = run.getText(0);
-//								System.out.println("run : "+run);
-//								if (text == null) {
-//									continue;
-//								} else {
-//									if (text.contains("sName")) {
-//										text = SELER_NAME;
-//										run.setText(text, 0);
-//									} else if (text.contains("sStreet")) {
-//										text = SELER_STREET;
-//									} else if (text.contains("sCity")) {
-//										text = SELER_CITY;
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
 
 			JFrame parentFrame = new JFrame();
 			JFileChooser fileChooser = new JFileChooser();
@@ -226,6 +191,54 @@ public class RechnungSelectionArea {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void handleTableRow(XWPFTable table) {
+		for (XWPFTableRow row : table.getRows()) {
+			for (XWPFTableCell cell : row.getTableCells()) {
+				for(XWPFParagraph cellParagraph:  cell.getParagraphs()){
+					for(XWPFRun  cellRun : cellParagraph.getRuns()){
+						updateRunText(cellRun);
+					}
+				}
+			}
+		}
+	}
+
+	private void updateRunText(XWPFRun cellRun) {
+		String t = cellRun.getText(0);
+		if(cellRun == null || t == null)
+			return;
+		
+		if(t.contains("S_NAME") || 
+		   t.contains("S_STREET") || 
+		   t.contains("S_HOME_NO") || 
+		   t.contains("S_PLZ") || 
+		   t.contains("S_CITY") || 
+		   t.contains("S_COUNTRY") ||
+		   t.contains("C_NAME") || 
+		   t.contains("C_STREET") ||
+		   t.contains("C_HOME_NO") ||
+		   t.contains("C_PLZ") ||
+		   t.contains("C_CITY"))
+		 {
+			
+			t = t.replaceAll("S_NAME", SELER_NAME);
+			t = t.replaceAll("S_STREET", SELER_STREET);
+			t = t.replaceAll("S_HOME_NO", SELER_HOME_NO);
+			t = t.replaceAll("S_PLZ", SELER_PLZ);
+			t = t.replaceAll("S_CITY", SELER_CITY);
+			t = t.replaceAll("S_COUNTRY", SELER_COUNTRY);
+			
+			// TODO here will be dynamic changed
+			t = t.replaceAll("C_NAME", "Mustermann");
+			t = t.replaceAll("C_STREET", "Musterstr.");
+			t = t.replaceAll("C_HOME_NO", "25");
+			t = t.replaceAll("C_PLZ", "76555");
+			t = t.replaceAll("C_CITY", "Stuttgart");
+			cellRun.setText(t,0);
+		}
+		
 	}
 
 	@SuppressWarnings("restriction")
