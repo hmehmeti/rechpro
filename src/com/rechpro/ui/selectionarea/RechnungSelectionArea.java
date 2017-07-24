@@ -150,14 +150,13 @@ public class RechnungSelectionArea {
 			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
 			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
 			// read footer
-			XWPFFooter footer = policy.getDefaultFooter();
-			List<XWPFParagraph> paragraphsInFooter = footer.getParagraphs(); 
-			for (XWPFParagraph paragraphInFooter : paragraphsInFooter){
-				List<XWPFRun> runsInFooter = paragraphInFooter.getRuns();
-				for(XWPFRun runInFooter : runsInFooter){
-					updateRunText(runInFooter);
+			for(XWPFFooter f : xdoc.getFooterList()){
+				for(XWPFTable ft: f.getTables()){
+					handleTableRow(ft);
 				}
 			}
+			
+			
 			List<IBodyElement> bodys = xdoc.getBodyElements();
 			XWPFTable tab = xdoc.createTable();
 			for (IBodyElement bE : bodys) {
