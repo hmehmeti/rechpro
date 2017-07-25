@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FileChooserUI;
 
+import org.apache.poi.POIXMLProperties;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.CharacterRun;
 import org.apache.poi.hwpf.usermodel.Paragraph;
@@ -39,8 +40,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.docx4j.model.fields.FieldUpdater;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 
 import com.rechpro.ui.TableGenerator;
@@ -71,13 +74,17 @@ import resources.PathClass;
  **/
 public class RechnungSelectionArea {
 
-	private static String SELLER_ADDRESS = "Körnerstr. 24 78777 Karlsruhe";
-	private static String SELER_STREET = "Körnerstr.";
+	private static String SELLER_ADDRESS = "Verkäuferstr. 24 78777 Verkäufer Stadt";
+	private static String SELER_STREET = "Verkäuferstr.";
 	private static String SELER_HOME_NO = "24";
 	private static String SELER_PLZ = "78777";
-	private static String SELER_CITY = "Karlsruhe";
-	private static String SELER_COUNTRY = "Deutschland";
-	private static String SELER_NAME = "Dogan";
+	private static String SELER_CITY = "Verkäufer Stadt";
+	private static String SELER_COUNTRY = "Verläufer Land";
+	private static String SELER_NAME = "Muster Verkäufer";
+	private static String SELER_MOBIL_NO = "178788888";
+	private static String SELER_TEL_NO = "171111111";
+	
+	
 	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
 	private static final String CURRENCY = " �";
 	public static final ObservableList<ArticleViewModelInRechnung> articles = FXCollections.observableArrayList();
@@ -149,22 +156,32 @@ public class RechnungSelectionArea {
 			fileInputstream = new FileInputStream(filePath);
 			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
 			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
-			// read footer
-			for(XWPFFooter f : xdoc.getFooterList()){
-				for(XWPFTable ft: f.getTables()){
-					handleTableRow(ft);
-				}
-			}
+			// 1. Create product table
+			POIXMLProperties pro = xdoc.getProperties();
+			pro.getCustomProperties().getProperty("S_NAME").setLpwstr(SELER_NAME);
+			pro.getCustomProperties().getProperty("S_STREET").setLpwstr(SELER_STREET);
+			pro.getCustomProperties().getProperty("S_HOME_NO").setLpwstr(SELER_HOME_NO);
+			pro.getCustomProperties().getProperty("S_PLZ").setLpwstr(SELER_PLZ);
+			pro.getCustomProperties().getProperty("S_CITY").setLpwstr(SELER_CITY);
+			pro.getCustomProperties().getProperty("S_COUNTRY").setLpwstr(SELER_COUNTRY);
+			pro.getCustomProperties().getProperty("S_MOBIL_NO").setLpwstr(SELER_MOBIL_NO);
+			pro.getCustomProperties().getProperty("S_TEL_NO").setLpwstr(SELER_TEL_NO);
 			
+			// set customer property values
+			pro.getCustomProperties().getProperty("C_NAME").setLpwstr("Muster Kunde");
+			pro.getCustomProperties().getProperty("C_STREET").setLpwstr("Musterstr.");
+			pro.getCustomProperties().getProperty("C_HOME_NO").setLpwstr("20");
+			pro.getCustomProperties().getProperty("C_PLZ").setLpwstr("79443");
+			pro.getCustomProperties().getProperty("C_CITY").setLpwstr("Muster Stadt");
+			pro.getCustomProperties().getProperty("C_COUNTRY").setLpwstr("Muster Land");
 			
-			List<IBodyElement> bodys = xdoc.getBodyElements();
-			XWPFTable tab = xdoc.createTable();
-			for (IBodyElement bE : bodys) {
-				if (bE.getClass().isInstance(tab)) {
-					XWPFTable myTable = (XWPFTable) bE;
-					handleTableRow(myTable);
-				}
-			}
+			// set general property values
+			pro.getCustomProperties().getProperty("RECHNUNG_NR").setLpwstr("000004321");
+			pro.getCustomProperties().getProperty("C_NO").setLpwstr("000000001");
+			
+			pro.getCustomProperties().getProperty("NET_AMOUNT").setLpwstr("4.600.000");
+			pro.getCustomProperties().getProperty("MwSt").setLpwstr("500.000");
+			pro.getCustomProperties().getProperty("TOTAL_AMOUNT").setLpwstr("5.200.000");
 
 			JFrame parentFrame = new JFrame();
 			JFileChooser fileChooser = new JFileChooser();
