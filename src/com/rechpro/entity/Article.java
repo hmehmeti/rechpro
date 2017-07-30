@@ -51,7 +51,7 @@ public class Article {
 	private Category category;
 
 	public Article(){
-		//MUST have a default constructor to initialise Entity
+		//MUST have a default constructor to initialize Entity
 	}
 	public Article(int articleNumber, String name, String description, int rechnungId, double price) {
 		this.articleNumber = articleNumber;

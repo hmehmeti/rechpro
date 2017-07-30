@@ -158,30 +158,38 @@ public class RechnungSelectionArea {
 			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
 			// 1. Create product table
 			POIXMLProperties pro = xdoc.getProperties();
-			pro.getCustomProperties().getProperty("S_NAME").setLpwstr(SELER_NAME);
-			pro.getCustomProperties().getProperty("S_STREET").setLpwstr(SELER_STREET);
-			pro.getCustomProperties().getProperty("S_HOME_NO").setLpwstr(SELER_HOME_NO);
-			pro.getCustomProperties().getProperty("S_PLZ").setLpwstr(SELER_PLZ);
-			pro.getCustomProperties().getProperty("S_CITY").setLpwstr(SELER_CITY);
-			pro.getCustomProperties().getProperty("S_COUNTRY").setLpwstr(SELER_COUNTRY);
-			pro.getCustomProperties().getProperty("S_MOBIL_NO").setLpwstr(SELER_MOBIL_NO);
-			pro.getCustomProperties().getProperty("S_TEL_NO").setLpwstr(SELER_TEL_NO);
 			
-			// set customer property values
-			pro.getCustomProperties().getProperty("C_NAME").setLpwstr("Muster Kunde");
-			pro.getCustomProperties().getProperty("C_STREET").setLpwstr("Musterstr.");
-			pro.getCustomProperties().getProperty("C_HOME_NO").setLpwstr("20");
-			pro.getCustomProperties().getProperty("C_PLZ").setLpwstr("79443");
-			pro.getCustomProperties().getProperty("C_CITY").setLpwstr("Muster Stadt");
-			pro.getCustomProperties().getProperty("C_COUNTRY").setLpwstr("Muster Land");
-			
-			// set general property values
-			pro.getCustomProperties().getProperty("RECHNUNG_NR").setLpwstr("000004321");
-			pro.getCustomProperties().getProperty("C_NO").setLpwstr("000000001");
-			
-			pro.getCustomProperties().getProperty("NET_AMOUNT").setLpwstr("4.600.000");
-			pro.getCustomProperties().getProperty("MwSt").setLpwstr("500.000");
-			pro.getCustomProperties().getProperty("TOTAL_AMOUNT").setLpwstr("5.200.000");
+			SetSellerInformations(pro);
+			SetCustomerInformations(pro);
+			List<XWPFTable> tables = xdoc.getTables();
+			for(XWPFTable table : tables){
+				if(table.getText().contains("Preis") || table.getText().contains("Pos.") || table.getText().contains("Bezeichnung")){
+					XWPFTableRow newRow = table.getRow(1);
+					XWPFTableCell newCell =newRow.getCell(0);
+					
+					XWPFParagraph paragraph = newCell.getParagraphArray(0);
+					XWPFRun cellRun = (XWPFRun) paragraph.getIRuns().get(0);
+					String t = "foo"; 
+				    if(cellRun == null || t == null) 
+				      return;
+				    cellRun.setText(t,0); 
+				    
+				    // add new row
+				    System.out.println(table.getRows().size());
+				    XWPFTableRow row2 = table.insertNewTableRow(table.getRows().size()-2);
+				    System.out.println(table.getRows().size());
+				    XWPFTableCell cell2 = row2.getCell(0);
+					
+					XWPFParagraph paragraph2 = cell2.getParagraphArray(0);
+					XWPFRun run2 = (XWPFRun) paragraph2.getIRuns().get(0);
+					String t2 = "Pos. 2"; 
+				    if(run2 == null || t2 == null) 
+				      return;
+				    run2.setText(t2,0); 
+				    table.addRow(row2, table.getRows().size()-1);
+				}
+			}
+			SetBillValues(pro);
 
 			JFrame parentFrame = new JFrame();
 			JFileChooser fileChooser = new JFileChooser();
@@ -209,52 +217,34 @@ public class RechnungSelectionArea {
 		}
 	}
 
-	private void handleTableRow(XWPFTable table) {
-		for (XWPFTableRow row : table.getRows()) {
-			for (XWPFTableCell cell : row.getTableCells()) {
-				for(XWPFParagraph cellParagraph:  cell.getParagraphs()){
-					for(XWPFRun  cellRun : cellParagraph.getRuns()){
-						updateRunText(cellRun);
-					}
-				}
-			}
-		}
+	private void SetBillValues(POIXMLProperties pro) {
+		pro.getCustomProperties().getProperty("RECHNUNG_NR").setLpwstr("000004321");
+		pro.getCustomProperties().getProperty("C_NO").setLpwstr("000000001");
+		
+		pro.getCustomProperties().getProperty("NET_AMOUNT").setLpwstr("4.600.000");
+		pro.getCustomProperties().getProperty("MwSt").setLpwstr("500.000");
+		pro.getCustomProperties().getProperty("TOTAL_AMOUNT").setLpwstr("5.200.000");		
 	}
 
-	private void updateRunText(XWPFRun cellRun) {
-		String t = cellRun.getText(0);
-		if(cellRun == null || t == null)
-			return;
+	private void SetCustomerInformations(POIXMLProperties pro) {
+		pro.getCustomProperties().getProperty("C_NAME").setLpwstr("Muster Kunde");
+		pro.getCustomProperties().getProperty("C_STREET").setLpwstr("Musterstr.");
+		pro.getCustomProperties().getProperty("C_HOME_NO").setLpwstr("20");
+		pro.getCustomProperties().getProperty("C_PLZ").setLpwstr("79443");
+		pro.getCustomProperties().getProperty("C_CITY").setLpwstr("Muster Stadt");
+		pro.getCustomProperties().getProperty("C_COUNTRY").setLpwstr("Muster Land");
 		
-		if(t.contains("S_NAME") || 
-		   t.contains("S_STREET") || 
-		   t.contains("S_HOME_NO") || 
-		   t.contains("S_PLZ") || 
-		   t.contains("S_CITY") || 
-		   t.contains("S_COUNTRY") ||
-		   t.contains("C_NAME") || 
-		   t.contains("C_STREET") ||
-		   t.contains("C_HOME_NO") ||
-		   t.contains("C_PLZ") ||
-		   t.contains("C_CITY"))
-		 {
-			
-			t = t.replaceAll("S_NAME", SELER_NAME);
-			t = t.replaceAll("S_STREET", SELER_STREET);
-			t = t.replaceAll("S_HOME_NO", SELER_HOME_NO);
-			t = t.replaceAll("S_PLZ", SELER_PLZ);
-			t = t.replaceAll("S_CITY", SELER_CITY);
-			t = t.replaceAll("S_COUNTRY", SELER_COUNTRY);
-			
-			// TODO here will be dynamic changed
-			t = t.replaceAll("C_NAME", "Mustermann");
-			t = t.replaceAll("C_STREET", "Musterstr.");
-			t = t.replaceAll("C_HOME_NO", "25");
-			t = t.replaceAll("C_PLZ", "76555");
-			t = t.replaceAll("C_CITY", "Stuttgart");
-			cellRun.setText(t,0);
-		}
-		
+	}
+
+	private void SetSellerInformations(POIXMLProperties pro) {
+		pro.getCustomProperties().getProperty("S_NAME").setLpwstr(SELER_NAME);
+		pro.getCustomProperties().getProperty("S_STREET").setLpwstr(SELER_STREET);
+		pro.getCustomProperties().getProperty("S_HOME_NO").setLpwstr(SELER_HOME_NO);
+		pro.getCustomProperties().getProperty("S_PLZ").setLpwstr(SELER_PLZ);
+		pro.getCustomProperties().getProperty("S_CITY").setLpwstr(SELER_CITY);
+		pro.getCustomProperties().getProperty("S_COUNTRY").setLpwstr(SELER_COUNTRY);
+		pro.getCustomProperties().getProperty("S_MOBIL_NO").setLpwstr(SELER_MOBIL_NO);
+		pro.getCustomProperties().getProperty("S_TEL_NO").setLpwstr(SELER_TEL_NO);
 	}
 
 	@SuppressWarnings("restriction")
