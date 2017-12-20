@@ -2,50 +2,26 @@ package com.rechpro.ui.selectionarea;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.FileChooserUI;
 
-import org.apache.poi.POIXMLProperties;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.CharacterRun;
-import org.apache.poi.hwpf.usermodel.Paragraph;
-import org.apache.poi.hwpf.usermodel.Range;
-import org.apache.poi.hwpf.usermodel.Section;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.sl.draw.geom.Path;
-import org.apache.poi.util.SystemOutLogger;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.IRunElement;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.docx4j.model.fields.FieldUpdater;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.rechpro.ui.TableGenerator;
 import com.rechpro.viewmodel.ArticleViewModelInRechnung;
 import com.rechpro.viewmodel.CustomerViewModel;
@@ -55,10 +31,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -75,14 +61,6 @@ import resources.PathClass;
 public class RechnungSelectionArea {
 
 	private static String SELLER_ADDRESS = "Verkäuferstr. 24 78777 Verkäufer Stadt";
-	private static String SELER_STREET = "Verkäuferstr.";
-	private static String SELER_HOME_NO = "24";
-	private static String SELER_PLZ = "78777";
-	private static String SELER_CITY = "Verkäufer Stadt";
-	private static String SELER_COUNTRY = "Verläufer Land";
-	private static String SELER_NAME = "Muster Verkäufer";
-	private static String SELER_MOBIL_NO = "178788888";
-	private static String SELER_TEL_NO = "171111111";
 	
 	
 	private static final String INPUT_SUBMIT_BUTTON = "Ändern";
@@ -126,8 +104,7 @@ public class RechnungSelectionArea {
 		mainWinBorderPane.setCenter(center);
 		mainWinBorderPane.setBottom(footer);
 
-		// right click on Mouse on the article to remove or change the number of
-		// article
+		// right click on Mouse on the article to remove or change the number of article
 		articleTable.setRowFactory(
 				new Callback<TableView<ArticleViewModelInRechnung>, TableRow<ArticleViewModelInRechnung>>() {
 					@Override
@@ -148,104 +125,56 @@ public class RechnungSelectionArea {
 		return grid;
 	}
 
-	private void createWordDocument() {
-		FileInputStream fileInputstream;
-		String filePath = getClass().getResource(PathClass.WORD_TMPL_PATH).getPath();
-		FileInputStream fileInputStream;
+	private void createPDF() throws IOException {
+		PDDocument document = new PDDocument();
+		PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+        //insert logo
+        String imageName = "C:/Users/kdogan/DEV/rechpro/src/resources/logo.jpg";
+        FileInputStream imageStream = new FileInputStream(imageName);
+        PDImageXObject image = JPEGFactory.createFromStream(document,imageStream);
+        
+        contentStream.drawImage(image, 10, 900);
+        
+        
+        PDFont font = PDType1Font.HELVETICA_BOLD;
+        contentStream.beginText();
+        contentStream.setFont(font, 5 );
+        contentStream.newLineAtOffset(10, 700);
+        String sellerAddress = "Königstr. 32 79333 Stuttgart";
+        contentStream.showText(sellerAddress);
+        contentStream.endText();
+        contentStream.setFont(font, 2);
+        contentStream.drawLine(10, 699, 150, 699);
+        contentStream.close();
+		
+		//seve Document
 		try {
-			fileInputstream = new FileInputStream(filePath);
-			XWPFDocument xdoc = new XWPFDocument(OPCPackage.open(fileInputstream));
-			XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(xdoc);
-			// 1. Create product table
-			POIXMLProperties pro = xdoc.getProperties();
-			
-			SetSellerInformations(pro);
-			SetCustomerInformations(pro);
-			List<XWPFTable> tables = xdoc.getTables();
-			for(XWPFTable table : tables){
-				if(table.getText().contains("Preis") || table.getText().contains("Pos.") || table.getText().contains("Bezeichnung")){
-					XWPFTableRow newRow = table.getRow(1);
-					XWPFTableCell newCell =newRow.getCell(0);
-					
-					XWPFParagraph paragraph = newCell.getParagraphArray(0);
-					XWPFRun cellRun = (XWPFRun) paragraph.getIRuns().get(0);
-					String t = "foo"; 
-				    if(cellRun == null || t == null) 
-				      return;
-				    cellRun.setText(t,0); 
-				    
-				    // add new row
-				    System.out.println(table.getRows().size());
-				    XWPFTableRow row2 = table.insertNewTableRow(table.getRows().size()-2);
-				    System.out.println(table.getRows().size());
-				    XWPFTableCell cell2 = row2.getCell(0);
-					
-					XWPFParagraph paragraph2 = cell2.getParagraphArray(0);
-					XWPFRun run2 = (XWPFRun) paragraph2.getIRuns().get(0);
-					String t2 = "Pos. 2"; 
-				    if(run2 == null || t2 == null) 
-				      return;
-				    run2.setText(t2,0); 
-				    table.addRow(row2, table.getRows().size()-1);
-				}
-			}
-			SetBillValues(pro);
-
-			JFrame parentFrame = new JFrame();
-			JFileChooser fileChooser = new JFileChooser();
-			FileFilter filter = new FileNameExtensionFilter("MS Word 2010", "docx");
-			fileChooser.setFileFilter(filter);
-			fileChooser.setDialogTitle("Wählen Sie einen Name für das Dokument aus");
-			int userSelection = fileChooser.showSaveDialog(parentFrame);
-			File outputFile = null;
-			if (userSelection == JFileChooser.APPROVE_OPTION) {
-				outputFile = fileChooser.getSelectedFile();
-				// Write the Document in file system
-				FileOutputStream out;
-				if (outputFile.toString().endsWith(".docx")) {
-					out = new FileOutputStream(outputFile);
-				} else {
-					out = new FileOutputStream(outputFile + ".docx");
-				}
-				xdoc.write(out);
-				out.close();
-			}
-
-		} catch (IOException | InvalidFormatException e) {
-			// TODO Auto-generated catch block
+		JFrame parentFrame = new JFrame(); 
+	      JFileChooser fileChooser = new JFileChooser(); 
+	      FileFilter filter = new FileNameExtensionFilter("PDF", "pdf"); 
+	      fileChooser.setFileFilter(filter); 
+	      fileChooser.setDialogTitle("Wählen Sie einen Name für das Dokument aus"); 
+	      int userSelection = fileChooser.showSaveDialog(parentFrame); 
+	      File outputFile = null; 
+	      if (userSelection == JFileChooser.APPROVE_OPTION) { 
+	        outputFile = fileChooser.getSelectedFile(); 
+	        // Write the Document in file system 
+	        FileOutputStream out; 
+	        if (outputFile.toString().endsWith(".pdf")) { 
+	          out = new FileOutputStream(outputFile); 
+	        } else { 
+	          out = new FileOutputStream(outputFile + ".pdf"); 
+	        } 
+	        document.save(out); 
+	        out.close(); 
+	      } 
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}	
 	}
 
-	private void SetBillValues(POIXMLProperties pro) {
-		pro.getCustomProperties().getProperty("RECHNUNG_NR").setLpwstr("000004321");
-		pro.getCustomProperties().getProperty("C_NO").setLpwstr("000000001");
-		
-		pro.getCustomProperties().getProperty("NET_AMOUNT").setLpwstr("4.600.000");
-		pro.getCustomProperties().getProperty("MwSt").setLpwstr("500.000");
-		pro.getCustomProperties().getProperty("TOTAL_AMOUNT").setLpwstr("5.200.000");		
-	}
-
-	private void SetCustomerInformations(POIXMLProperties pro) {
-		pro.getCustomProperties().getProperty("C_NAME").setLpwstr("Muster Kunde");
-		pro.getCustomProperties().getProperty("C_STREET").setLpwstr("Musterstr.");
-		pro.getCustomProperties().getProperty("C_HOME_NO").setLpwstr("20");
-		pro.getCustomProperties().getProperty("C_PLZ").setLpwstr("79443");
-		pro.getCustomProperties().getProperty("C_CITY").setLpwstr("Muster Stadt");
-		pro.getCustomProperties().getProperty("C_COUNTRY").setLpwstr("Muster Land");
-		
-	}
-
-	private void SetSellerInformations(POIXMLProperties pro) {
-		pro.getCustomProperties().getProperty("S_NAME").setLpwstr(SELER_NAME);
-		pro.getCustomProperties().getProperty("S_STREET").setLpwstr(SELER_STREET);
-		pro.getCustomProperties().getProperty("S_HOME_NO").setLpwstr(SELER_HOME_NO);
-		pro.getCustomProperties().getProperty("S_PLZ").setLpwstr(SELER_PLZ);
-		pro.getCustomProperties().getProperty("S_CITY").setLpwstr(SELER_CITY);
-		pro.getCustomProperties().getProperty("S_COUNTRY").setLpwstr(SELER_COUNTRY);
-		pro.getCustomProperties().getProperty("S_MOBIL_NO").setLpwstr(SELER_MOBIL_NO);
-		pro.getCustomProperties().getProperty("S_TEL_NO").setLpwstr(SELER_TEL_NO);
-	}
 
 	@SuppressWarnings("restriction")
 	private BorderPane createCenterArea() {
@@ -270,7 +199,11 @@ public class RechnungSelectionArea {
 		createWordFile.setGraphic(createImageView(PathClass.WORD_ICON_PATH, 50, 50));
 
 		createWordFile.setOnAction(e -> {
-			createWordDocument();
+			try {
+				createPDF();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		Line line2 = new Line(90, 40, 800, 40);
 		line2.setStroke(Color.BLACK);
